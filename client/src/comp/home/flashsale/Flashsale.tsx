@@ -17,7 +17,7 @@ const products: Product[] = [
   {
     id: 1,
     name: "Baby care product",
-    image: "/baby.png",
+    image: "public/product_img/babycare.webp",
     discount: 40,
     price: 120,
     originalPrice: 160,
@@ -27,7 +27,7 @@ const products: Product[] = [
   {
     id: 2,
     name: "Dairy Product",
-    image: "/dairy.png",
+    image:  "public/product_img/dairy.avif",
     discount: 35,
     price: 960,
     originalPrice: 1160,
@@ -37,7 +37,7 @@ const products: Product[] = [
   {
     id: 3,
     name: "Vadilal ice-cream",
-    image: "/icecream.png",
+    image: "public/product_img/icecream.jpg",
     discount: 30,
     price: 370,
     originalPrice: 470,
@@ -47,7 +47,7 @@ const products: Product[] = [
   {
     id: 4,
     name: "Fruits & vegetable",
-    image: "/fruits.png",
+    image: "/product_img/vegetables.jpg",
     discount: 25,
     price: 375,
     originalPrice: 400,
@@ -57,7 +57,7 @@ const products: Product[] = [
   {
     id: 5,
     name: "Organic Vegetables",
-    image: "/vegetables.png",
+    image: "/product_img/vegetables oil.jpg",
     discount: 20,
     price: 280,
     originalPrice: 350,
@@ -67,7 +67,7 @@ const products: Product[] = [
   {
     id: 6,
     name: "Organic Vegetables",
-    image: "/vegetables.png",
+    image: "/product_img/vegetables.jpg",
     discount: 20,
     price: 280,
     originalPrice: 350,
@@ -77,7 +77,7 @@ const products: Product[] = [
   {
     id: 7,
     name: "Organic Vegetables",
-    image: "/vegetables.png",
+    image: "/product_img/vegetables.jpg",
     discount: 20,
     price: 280,
     originalPrice: 350,
