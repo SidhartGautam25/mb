@@ -6,22 +6,37 @@ const Right: React.FC = () => {
   const slides = [
     {
       content: (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold p-4 text-center">
-          Summer Sale <br /> Up to 30% Off
+        // <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold p-4 text-center">
+        //   Summer Sale <br /> Up to 30% Off
+        // </div>
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold  text-center">
+          <img
+            src="product_img/sales.avif"
+            alt="banner"
+            className="w-full h-full flex items-center justify-center"
+          />
         </div>
       ),
     },
     {
       content: (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold p-4 text-center">
-          Summer Sale <br /> Up to 30% Off
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold  text-center">
+          <img
+            src="product_img/salesbanner3.jpeg"
+            alt="banner"
+            className="w-full h-full flex items-center justify-center"
+          />
         </div>
       ),
     },
     {
       content: (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold p-4 text-center">
-          Summer Sale <br /> Up to 30% Off
+        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold  text-center">
+          <img
+            src="product_img/salesbanner2.avif"
+            alt="banner"
+            className="w-full h-full flex items-center justify-center"
+          />
         </div>
       ),
     },
