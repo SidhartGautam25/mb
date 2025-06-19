@@ -1,7 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { useAppDispatch, useAppSelector } from "../../context/hooks";
+import {
+  register,
+  removeErrors,
+  removeSuccess,
+} from "../../context/user/userSlice";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const SignupC: React.FC = () => {
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const { name, email, password } = user;
+  const { success, error } = useAppSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const onChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUser({ ...user, [e.target.name]: e.target.value });
+  };
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!name || !email || !password) {
+      toast.error("Please fill all the field properly");
+      return;
+    }
+    const myForm = new FormData();
+    myForm.set("name", name);
+    myForm.set("name", name);
+    myForm.set("name", name);
+    dispatch(register(myForm));
+  };
+  useEffect(() => {
+    if (error) {
+      toast.error(error, { position: "top-center", autoClose: 3000 });
+      dispatch(removeErrors());
+    }
+  }, [dispatch, error]);
+
+  useEffect(() => {
+    if (success) {
+      toast.success("Registration SuccessFul", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeSuccess());
+      navigate("/login");
+    }
+  }, [dispatch, success]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-stretch">
@@ -19,20 +69,29 @@ const SignupC: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-2">Create an account</h2>
           <p className="text-sm text-gray-600 mb-6">Enter your details below</p>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={onSubmit}>
             <input
               type="text"
               placeholder="Name"
+              name="name"
+              value={name}
+              onChange={onChanges}
               className="w-full border-b border-gray-300 py-2 outline-none focus:border-black"
             />
             <input
-              type="text"
-              placeholder="Email or Phone Number"
+              type="email"
+              placeholder="Email"
+              name="email"
+              value={email}
+              onChange={onChanges}
               className="w-full border-b border-gray-300 py-2 outline-none focus:border-black"
             />
             <input
               type="password"
               placeholder="Password"
+              name="password"
+              value={password}
+              onChange={onChanges}
               className="w-full border-b border-gray-300 py-2 outline-none focus:border-black"
             />
             <button

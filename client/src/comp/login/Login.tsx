@@ -1,7 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "react-toastify";
+import {
+  login,
+  removeErrors,
+  removeSuccess,
+} from "../../context/user/userSlice";
+import { useAppDispatch, useAppSelector } from "../../context/hooks";
 
 const LoginC: React.FC = () => {
+  const [lEmail, setLEmail] = useState<string>("");
+  const [lPassword, setLPassword] = useState<string>("");
+  const { error, success, isAuthenticated } = useAppSelector(
+    (state) => state.user
+  );
+  const dispatch = useAppDispatch();
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(login({ email: lEmail, password: lPassword }));
+  };
+  useEffect(() => {
+    if (error) {
+      toast.error(error, { position: "top-center", autoClose: 3000 });
+      dispatch(removeErrors());
+    }
+  }, [dispatch, error]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+    }
+  }, [isAuthenticated]);
+  useEffect(() => {
+    if (success) {
+      toast.success("login successfull", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeSuccess());
+    }
+  }, [dispatch, success]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center md:items-stretch">
@@ -19,21 +57,18 @@ const LoginC: React.FC = () => {
           <h2 className="text-2xl font-semibold mb-2">Enter Your Details</h2>
           {/* <p className="text-sm text-gray-600 mb-6">Enter your details below</p> */}
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={onSubmit}>
             <input
-              type="text"
-              placeholder="Name"
+              type="email"
+              placeholder="Email"
               className="w-full border-b border-gray-300 py-2 outline-none focus:border-black"
-            />
-            <input
-              type="text"
-              placeholder="Email or Phone Number"
-              className="w-full border-b border-gray-300 py-2 outline-none focus:border-black"
+              onChange={(e) => setLEmail(e.target.value)}
             />
             <input
               type="password"
               placeholder="Password"
               className="w-full border-b border-gray-300 py-2 outline-none focus:border-black"
+              onChange={(e) => setLPassword(e.target.value)}
             />
             <button
               type="submit"
