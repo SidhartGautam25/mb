@@ -32,5 +32,6 @@ function App(): JSX.Element {
   );
 }
 // now doign things from fedora
+// checking git github setup
 
 export default App;
