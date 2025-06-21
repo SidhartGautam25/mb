@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 
 
+
 interface User{
     [key: string]: any;
 }
@@ -37,17 +38,21 @@ interface ApiError{
     statusCode?: number;
 }
 
-export const register = createAsyncThunk<ApiResponse, FormData, { rejectValue: ApiError }>('user/register', async (userData, { rejectWithValue }) => {
+export const register = createAsyncThunk<ApiResponse, User, { rejectValue: ApiError }>('user/register', async (userData, { rejectWithValue }) => {
     try {
         const config = {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'application/json'
             }
         };
-        const { data } = await axios.post('/api/v1/register', userData, config);
+        console.log("userData is ",userData);
+        console.log("trying to post /api/v1/register");
+        const { data } = await axios.post(`/api/v1/register`, userData, config);
+        console.log("data is ",data);
         return data;
         
     } catch (err) {
+      console.log("error occured while doing this register things");
         const axiosError = err as AxiosError<ApiError>;
         return rejectWithValue(axiosError.response?.data || { message: 'Registration failed. Try again' })
         
@@ -61,9 +66,12 @@ export const login = createAsyncThunk<ApiResponse, LoginCredentials, { rejectVal
                 'Content-Type': 'application/json'
             }
         };
+        console.log("trying to post /api/v1/login");
         const { data } = await axios.post('/api/v1/login', { email, password }, config);
+        console.log("data got is ",data);
         return data;
     } catch (err) {
+      console.log("error occured while doing login thing")
         const axiosError = err as AxiosError<ApiError>;
         return rejectWithValue(axiosError.response?.data || { message: 'Login Failed' })
     }

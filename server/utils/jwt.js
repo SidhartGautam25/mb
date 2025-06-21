@@ -1,5 +1,7 @@
 export const sendToken = (user, statusCode, res) => {
-  const token = user.getJWTToken();
+  console.log("trying to create token");
+  const token = user.getJwtToken();
+  console.log("token is ",token);
 
   // options for cookies
   const options = {
@@ -8,6 +10,7 @@ export const sendToken = (user, statusCode, res) => {
     ),
     httpOnly: true,
   };
+  console.log("sending res to client")
   res.status(statusCode).cookie("token", token, options).json({
     success: true,
     user,

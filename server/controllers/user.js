@@ -1,15 +1,19 @@
-import handleAsyncError from "../middlewares/handleAsyncError";
-import User from "../models/User";
-import HandleError from "../utils/handleError";
-import { sendToken } from "../utils/jwt";
+import handleAsyncError from "../middlewares/handleAsyncError.js";
+import User from "../models/User.js";
+import HandleError from "../utils/handleError.js";
+import { sendToken } from "../utils/jwt.js";
 
 export const registerUser = handleAsyncError(async (req, res, next) => {
+  console.log("user is trying to register ",req.body);
   const { name, email, password } = req.body;
+  console.log("name is ",name," email is ",email," password is ",password);
+  console.log("trying to create user");
   const user = await User.create({
     name,
     email,
     password,
   });
+  console.log("user created");
   sendToken(user, 201, res);
 });
 

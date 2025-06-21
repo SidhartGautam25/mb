@@ -1,5 +1,6 @@
 import app from "./app.js";
 import { mongoConnect } from "./config/mongo.js";
+import mongoose from "mongoose";
 
 mongoConnect();
 process.on("uncaughtException", (err) => {
@@ -11,6 +12,10 @@ process.on("uncaughtException", (err) => {
 const port = process.env.PORT || 8800;
 const server = app.listen(port, () => {
   console.log(`Server is running on PORT ${port}`);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.log("mongoDB disconnected!");
 });
 
 process.on("unhandledRejection", (err) => {
