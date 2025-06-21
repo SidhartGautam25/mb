@@ -24,14 +24,12 @@ function App(): JSX.Element {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<Product />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products/:category" element={<Products />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
     </Router>
   );
 }
-// now doign things from fedora
-// checking git github setup
 
 export default App;

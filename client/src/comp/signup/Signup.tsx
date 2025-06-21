@@ -24,15 +24,17 @@ const SignupC: React.FC = () => {
   };
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("trying to signup")
     if (!name || !email || !password) {
       toast.error("Please fill all the field properly");
       return;
     }
     const myForm = new FormData();
     myForm.set("name", name);
-    myForm.set("name", name);
-    myForm.set("name", name);
-    dispatch(register(myForm));
+    myForm.set("email", email);
+    myForm.set("password", password);
+    console.log("trying to dispatch register ",myForm);
+    dispatch(register({name, email, password}));
   };
   useEffect(() => {
     if (error) {

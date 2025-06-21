@@ -7,16 +7,20 @@ import {
   removeSuccess,
 } from "../../context/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
+import { useNavigate} from "react-router-dom";
 
 const LoginC: React.FC = () => {
   const [lEmail, setLEmail] = useState<string>("");
   const [lPassword, setLPassword] = useState<string>("");
+  const navigate=useNavigate();
   const { error, success, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
+  const redirect="/";
   const dispatch = useAppDispatch();
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("trying to dispatch login");
     dispatch(login({ email: lEmail, password: lPassword }));
   };
   useEffect(() => {
@@ -28,6 +32,7 @@ const LoginC: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
+      navigate(redirect);
     }
   }, [isAuthenticated]);
   useEffect(() => {
