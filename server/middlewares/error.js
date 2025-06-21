@@ -1,4 +1,4 @@
-export default errorMiddleware = (err, req, res, next) => {
+export default function errorMiddleware (err, req, res, next){
   err.statusCode = err.statusCode || 500;
   err.message = err.message || "Internal Server Error";
   res.statusCode(err.statusCode).json({
