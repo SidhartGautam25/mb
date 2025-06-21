@@ -2,7 +2,8 @@ import express, { urlencoded } from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import errorMiddleware from "./middlewares/error.js";
-import userRoute from "./routes/userRoutes.js"
+import userRoute from "./routes/userRoutes.js";
+import productRoutes from "./routes/productRoute.js"
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1", userRoute);
+app.use("/api/v1",productRoutes);
 
 app.use(errorMiddleware);
 
