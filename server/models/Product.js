@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
+  id:{
+    type:String,
+    required:true,
+    unique:true,
+  },
   name: {
     type: String,
     required: true,
@@ -28,7 +33,7 @@ const productSchema = new mongoose.Schema({
     },
   ],
   discount: {
-    type: Number,
+    type: String,
   },
   stock: {
     type: Number,
@@ -36,6 +41,10 @@ const productSchema = new mongoose.Schema({
     maxLength: [5, "Price cannot exceed 5 digits"],
     default: 100,
   },
+  image:{
+    type:String,
+    default:""
+  }
 });
 
 export default mongoose.model("Product", productSchema);
