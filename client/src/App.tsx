@@ -8,6 +8,8 @@ import Product from "./pages/product.tsx";
 import Products from "./pages/products.tsx";
 import Login from "./pages/login.tsx";
 import Signup from "./pages/signup.tsx";
+import ProtectedRoute from "./comp/common/ProtectedRoute.tsx";
+import CreateProduct from "./pages/admin/createProduct.tsx";
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -27,6 +29,8 @@ function App(): JSX.Element {
         <Route path="/products/:category" element={<Products />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        {/* admin routes */}
+        <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>} adminOnly={true}/>}/>
       </Routes>
     </Router>
   );

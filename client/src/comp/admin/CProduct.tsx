@@ -4,7 +4,7 @@ import { removeErrors, removeSuccess } from "../../context/admin/adminSlice";
 import { toast } from "react-toastify";
 
 
-const DashboardC: React.FC = () => {
+const CProductC: React.FC = () => {
   const categories:string[]=["vegetables","fruits"];
   const Tags:string[]=["free","50% OFF","30% OFF"];
   const [id,setId]=useState("");
@@ -189,4 +189,4 @@ const DashboardC: React.FC = () => {
   );
 };
 
-export default DashboardC;
+export default CProductC;
