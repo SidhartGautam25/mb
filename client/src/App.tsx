@@ -30,7 +30,7 @@ function App(): JSX.Element {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         {/* admin routes */}
-        <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>} adminOnly={true}/>}/>
+        <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>} />}/>
       </Routes>
     </Router>
   );
