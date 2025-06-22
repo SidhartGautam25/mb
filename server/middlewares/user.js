@@ -1,8 +1,10 @@
-import HandleError from "../utils/handleError";
-import handleAsyncError from "./handleAsyncError";
+import User from "../models/User.js";
+import HandleError from "../utils/handleError.js";
+import handleAsyncError from "./handleAsyncError.js";
 import jwt from "jsonwebtoken";
 
 export const verifyUser=handleAsyncError(async(req,res,next)=>{
+    console.log("res.cookie is ",req.cookies);
     const {token}=req.cookies;
     if(!token){
         return next(new HandleError("not authenticated,please login to access resources",401));

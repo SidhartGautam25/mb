@@ -1,8 +1,14 @@
 import app from "./app.js";
 import { mongoConnect } from "./config/mongo.js";
 import mongoose from "mongoose";
+import {v2 as cloudinary} from 'cloudinary';
 
 mongoConnect();
+cloudinary.config({
+    cloud_name:process.env.CLOUDINARY_NAME,
+    api_key:process.env.API_KEY,
+    api_secret:process.env.API_SECRET
+})
 process.on("uncaughtException", (err) => {
   console.log(`Error : ${err.message}`);
   console.log(`Server is shutting down due to uncaught exception errors`);
