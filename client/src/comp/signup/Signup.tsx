@@ -29,11 +29,11 @@ const SignupC: React.FC = () => {
       toast.error("Please fill all the field properly");
       return;
     }
-    const myForm = new FormData();
-    myForm.set("name", name);
-    myForm.set("email", email);
-    myForm.set("password", password);
-    console.log("trying to dispatch register ",myForm);
+    // const myForm = new FormData();
+    // myForm.set("name", name);
+    // myForm.set("email", email);
+    // myForm.set("password", password);
+    // console.log("trying to dispatch register ",myForm);
     dispatch(register({name, email, password}));
   };
   useEffect(() => {
@@ -45,6 +45,7 @@ const SignupC: React.FC = () => {
 
   useEffect(() => {
     if (success) {
+      console.log("registration successfull");
       toast.success("Registration SuccessFul", {
         position: "top-center",
         autoClose: 3000,
