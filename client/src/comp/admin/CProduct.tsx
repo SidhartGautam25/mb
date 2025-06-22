@@ -39,6 +39,7 @@ const CProductC: React.FC = () => {
 
     const createProductImage = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const files = e.target.files;
+    console.log("files are ",files);
     
     if (!files) return;
     
@@ -52,6 +53,7 @@ const CProductC: React.FC = () => {
       reader.onload = (): void => {
         if (reader.readyState === 2 && reader.result) {
           const result = reader.result as string;
+          console.log("result is ",result);
           // setImagePreview((old: string[]) => [...old, result]);
           setImage((old: string[]) => [...old, result]);
         }
