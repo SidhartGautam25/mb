@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
-import { removeErrors, removeSuccess } from "../../context/admin/adminSlice";
+import { createProduct, removeErrors, removeSuccess } from "../../context/admin/adminSlice";
 import { toast } from "react-toastify";
 
 
@@ -23,6 +23,11 @@ const CProductC: React.FC = () => {
   );
   
   const dispatch = useAppDispatch();
+
+  const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
+    e.preventDefault();
+    dispatch(createProduct({id,name,price,description,category,stock,image,tags,discount}));
+  }
 
  const handleCheckboxChange = (tag: string): void => {
     setTags((prevTags: string[]) => 
@@ -57,11 +62,11 @@ const CProductC: React.FC = () => {
 
    useEffect(()=>{
     if(error){
-        toast.error(error,{position:'top-center',autoClose:3000});
+        toast.error(error,{position:'top-center',autoClose:6000});
         dispatch(removeErrors())
     }
     if(success){
-        toast.success("Product Created successfully",{position:'top-center',autoClose:3000});
+        toast.success("Product Created successfully",{position:'top-center',autoClose:6000});
         dispatch(removeSuccess()) 
         setName("");
         setPrice("");
@@ -88,7 +93,7 @@ const CProductC: React.FC = () => {
           <form 
             className="space-y-6" 
             encType="multipart/form-data"
-            // onSubmit={handleSubmit}
+            onSubmit={handleSubmit}
           >
             {/* Product Name */}
             <div className="space-y-2">

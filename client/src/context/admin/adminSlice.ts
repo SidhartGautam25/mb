@@ -54,7 +54,7 @@ export const fetchAdminProducts = createAsyncThunk(
 // Create Product
 export const createProduct = createAsyncThunk(
   'admin/createProduct',
-  async (productData: FormData, { rejectWithValue }) => {
+  async (productData: Record<string,any>, { rejectWithValue }) => {
     try {
       const config = {
         headers: {
