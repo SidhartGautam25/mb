@@ -9,11 +9,13 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 dotenv.config();
 
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   console.log("request is coming")
+  console.log("request body is ",req.body);
   console.log('IP:', req.ip);
   next(); 
 });

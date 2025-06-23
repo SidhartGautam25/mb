@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { createProduct, removeErrors, removeSuccess } from "../../context/admin/adminSlice";
 import { toast } from "react-toastify";
+import { logFormData } from "../../utils/logThings";
 
 
 const CProductC: React.FC = () => {
@@ -14,6 +15,7 @@ const CProductC: React.FC = () => {
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState("");
   const [image, setImage] = useState<string[]>([]);
+  const [iloading,setIloading]=useState<boolean>(false);
   // const [imagePreview, setImagePreview] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [discount,setDiscount]=useState("");
@@ -23,10 +25,64 @@ const CProductC: React.FC = () => {
   );
   
   const dispatch = useAppDispatch();
+  if(iloading){
+    toast.success("Image processing")
+  }
+
+  const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    const data = new FormData();
+    if (files) {
+      data.append("file", files[0]);
+      data.append("upload_preset", "ppn3qr4u");
+      setIloading(true);
+
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dkzpbucfz/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const file = await res.json();
+      setImage(file.secure_url);
+      console.log("we are here now ");
+      console.log(file.secure_url);
+      setIloading(false);
+    }
+    if (e.target.files?.length) {
+      toast.success("File selected successfully!");
+    }
+  };
 
   const handleSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault();
-    dispatch(createProduct({id,name,price,description,category,stock,image,tags,discount}));
+    // dispatch(createProduct({id,name,price,description,category,stock,image,tags,discount}));
+//     const myForm = new FormData();
+//     myForm.set('name', name || '');
+//     myForm.set('price', price?.toString() || '0');
+//     myForm.set('description', description || '');
+//     myForm.set('category', category || '');
+//     myForm.set('stock', stock?.toString() || '0');
+//     myForm.set('id', id || '');
+//     myForm.set('discount', discount?.toString() || '0');
+
+//     // Safe array iteration with checks
+//     if (image && image.length > 0) {
+//       image.forEach((img) => {
+//         myForm.append("image", img);
+//     });
+// }
+
+//     if (tags && tags.length > 0) {
+//       tags.forEach((tag) => {
+//         if (tag) {
+//           myForm.append("tags", tag);
+//         }
+//      });
+//     }
+//     logFormData(myForm);
+    dispatch( createProduct({id,name,price,description,category,stock,discount,tags,image}));
   }
 
  const handleCheckboxChange = (tag: string): void => {
@@ -37,30 +93,30 @@ const CProductC: React.FC = () => {
     );
   };
 
-    const createProductImage = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const files = e.target.files;
-    console.log("files are ",files);
+  //   const createProductImage = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  //   const files = e.target.files;
+  //   console.log("files are ",files);
     
-    if (!files) return;
+  //   if (!files) return;
     
-    const fileArray: File[] = Array.from(files);
+  //   const fileArray: File[] = Array.from(files);
     
-    setImage([]);
-    // setImagePreview([]);
+  //   setImage([]);
+  //   // setImagePreview([]);
     
-    fileArray.forEach((file: File) => {
-      const reader = new FileReader();
-      reader.onload = (): void => {
-        if (reader.readyState === 2 && reader.result) {
-          const result = reader.result as string;
-          console.log("result is ",result);
-          // setImagePreview((old: string[]) => [...old, result]);
-          setImage((old: string[]) => [...old, result]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  };
+  //   fileArray.forEach((file: File) => {
+  //     const reader = new FileReader();
+  //     reader.onload = (): void => {
+  //       if (reader.readyState === 2 && reader.result) {
+  //         const result = reader.result as string;
+  //         console.log("result is ",result);
+  //         // setImagePreview((old: string[]) => [...old, result]);
+  //         setImage((old: string[]) => [...old, result]);
+  //       }
+  //     };
+  //     reader.readAsDataURL(file);
+  //   });
+  // };
 
    useEffect(()=>{
     if(error){
@@ -260,10 +316,8 @@ const CProductC: React.FC = () => {
                 <input
                   id="image"
                   type="file"
-                  accept="image/*"
-                  multiple
                   name="image"
-                  onChange={createProductImage}
+                  onChange={uploadImage}
                   className="hidden"
                 />
                 <label 

@@ -56,12 +56,13 @@ export const createProduct = createAsyncThunk(
   'admin/createProduct',
   async (productData: Record<string,any>, { rejectWithValue }) => {
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-      const { data } = await axios.post('/api/v1/admin/product/create', productData, config);
+    //   const config = {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data'
+    //     }
+    //   };
+      console.log("productData ",productData);
+      const { data } = await axios.post('/api/v1/admin/product/create', productData);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Product Creation Failed");
