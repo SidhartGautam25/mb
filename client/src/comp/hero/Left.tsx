@@ -1,17 +1,6 @@
 import React from "react";
 import { FaChevronRight } from "react-icons/fa";
-
-const categories = [
-  "Fruits",
-  "Vegetables",
-  "Dairy",
-  "Meat",
-  "Medicine",
-  "Dairy",
-  "Kitchen's need",
-  "Groceries & Pets",
-  "Health & Beauty",
-];
+import { categories } from "../../utils/categories";
 
 const Left: React.FC = () => {
   return (
@@ -25,7 +14,7 @@ const Left: React.FC = () => {
             key={index}
             className="flex justify-between items-center cursor-pointer hover:text-black hover:font-medium transition-all"
           >
-            <span className="flex-1">{item}</span>
+            <a href={`/products/${item.str}`}><span className="flex-1">{item.name}</span></a>
             <FaChevronRight className="text-sm ml-2" />
           </li>
         ))}
