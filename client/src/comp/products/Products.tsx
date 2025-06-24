@@ -1,4 +1,10 @@
 import Card from "./Card";
+import { categories } from "../../utils/categories";
+import { useAppDispatch, useAppSelector } from "../../context/hooks";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { getProduct, removeErrors } from "../../context/product/productSlice";
+import { toast } from "react-toastify";
 
 
 interface Book {
@@ -51,11 +57,32 @@ const books: Book[] = [
 
 
 export default function ProductsC() {
+
+
+  const { loading, error,products } = useAppSelector((state) => state.product);
+  const dispatch = useAppDispatch();
+  const searchParams= new URLSearchParams(location.search);
+  const category=searchParams.get("category") || 'vegetables'
+  
+    useEffect(()=>{
+        dispatch(getProduct({page:1,category}))
+    },[dispatch,category])
+    useEffect(()=>{
+      if(error){
+        toast.error("Some Error Occured",{position:'top-center',autoClose:3000});
+        dispatch(removeErrors())
+      }
+    },[dispatch,error])
+
   return (
-    <div className="flex flex-col items-center gap-6 py-6">
-      {books.map((book, idx) => (
-        <Card key={idx} book={book} />
+    <>
+    {loading?(<div>Loading</div>):(
+        <div className="flex flex-col items-center gap-6 py-6">
+      {products.map((product, idx) => (
+        <Card key={idx} product={product} />
       ))}
     </div>
+    )}</>
+  
   );
 }
