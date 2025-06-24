@@ -1,5 +1,6 @@
 import handleAsyncError from "../middlewares/handleAsyncError.js";
 import Product from "../models/Product.js";
+import { APIFunctionality } from "../utils/apiFunctionality.js";
 
 export const createProduct=handleAsyncError(async(req,res,next)=>{
   console.log("trying to create product")
@@ -31,5 +32,47 @@ export const createProduct=handleAsyncError(async(req,res,next)=>{
         product
     })
 
+
+})
+
+export const getProducts=handleAsyncError(async (req,res,next)=>{
+  const count=10;
+  console.log("trying to fetch products");
+  const apiFeatures=new APIFunctionality(Product.find(),req.query).search().filter();
+  
+  //  getting filtered query
+  console.log("step 1 is done");
+  const filteredQuery=apiFeatures.query.clone();
+  const productCount=await filteredQuery.countDocuments();
+
+  // calculating total pages according to total products
+  console.log("reached here 2");
+  const totalPages=Math.ceil(productCount/count);
+  const page=Number(req.query.page) || 1;
+  
+  console.log("reached here 3");
+  if(page > totalPages && productCount > 0){
+     return next(new HandleError("this page does not exist"));
+  }
+
+  console.log("reached here 4");
+  // applying pagination
+  apiFeatures.pagination(count);
+  const products= await apiFeatures.query;
+  console.log("products are ",products);
+
+  if(!products || products.count === 0 ){
+    return next(HandleError("no product found",404));
+  }
+
+  console.log("reached here 5");
+  res.status(200).json({
+    success:true,
+    products,
+    productCount,
+    resultPerPage:count,
+    totalPages,
+    currentPage:page
+  })
 
 })
