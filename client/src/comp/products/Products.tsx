@@ -1,7 +1,7 @@
 import Card from "./Card";
 import { categories } from "../../utils/categories";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { getProduct, removeErrors } from "../../context/product/productSlice";
 import { toast } from "react-toastify";
@@ -61,8 +61,9 @@ export default function ProductsC() {
 
   const { loading, error,products } = useAppSelector((state) => state.product);
   const dispatch = useAppDispatch();
-  const searchParams= new URLSearchParams(location.search);
-  const category=searchParams.get("category") || 'vegetables'
+  const searchParams= useParams();
+  console.log("searchParam is ",searchParams.category);
+  const category=searchParams.category || 'vegetables';
   
     useEffect(()=>{
         dispatch(getProduct({page:1,category}))

@@ -1,6 +1,7 @@
 import handleAsyncError from "../middlewares/handleAsyncError.js";
 import Product from "../models/Product.js";
 import { APIFunctionality } from "../utils/apiFunctionality.js";
+import { getCat } from "../utils/categories.js";
 
 export const createProduct=handleAsyncError(async(req,res,next)=>{
   console.log("trying to create product")
@@ -38,7 +39,14 @@ export const createProduct=handleAsyncError(async(req,res,next)=>{
 export const getProducts=handleAsyncError(async (req,res,next)=>{
   const count=10;
   console.log("trying to fetch products");
-  const apiFeatures=new APIFunctionality(Product.find(),req.query).search().filter();
+  console.log("req.query is ",req.query);
+  const cat=getCat(Number(req.query.category));
+  const queryStr=req.query;
+  console.log("cat is ",cat);
+  req.query.category=cat;
+  queryStr.category=cat;
+  console.log("queryStr is ",queryStr);
+  const apiFeatures=new APIFunctionality(Product.find(),queryStr).search().filter();
   
   //  getting filtered query
   console.log("step 1 is done");

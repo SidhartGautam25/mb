@@ -1,5 +1,6 @@
 export class APIFunctionality{
     constructor(query,queryStr){
+        console.log("at api constructor and the query is ",queryStr)
         this.query=query;
         this.queryStr=queryStr;
     }
@@ -10,6 +11,7 @@ export class APIFunctionality{
                 $options:"1"
             }
         }:{};
+        console.log("keyword is ",keyword);
         this.query=this.query.find({...keyword});
         return this;
     }
@@ -18,6 +20,7 @@ export class APIFunctionality{
         const queryCopy={...this.queryStr};
         const removeFields=["keyword","page","limit"];
         removeFields.forEach(key=>delete queryCopy[key]);
+        console.log("query copy is ",queryCopy);
         this.query=this.query.find(queryCopy);
         return this;
     }

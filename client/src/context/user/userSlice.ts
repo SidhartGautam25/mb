@@ -93,6 +93,7 @@ export const loadUser = createAsyncThunk<ApiResponse, void, { rejectValue: ApiEr
 
 export const logout = createAsyncThunk<ApiResponse, void, { rejectValue: ApiError }>(
     'user/logout', async (_, { rejectWithValue }) => {
+      console.log("tring to logout user from client side");
         try {
             const { data } = await axios.post('/api/v1/logout', { withCredentials: true });
             return data;

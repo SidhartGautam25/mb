@@ -14,30 +14,39 @@ export const registerUser = handleAsyncError(async (req, res, next) => {
     password,
   });
   console.log("user created");
-  sendToken(user, 201, res);
+  // sendToken(user, 201, res);
+   res.status(201).json({
+    success: true,
+    user
+  });
 });
 
 export const Login = handleAsyncError(async (req, res, next) => {
+  console.log("req body is ",req.body);
   const { email, password } = req.body;
   if (!email || !password) {
     return next(new HandleError("Email or passoword cannot be empty", 400));
   }
+  console.log("trying to get user ");
   const user = await User.findOne({ email }).select("+password");
+  console.log("user is ",user);
   if (!user) {
     return next(new HandleError("Invalid email or password", 401));
   }
-  const isValid = await user.verifyPassword(password);
+  const isValid = user.verifyPassword(password);
   if (!isValid) {
-    return next(new HandleError("Invalid Email or password", 401));
+    return next(new HandleError("Invalid Email or Password", 401));
   }
   sendToken(user, 200, res);
 });
 
 export const logout = handleAsyncError(async (req, res, next) => {
+  console.log("trying to logout user");
   res.cookie("token", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
   });
+  console.log("successfull")
   res.status(200).json({
     success: true,
     message: "Successfully Logged Out",
