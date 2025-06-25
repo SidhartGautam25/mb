@@ -16,7 +16,7 @@ const LoginC: React.FC = () => {
   const { error, success, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
-  const redirect="/";
+  const homeUrl="/";
   const dispatch = useAppDispatch();
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ const LoginC: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(redirect);
+      navigate(homeUrl);
     }
   }, [isAuthenticated]);
   useEffect(() => {

@@ -34,3 +34,9 @@ export const categories=[
         name:"Health & Beauty"
     }
 ]
+
+export const getCat=(ind)=>{
+    console.log("return value is ",categories[ind].str);
+    return categories[ind].str;
+
+}

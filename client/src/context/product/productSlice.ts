@@ -57,6 +57,7 @@ interface ApiError {
 export const getProduct = createAsyncThunk<GetProductResponse, GetProductParams, { rejectValue: ApiError }>(
     'product/getProduct',
     async ({ page = 1, category }, { rejectWithValue }) => {
+      console.log("tring to fetch product");
       try {
         let link = '/api/v1/products?page=' + page;
         if (category) {
@@ -64,8 +65,9 @@ export const getProduct = createAsyncThunk<GetProductResponse, GetProductParams,
           link += `&category=${cat}`;
         }
       
-       
+       console.log("tring to get products");
         const { data } = await axios.get(link);
+        console.log("data is ",data);
         return data;
       } catch (error) {
         const axiosError = error as AxiosError<ApiError>;
