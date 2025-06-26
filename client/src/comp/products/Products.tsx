@@ -64,6 +64,10 @@ export default function ProductsC() {
   const searchParams= useParams();
   console.log("searchParam is ",searchParams.category);
   const category=searchParams.category || 'vegetables';
+
+  const productClciked=()=>{
+    
+  }
   
     useEffect(()=>{
         dispatch(getProduct({page:1,category}))
@@ -80,7 +84,7 @@ export default function ProductsC() {
     {loading?(<div>Loading</div>):(
         <div className="flex flex-col items-center gap-6 py-6">
       {products.map((product, idx) => (
-        <Card key={idx} product={product} />
+        <div onClick={productClciked}><Card key={idx} product={product} /></div>
       ))}
     </div>
     )}</>
