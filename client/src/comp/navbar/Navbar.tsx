@@ -36,6 +36,9 @@ const Navbar: React.FC = () => {
   const goToLogin = () => {
     navigate("/login");
   };
+  const GoToProfile=()=>{
+    navigate("/profile")
+  }
   useEffect(() => {
     if (!isAuthenticated) {
     }
@@ -185,7 +188,7 @@ const Navbar: React.FC = () => {
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
               {/* Profile */}
               <button
-                // onClick={() => handleMenuItemClick('profile')}
+                onClick={()=>GoToProfile()}
                 className="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors duration-150"
               >
                 <FaUserCircle className="mr-3 text-lg text-gray-600" />
