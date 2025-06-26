@@ -13,12 +13,8 @@ export const registerUser = handleAsyncError(async (req, res, next) => {
     email,
     password,
   });
-  console.log("user created");
-  // sendToken(user, 201, res);
-   res.status(201).json({
-    success: true,
-    user
-  });
+  sendToken(user, 200, res);
+
 });
 
 export const Login = handleAsyncError(async (req, res, next) => {
