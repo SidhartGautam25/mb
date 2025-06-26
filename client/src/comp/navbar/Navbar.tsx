@@ -1,42 +1,65 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaHeart, FaShoppingCart, FaUser, FaSearch, FaUserCircle, FaQuestionCircle, FaSignOutAlt } from "react-icons/fa";
-import { useAppDispatch} from "../../context/hooks";
+import {
+  FaHeart,
+  FaShoppingCart,
+  FaUser,
+  FaSearch,
+  FaUserCircle,
+  FaQuestionCircle,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { logout } from "../../context/user/userSlice";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 // import { AppDispatch } from "../../context/store";
 
 const Navbar: React.FC = () => {
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
-  //  const { success, error } = useAppSelector((state) => state.user);
+  const { isAuthenticated } = useAppSelector((state) => state.user);
+  const navigate = useNavigate();
 
-
-  const Logout=()=>{
+  const Logout = () => {
     // logout logic
     console.log("trying to logout");
     dispatch(logout());
+    if (!isAuthenticated) {
+      toast.success("You are successfully Logged Out", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+    }
+  };
 
-  }
+  const goToLogin = () => {
+    navigate("/login");
+  };
+  useEffect(() => {
+    if (!isAuthenticated) {
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-   const toggleDropdown = () => {
+  const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-
-
 
   return (
     // <header className="w-full px-4 md:px-10 py-4 flex justify-between items-center shadow-sm">
@@ -89,7 +112,9 @@ const Navbar: React.FC = () => {
     // </header>
     <header className="w-full px-4 md:px-10 py-4 flex justify-between items-center shadow-sm">
       {/* Logo */}
-      <a href="/"><div className="text-xl font-bold">Mithila Bazar</div></a>
+      <a href="/">
+        <div className="text-xl font-bold">Mithila Bazar</div>
+      </a>
 
       {/* Right-side: search + icons */}
       <div className="flex items-center space-x-6 ml-8">
@@ -108,20 +133,55 @@ const Navbar: React.FC = () => {
           <FaHeart className="text-xl text-gray-700" />
         </button>
         <button className="p-1 hover:bg-gray-100 rounded-full">
-          <FaShoppingCart className="text-xl text-gray-700" />
+          <a href="/cart">
+            <FaShoppingCart className="text-xl text-gray-700" />
+          </a>
         </button>
 
         {/* User Icon with Dropdown */}
         <div className="relative" ref={dropdownRef}>
-          <button 
-            onClick={toggleDropdown}
-            className="p-1 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300"
-          >
-            <FaUser className="text-xl text-gray-700" />
-          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={toggleDropdown}
+              className="p-1 hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-300"
+            >
+              <FaUser className="text-xl text-gray-700" />
+            </button>
+          ) : (
+            <button
+              onClick={() => goToLogin()}
+              className="
+    inline-flex items-center justify-center
+    px-4 py-2 
+    bg-blue-600 hover:bg-blue-700 
+    text-white font-medium text-xs
+    border border-transparent rounded-lg
+    transition-all duration-200 ease-in-out
+    transform hover:scale-105 active:scale-95
+    shadow-sm hover:shadow-md
+    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+    disabled:opacity-50 disabled:cursor-not-allowed
+  "
+            >
+              <svg
+                className="w-3.5 h-3.5 mr-1.5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                />
+              </svg>
+              Login
+            </button>
+          )}
 
           {/* Dropdown Menu */}
-          {isDropdownOpen && (
+          {isDropdownOpen && isAuthenticated && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
               {/* Profile */}
               <button
@@ -153,7 +213,9 @@ const Navbar: React.FC = () => {
                 className="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-red-600 transition-colors duration-150"
               >
                 <FaSignOutAlt className="mr-3 text-lg text-gray-600" />
-                <span className="font-medium" onClick={Logout}>Logout</span>
+                <span className="font-medium" onClick={Logout}>
+                  Logout
+                </span>
               </button>
             </div>
           )}

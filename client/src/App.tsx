@@ -11,6 +11,7 @@ import Signup from "./pages/signup.tsx";
 import ProtectedRoute from "./comp/common/ProtectedRoute.tsx";
 import CreateProduct from "./pages/admin/createProduct.tsx";
 import Profile from "./pages/profile.tsx";
+import CartPage from "./pages/cart.tsx";
 
 function App(): JSX.Element {
   // const dispatch = useAppDispatch();
@@ -31,6 +32,7 @@ function App(): JSX.Element {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/cart" element={<CartPage/>}/>
         {/* admin routes */}
         <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>} />}/>
       </Routes>
