@@ -4,15 +4,19 @@ import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { useParams } from "react-router-dom";
 import { addItemsToCart, removeMessage } from "../../context/cart/cartSlice";
 import { toast } from "react-toastify";
-import { removeErrors } from "../../context/product/productSlice";
+import {
+  getProductDetails,
+  removeErrors,
+} from "../../context/product/productSlice";
 
 const ProductInfo: React.FC = () => {
-  const [qty, setQty] = useState(1);
+  // const [qty, setQty] = useState(1);
   const sizes = ["XS", "S", "M", "L", "XL"];
   const [selectedSize, setSelectedSize] = useState("M");
   const [quantity, setQuantity] = useState(1);
 
   const { loading, error, product } = useAppSelector((state) => state.product);
+  const { isAuthenticated } = useAppSelector((state) => state.user);
 
   const {
     loading: cartLoading,
@@ -24,17 +28,52 @@ const ProductInfo: React.FC = () => {
   const { id } = useParams();
 
   const dispatch = useAppDispatch();
-  const addToCart = () => {
+  const findItemIndex = () => {
     const productId = id ?? "1";
-    const item = {
-      id: productId,
-      name: "",
-      image: "",
-      price: 100,
-      quantity: 100,
-    };
-    dispatch(addItemsToCart(item));
+    const temp= cartItems.findIndex((item) => item.id === productId);
+    if(temp==-1){
+      return temp;
+    }else{
+      if(quantity === cartItems[temp].quantity){
+        return temp;
+      }
+      return -1;
+    }
   };
+
+  const ind = findItemIndex();
+  const addToCart = () => {
+    console.log("add to cart function");
+    if (isAuthenticated) {
+      console.log("your are authenticated");
+      const productId = id ?? "1";
+      const item = {
+        id: productId,
+        name: product?.name,
+        image: product?.image,
+        price: product?.price,
+        quantity: quantity,
+      };
+      dispatch(addItemsToCart(item));
+    } else {
+      console.log("sorry you are logged out");
+      toast.error("Please login first to add items to cart", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!id) {
+      toast.error("Error while loading Product", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+    } else {
+      dispatch(getProductDetails(id));
+    }
+  }, [id]);
 
   useEffect(() => {
     if (error) {
@@ -79,84 +118,94 @@ const ProductInfo: React.FC = () => {
     setQuantity((qty) => qty + 1);
   };
   return (
-    <div className="w-full md:w-1/2 px-4 py-6 space-y-4">
-      <h1 className="text-xl font-semibold">
-        Vadilal silk choclate icecream cup
-      </h1>
-      <div className="flex items-center gap-2 text-sm text-gray-500">
-        <span>⭐⭐⭐⭐☆</span>
-        <span>(150 Reviews)</span>
-        <span className="text-green-600 ml-2">In Stock</span>
-      </div>
+    <>
+      {loading ? (
+        <div>Laoding Details</div>
+      ) : (
+        <div className="w-full md:w-1/2 px-4 py-6 space-y-4">
+          <h1 className="text-xl font-semibold">{product?.name}</h1>
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <span>⭐⭐⭐⭐☆</span>
+            <span>(150 Reviews)</span>
+            <span className="text-green-600 ml-2">In Stock</span>
+          </div>
 
-      <div className="text-xl font-bold">$192.00</div>
-      <p className="text-sm text-gray-600">
-        Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-      </p>
+          <div className="text-xl font-bold">Rs {product?.price}</div>
+          <p className="text-sm text-gray-600">{product?.description}</p>
 
-      <hr />
+          <hr />
 
-      {/* Colours */}
-      <div className="flex items-center gap-2">
-        <span>Colours:</span>
-        <button className="w-4 h-4 rounded-full bg-red-500 border" />
-        <button className="w-4 h-4 rounded-full bg-blue-600 border" />
-      </div>
+          {/* Colours */}
+          <div className="flex items-center gap-2">
+            <span>Colours:</span>
+            <button className="w-4 h-4 rounded-full bg-red-500 border" />
+            <button className="w-4 h-4 rounded-full bg-blue-600 border" />
+          </div>
 
-      {/* Size */}
-      <div className="flex items-center gap-2">
-        <span>Size:</span>
-        {sizes.map((size) => (
-          <button
-            key={size}
-            className={`px-3 py-1 border rounded ${
-              selectedSize === size
-                ? "bg-black text-white"
-                : "text-black border-gray-300"
-            }`}
-            onClick={() => setSelectedSize(size)}
-          >
-            {size}
-          </button>
-        ))}
-      </div>
+          {/* Size */}
+          <div className="flex items-center gap-2">
+            <span>Size:</span>
+            {sizes.map((size) => (
+              <button
+                key={size}
+                className={`px-3 py-1 border rounded ${
+                  selectedSize === size
+                    ? "bg-black text-white"
+                    : "text-black border-gray-300"
+                }`}
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
 
-      {/* Quantity and Actions */}
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => setQty(Math.max(1, qty - 1))}
-          className="px-3 py-1 border"
-        >
-          −
-        </button>
-        <span>{qty}</span>
-        <button onClick={() => setQty(qty + 1)} className="px-3 py-1 border">
-          +
-        </button>
-        <button className="ml-4 bg-red-500 text-white px-5 py-2 rounded">
-          Add To Cart
-        </button>
-        <button className="ml-2 border p-2 rounded">
-          <AiOutlineHeart size={20} />
-        </button>
-      </div>
+          {/* Quantity and Actions */}
+          <div className="flex items-center gap-2">
+            <button onClick={decreaseQuantity} className="px-3 py-1 border">
+              −
+            </button>
+            <span>{quantity}</span>
+            <button onClick={increaseQuantity} className="px-3 py-1 border">
+              +
+            </button>
 
-      {/* Delivery Info */}
-      <div className="border mt-4 divide-y">
-        <div className="px-4 py-2 text-sm">
-          <strong>Free Delivery</strong>
-          <div className="text-gray-600 text-xs">
-            Enter your postal code for Delivery Availability
+            {ind == -1 ? (
+              <button
+                className="ml-4 bg-red-500 text-white px-5 py-2 rounded"
+                onClick={() => addToCart()}
+              >
+                Add To Cart
+              </button>
+            ) : (
+              <button className="ml-4 bg-green-500 text-white px-5 py-2 rounded">
+                Added to cart
+              </button>
+            )}
+
+            <button className="ml-2 border p-2 rounded">
+              <AiOutlineHeart size={20} />
+            </button>
+          </div>
+
+          {/* Delivery Info */}
+          <div className="border mt-4 divide-y">
+            <div className="px-4 py-2 text-sm">
+              <strong>Free Delivery</strong>
+              <div className="text-gray-600 text-xs">
+                Enter your postal code for Delivery Availability
+              </div>
+            </div>
+            <div className="px-4 py-2 text-sm">
+              <strong>Return Delivery</strong>
+              <div className="text-gray-600 text-xs">
+                Free 30 Days Delivery Returns. Details
+              </div>
+            </div>
           </div>
         </div>
-        <div className="px-4 py-2 text-sm">
-          <strong>Return Delivery</strong>
-          <div className="text-gray-600 text-xs">
-            Free 30 Days Delivery Returns. Details
-          </div>
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
