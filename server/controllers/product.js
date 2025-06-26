@@ -84,3 +84,16 @@ export const getProducts=handleAsyncError(async (req,res,next)=>{
   })
 
 })
+
+
+
+export const getProduct=handleAsyncError(async (req,res,next)=>{
+  const product=await Product.findById(req.params.id);
+  if(!product){
+    return next(new HandleError("Product Not Found",404));
+  }
+  res.status(200).json({
+    success:true,
+    product
+  })
+})
