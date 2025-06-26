@@ -10,56 +10,74 @@ const ProductInfo: React.FC = () => {
   const [qty, setQty] = useState(1);
   const sizes = ["XS", "S", "M", "L", "XL"];
   const [selectedSize, setSelectedSize] = useState("M");
-  const [quantity,setQuantity]=useState(1);
+  const [quantity, setQuantity] = useState(1);
 
-   
-    
-       const {loading,error,product}= useAppSelector((state)=>state.product);
-         
-         const {loading:cartLoading,error:cartError,success,message,cartItems}=useAppSelector((state)=>state.cart);
-          const {id}=useParams();
-         
-   
-    const dispatch = useAppDispatch();
-    const addToCart=()=>{
-    const productId=id ?? '1';
-      dispatch(addItemsToCart({id:productId,quantity}))
+  const { loading, error, product } = useAppSelector((state) => state.product);
+
+  const {
+    loading: cartLoading,
+    error: cartError,
+    success,
+    message,
+    cartItems,
+  } = useAppSelector((state) => state.cart);
+  const { id } = useParams();
+
+  const dispatch = useAppDispatch();
+  const addToCart = () => {
+    const productId = id ?? "1";
+    const item = {
+      id: productId,
+      name: "",
+      image: "",
+      price: 100,
+      quantity: 100,
+    };
+    dispatch(addItemsToCart(item));
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Error while loading Product", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeErrors());
     }
+    if (cartError) {
+      toast.error(cartError, { position: "top-center", autoClose: 3000 });
+    }
+  }, [dispatch, error, cartError]);
 
-         useEffect(()=>{
-                  if(error){
-                    toast.error("Error while loading Product",{position:'top-center',autoClose:3000});
-                    dispatch(removeErrors())
-                  }
-                  if(cartError){
-                   toast.error(cartError,{position:'top-center',autoClose:3000});
-                 }
-                },[dispatch,error,cartError])
+  useEffect(() => {
+    if (success) {
+      toast.success(message, { position: "top-center", autoClose: 3000 });
+      dispatch(removeMessage());
+    }
+  }, [dispatch, success, message]);
 
-                  useEffect(()=>{
-                            if(success){
-                              toast.success(message,{position:'top-center',autoClose:3000});
-                              dispatch(removeMessage())
-                            }
-                          },[dispatch,success,message])
-
-
-                            const decreaseQuantity=()=>{
-        if(quantity<=1){
-            toast.error('Quantity cannot be less than 1',{position:'top-center',autoClose:3000})
-            dispatch(removeErrors())
-            return;
-        }
-        setQuantity(qty=>qty-1)
-       }
-       const increaseQuantity=()=>{
-        if(product?.stock<=quantity){
-            toast.error('Cannot exceed available Stock!',{position:'top-center',autoClose:3000})
-            dispatch(removeErrors())
-            return;
-        }
-        setQuantity(qty=>qty+1)
-       } 
+  const decreaseQuantity = () => {
+    if (quantity <= 1) {
+      toast.error("Quantity cannot be less than 1", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeErrors());
+      return;
+    }
+    setQuantity((qty) => qty - 1);
+  };
+  const increaseQuantity = () => {
+    if (product?.stock <= quantity) {
+      toast.error("Cannot exceed available Stock!", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+      dispatch(removeErrors());
+      return;
+    }
+    setQuantity((qty) => qty + 1);
+  };
   return (
     <div className="w-full md:w-1/2 px-4 py-6 space-y-4">
       <h1 className="text-xl font-semibold">

@@ -56,7 +56,7 @@ export const logout = handleAsyncError(async (req, res, next) => {
 
 export const addToCart=handleAsyncError(async(req,res,next)=>{
   console.log("trying to add product to cart")
-  const {producdId,quantity}=req.body;
+  const {productId,quantity}=req.body;
   const userId=req.user._id;
   const user=User.findById(userId);
 
@@ -77,7 +77,8 @@ export const addToCart=handleAsyncError(async(req,res,next)=>{
   await user.save({validateBeforeSave:false});
   res.status(200).json({
     success:true,
-    cart:user.cart
+    productId,
+    quantity
   });
 
 

@@ -3,11 +3,10 @@ import axios, { AxiosError } from 'axios';
 
 // Types
 interface CartItem {
-  product: string;
+  id: string;
   name: string;
   price: number;
   image: string;
-  stock: number;
   quantity: number;
 }
 
@@ -28,16 +27,18 @@ interface CartState {
 interface AddItemParams {
   id: string;
   quantity: number;
+  name:string;
+  image:string;
+  price:number;
 }
 
 interface ProductResponse {
-  product: {
-    _id: string;
-    name: string;
-    price: number;
-    image: Array<{ url: string }>;
-    stock: number;
-  };
+ 
+   productId: string;
+   quantity:string;
+   success:boolean;
+    
+  
 }
 
 interface ApiError {
@@ -45,20 +46,21 @@ interface ApiError {
   [key: string]: any;
 }
 
+
 // Add items to cart
 export const addItemsToCart = createAsyncThunk<CartItem, AddItemParams, { rejectValue: ApiError }>(
   'cart/addItemsToCart',
-  async ({ id, quantity }, { rejectWithValue }) => {
+  async ({ id, quantity ,name,image,price}, { rejectWithValue }) => {
     try {
-      const { data }: { data: ProductResponse } = await axios.get(`/api/v1/product/${id}`);
+      const productId=id;
+      const { data }: { data: ProductResponse } = await axios.post(`/api/v1/addToCart`,{productId,quantity});
 
       return {
-        product: data.product._id,
-        name: data.product.name,
-        price: data.product.price,
-        image: data.product.image[0].url,
-        stock: data.product.stock,
-        quantity
+        id:data.productId,
+        quantity:quantity,
+        name,
+        image,
+        price
       };
     } catch (error) {
       const axiosError = error as AxiosError<ApiError>;
@@ -87,7 +89,7 @@ const cartSlice = createSlice({
     },
     removeItemFromCart: (state, action: PayloadAction<string>) => {
       state.removingId = action.payload;
-      state.cartItems = state.cartItems.filter(item => item.product != action.payload);
+      state.cartItems = state.cartItems.filter(item => item.id != action.payload);
       localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
       state.removingId = null;
     },
@@ -110,10 +112,10 @@ const cartSlice = createSlice({
       })
       .addCase(addItemsToCart.fulfilled, (state, action: PayloadAction<CartItem>) => {
         const item = action.payload;
-        const existingItem = state.cartItems.find((i) => i.product === item.product);
+        const existingItem = state.cartItems.find((i) => i.id === item.id);
         if (existingItem) {
           existingItem.quantity = item.quantity;
-          state.message = `Updated ${item.name} quantity in the cart`;
+          state.message = `Updated ${existingItem.name} quantity in the cart`;
         } else {
           state.cartItems.push(item);
           state.message = `${item.name} is added to cart successfully`;
