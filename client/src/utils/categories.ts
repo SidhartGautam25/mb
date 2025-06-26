@@ -35,8 +35,7 @@ export const categories=[
     }
 ]
 
-export const getCat=(ind)=>{
-    console.log("return value is ",categories[ind].str);
-    return categories[ind].str;
 
-}
+export const findCategoryIndex = (category:string) => {
+  return categories.findIndex(item => item.str === category);
+};

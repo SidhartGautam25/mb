@@ -10,16 +10,17 @@ import Login from "./pages/login.tsx";
 import Signup from "./pages/signup.tsx";
 import ProtectedRoute from "./comp/common/ProtectedRoute.tsx";
 import CreateProduct from "./pages/admin/createProduct.tsx";
+import Profile from "./pages/profile.tsx";
 
 function App(): JSX.Element {
-  const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.user);
+  // const dispatch = useAppDispatch();
+  // const { isAuthenticated } = useAppSelector((state) => state.user);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      dispatch(loadUser());
-    }
-  }, [dispatch]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     dispatch(loadUser());
+  //   }
+  // }, [dispatch]);
 
   return (
     <Router>
@@ -29,6 +30,7 @@ function App(): JSX.Element {
         <Route path="/products/:category" element={<Products />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/profile" element={<Profile/>}/>
         {/* admin routes */}
         <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>} />}/>
       </Routes>

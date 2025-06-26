@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ProductImages from "../comp/product/ProductImages";
 import ProductInfo from "../comp/product/ProductInfo";
 import RelatedItems from "../comp/product/RelatedItems";
 import Navbar from "../comp/navbar/Navbar";
 import Footer from "../comp/footer/Footer";
 
+
 const Product: React.FC = () => {
-  // pushing this to main
+
+ 
+   
+      
+
+      
+
+     
+
   return (
     <>
       <Navbar />

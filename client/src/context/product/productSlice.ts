@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
+import { findCategoryIndex } from '../../utils/categories';
 
 // Types
 interface Product {
@@ -55,17 +56,18 @@ interface ApiError {
 
 export const getProduct = createAsyncThunk<GetProductResponse, GetProductParams, { rejectValue: ApiError }>(
     'product/getProduct',
-    async ({ keyword, page = 1, category }, { rejectWithValue }) => {
+    async ({ page = 1, category }, { rejectWithValue }) => {
+      console.log("tring to fetch product");
       try {
         let link = '/api/v1/products?page=' + page;
         if (category) {
-          link += `&category=${category}`;
+          const cat=findCategoryIndex(category);
+          link += `&category=${cat}`;
         }
-        if (keyword) {
-          link += `&keyword=${keyword}`;
-        }
-       
+      
+       console.log("tring to get products");
         const { data } = await axios.get(link);
+        console.log("data is ",data);
         return data;
       } catch (error) {
         const axiosError = error as AxiosError<ApiError>;

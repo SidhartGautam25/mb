@@ -26,6 +26,19 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
+    cart:[{
+        productId:{
+          type:mongoose.Schema.ObjectId,
+          ref:"Product",
+          required:true
+
+        },
+        quantity:{
+          type:String,
+          default:"1",
+          required:true
+        }
+    }],
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },
@@ -48,8 +61,12 @@ userSchema.methods.getJwtToken=function(){
   })
 }
 
-userSchema.methods.verifyPassword = async function (pass) {
-  return await bcrypt.compare(pass, this.password);
+userSchema.methods.verifyPassword = function (pass) {
+  // return await bcrypt.compare(pass, this.password);
+  if(pass===this.password){
+    return true;
+  }
+  return false;
 };
 
 export default mongoose.model("User", userSchema);

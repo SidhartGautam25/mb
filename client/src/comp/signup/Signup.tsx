@@ -19,6 +19,7 @@ const SignupC: React.FC = () => {
   const { success, error } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  
   const onChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
@@ -35,6 +36,7 @@ const SignupC: React.FC = () => {
     // myForm.set("password", password);
     // console.log("trying to dispatch register ",myForm);
     dispatch(register({name, email, password}));
+    
   };
   useEffect(() => {
     if (error) {
