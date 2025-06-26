@@ -54,7 +54,9 @@ const books: Book[] = [
   }
 ];
 
-
+interface Product {
+    [key: string]: any; 
+}
 
 export default function ProductsC() {
 
@@ -64,8 +66,11 @@ export default function ProductsC() {
   const searchParams= useParams();
   console.log("searchParam is ",searchParams.category);
   const category=searchParams.category || 'vegetables';
+  const navigate=useNavigate();
 
-  const productClciked=()=>{
+  const productClciked=(product:Product)=>{
+    const productUrl=`/product/${product._id}`;
+    navigate(productUrl);
     
   }
   
@@ -84,7 +89,7 @@ export default function ProductsC() {
     {loading?(<div>Loading</div>):(
         <div className="flex flex-col items-center gap-6 py-6">
       {products.map((product, idx) => (
-        <div onClick={productClciked}><Card key={idx} product={product} /></div>
+        <div onClick={()=>productClciked(product)}><Card key={idx} product={product} /></div>
       ))}
     </div>
     )}</>

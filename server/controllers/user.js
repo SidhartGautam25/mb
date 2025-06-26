@@ -55,16 +55,20 @@ export const logout = handleAsyncError(async (req, res, next) => {
 
 
 export const addToCart=handleAsyncError(async(req,res,next)=>{
-  console.log("trying to add product to cart")
+  console.log("trying to add product to cart ",req.body);
   const {productId,quantity}=req.body;
   const userId=req.user._id;
-  const user=User.findById(userId);
+  console.log("trying to get user by userId ",userId);
+  const user=await User.findById(userId);
 
-  const productExists=user.cart.find((item)=> item.producdId.toString()===producdId.toString());
+  console.log("user is ",user);
 
+  const productExists=user.cart.find((item)=> item?.productId?.toString()===productId?.toString());
+ console.log("you are here 1");
   if(productExists){
+    console.log("you are here 2")
     user.cart.forEach((item)=>{
-      if(item.producdId.toString===producdId.toString()){
+      if(item.productId?.toString===productId?.toString()){
         item.quantity=quantity;
       }
     })
@@ -73,8 +77,10 @@ export const addToCart=handleAsyncError(async(req,res,next)=>{
       productId,quantity
     })
   }
-
+  console.log("user is ",user);
+  console.log("trying to save to the database");
   await user.save({validateBeforeSave:false});
+  console.log("successfully done");
   res.status(200).json({
     success:true,
     productId,
