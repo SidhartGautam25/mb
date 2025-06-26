@@ -52,3 +52,36 @@ export const logout = handleAsyncError(async (req, res, next) => {
     message: "Successfully Logged Out",
   });
 });
+
+
+export const addToCart=handleAsyncError(async(req,res,next)=>{
+  console.log("trying to add product to cart")
+  const {productId,quantity}=req.body;
+  const userId=req.user._id;
+  const user=User.findById(userId);
+
+  const productExists=user.cart.find((item)=> item.producdId.toString()===producdId.toString());
+
+  if(productExists){
+    user.cart.forEach((item)=>{
+      if(item.producdId.toString===producdId.toString()){
+        item.quantity=quantity;
+      }
+    })
+  }else{
+    user.cart.push({
+      productId,quantity
+    })
+  }
+
+  await user.save({validateBeforeSave:false});
+  res.status(200).json({
+    success:true,
+    productId,
+    quantity
+  });
+
+
+
+})
+

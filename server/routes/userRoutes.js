@@ -1,10 +1,12 @@
 import express from "express";
-import {Login, logout, registerUser} from "../controllers/user.js"; 
+import {addToCart, Login, logout, registerUser} from "../controllers/user.js"; 
+import { verifyUser } from "../middlewares/user.js";
 
 const router = express.Router();
 
 router.route("/register").post(registerUser);
 router.route("/login").post(Login);
+router.route("/addToCart").post(verifyUser, addToCart);
 router.route("/logout").post(logout);
 
 

@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { createProduct, removeErrors, removeSuccess } from "../../context/admin/adminSlice";
 import { toast } from "react-toastify";
-import { logFormData } from "../../utils/logThings";
+import { categories } from "../../utils/categories";
+// import { logFormData } from "../../utils/logThings";
 
 
 const CProductC: React.FC = () => {
-  const categories:string[]=["vegetables","fruits"];
+  // const categories:string[]=["vegetables","fruits"];
   const Tags:string[]=["free","50% OFF","30% OFF"];
   const [id,setId]=useState("");
   const [name, setName] = useState("");
@@ -253,8 +254,8 @@ const CProductC: React.FC = () => {
               >
                 <option value="">Choose a Category</option>
                 {categories.map((item) => (
-                  <option value={item} key={item}>
-                    {item}
+                  <option value={item.str} key={item.id}>
+                    {item.name}
                   </option>
                 ))}
               </select>
