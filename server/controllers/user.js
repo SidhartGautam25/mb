@@ -29,7 +29,7 @@ export const Login = handleAsyncError(async (req, res, next) => {
   if (!user) {
     return next(new HandleError("Invalid email or password", 401));
   }
-  const isValid = user.verifyPassword(password);
+  const isValid = await user.verifyPassword(password);
   if (!isValid) {
     return next(new HandleError("Invalid Email or Password", 401));
   }
@@ -77,7 +77,8 @@ export const addToCart = handleAsyncError(async (req, res, next) => {
   // const productExists = user.cart.find(
   //   (item) => item?.productId?.toString() === productId?.toString()
   // );
-  const existingItem=findCartItem(user.cart,productId);
+  const existingItem=await findCartItem(user.cart,productId);
+  console.log("existing item is ",existingItem);
   console.log("you are here 1");
   // if (productExists) {
   //   console.log("you are here 2");
@@ -93,12 +94,16 @@ export const addToCart = handleAsyncError(async (req, res, next) => {
   //   });
   // }
   if(existingItem){
+    console.log("you are at existing item");
     updateCartItemQuantity(user.cart,productId,quantity);
+    console.log("user is ",user);
 
   }else{
+    console.log("this is new item to cart ",user);
     user.cart.push({
       productId,quantity
     })
+    console.log("after pushing item to cart ",user);
   }
   console.log("user is ", user);
   console.log("trying to save to the database");
@@ -109,5 +114,34 @@ export const addToCart = handleAsyncError(async (req, res, next) => {
     productId,
     quantity,
     message:existingItem?"Cart Item quantity updated":"item added to cart"
+  });
+});
+
+
+
+export const getCartItems = handleAsyncError(async (req, res, next) => {
+  console.log("getting cart items controller ")
+  const userId = req.user._id;
+  const user = await User.findById(userId).populate('cart.productId', 'name price images');
+  
+  if (!user) {
+    return next(new HandleError("User not found", 404));
+  }
+
+  console.log("you are here");
+  console.log("seeing the item 0 ",user.cart);
+  const cartItems = user.cart.map(item => ({
+    id: item.productId._id.toString(),
+    name: item.productId.name,
+    price: item.productId.price,
+    image: item.productId.image, 
+    quantity: item.quantity
+  }));
+
+  console.log("cart items is ",cartItems);
+
+  res.status(200).json({
+    success: true,
+    cartItems
   });
 });
