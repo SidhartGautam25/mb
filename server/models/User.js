@@ -62,12 +62,12 @@ userSchema.methods.getJwtToken=function(){
   })
 }
 
-userSchema.methods.verifyPassword = function (pass) {
-  // return await bcrypt.compare(pass, this.password);
-  if(pass===this.password){
-    return true;
-  }
-  return false;
+userSchema.methods.verifyPassword = async function (pass) {
+  return await bcrypt.compare(pass, this.password);
+  // if(pass===this.password){
+  //   return true;
+  // }
+  // return false;
 };
 
 export default mongoose.model("User", userSchema);

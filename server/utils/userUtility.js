@@ -1,4 +1,4 @@
-import User from "../models/User";
+import User from "../models/User.js";
 
 export const getUser = async (userId) => {
   const user = await User.findById(userId);
@@ -14,11 +14,10 @@ export const findCartItem = async (cart, productId) => {
   );
 };
 
-
-export const updateCartItemQuantity=(cart,productId,quantity)=>{
-     cart.forEach((item) => {
+export const updateCartItemQuantity = (cart, productId, quantity) => {
+  cart.forEach((item) => {
     if (item.productId?.toString() === productId?.toString()) {
       item.quantity = quantity.toString(); // Ensure string format for consistency
     }
   });
-}
+};
