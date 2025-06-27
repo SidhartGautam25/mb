@@ -2,11 +2,12 @@ import handleAsyncError from "../middlewares/handleAsyncError.js";
 import User from "../models/User.js";
 import HandleError from "../utils/handleError.js";
 import { sendToken } from "../utils/jwt.js";
+import { findCartItem, getUser, updateCartItemQuantity } from "../utils/userUtility.js";
 
 export const registerUser = handleAsyncError(async (req, res, next) => {
-  console.log("user is trying to register ",req.body);
+  console.log("user is trying to register ", req.body);
   const { name, email, password } = req.body;
-  console.log("name is ",name," email is ",email," password is ",password);
+  console.log("name is ", name, " email is ", email, " password is ", password);
   console.log("trying to create user");
   const user = await User.create({
     name,
@@ -14,18 +15,17 @@ export const registerUser = handleAsyncError(async (req, res, next) => {
     password,
   });
   sendToken(user, 200, res);
-
 });
 
 export const Login = handleAsyncError(async (req, res, next) => {
-  console.log("req body is ",req.body);
+  console.log("req body is ", req.body);
   const { email, password } = req.body;
   if (!email || !password) {
     return next(new HandleError("Email or passoword cannot be empty", 400));
   }
   console.log("trying to get user ");
   const user = await User.findOne({ email }).select("+password");
-  console.log("user is ",user);
+  console.log("user is ", user);
   if (!user) {
     return next(new HandleError("Invalid email or password", 401));
   }
@@ -42,48 +42,72 @@ export const logout = handleAsyncError(async (req, res, next) => {
     expires: new Date(Date.now()),
     httpOnly: true,
   });
-  console.log("successfull")
+  console.log("successfull");
   res.status(200).json({
     success: true,
     message: "Successfully Logged Out",
   });
 });
 
+export const addToCart = handleAsyncError(async (req, res, next) => {
+  console.log("trying to add product to cart ", req.body);
+  const { productId, quantity } = req.body;
+  const userId = req.user._id;
 
-export const addToCart=handleAsyncError(async(req,res,next)=>{
-  console.log("trying to add product to cart ",req.body);
-  const {productId,quantity}=req.body;
-  const userId=req.user._id;
-  console.log("trying to get user by userId ",userId);
-  const user=await User.findById(userId);
+  if (!productId || !quantity) {
+    return res.status(400).json({
+      success: false,
+      message: "Product ID and quantity are required",
+    });
+  }
 
-  console.log("user is ",user);
+  if (parseInt(quantity) <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Quantity must be greater than 0",
+    });
+  }
+  console.log("trying to get user by userId ", userId);
+  // const user = await User.findById(userId);
 
-  const productExists=user.cart.find((item)=> item?.productId?.toString()===productId?.toString());
- console.log("you are here 1");
-  if(productExists){
-    console.log("you are here 2")
-    user.cart.forEach((item)=>{
-      if(item.productId?.toString===productId?.toString()){
-        item.quantity=quantity;
-      }
-    })
+  const user=await getUser(userId);
+
+  console.log("user is ", user);
+
+  // const productExists = user.cart.find(
+  //   (item) => item?.productId?.toString() === productId?.toString()
+  // );
+  const existingItem=findCartItem(user.cart,productId);
+  console.log("you are here 1");
+  // if (productExists) {
+  //   console.log("you are here 2");
+  //   user.cart.forEach((item) => {
+  //     if (item.productId?.toString === productId?.toString()) {
+  //       item.quantity = quantity;
+  //     }
+  //   });
+  // } else {
+  //   user.cart.push({
+  //     productId,
+  //     quantity,
+  //   });
+  // }
+  if(existingItem){
+    updateCartItemQuantity(user.cart,productId,quantity);
+
   }else{
     user.cart.push({
       productId,quantity
     })
   }
-  console.log("user is ",user);
+  console.log("user is ", user);
   console.log("trying to save to the database");
-  await user.save({validateBeforeSave:false});
+  await user.save({ validateBeforeSave: false });
   console.log("successfully done");
   res.status(200).json({
-    success:true,
+    success: true,
     productId,
-    quantity
+    quantity,
+    message:existingItem?"Cart Item quantity updated":"item added to cart"
   });
-
-
-
-})
-
+});
