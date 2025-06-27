@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { logout } from "../../context/user/userSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { clearCart } from "../../context/cart/cartSlice";
 // import { AppDispatch } from "../../context/store";
 
 const Navbar: React.FC = () => {
@@ -21,12 +22,32 @@ const Navbar: React.FC = () => {
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
 
-  const Logout = () => {
-    // logout logic
-    console.log("trying to logout");
-    dispatch(logout());
-    if (!isAuthenticated) {
-      toast.success("You are successfully Logged Out", {
+  const Logout = async () => {
+    try {
+      console.log("Attempting to logout user...");
+
+      // Dispatch logout action and wait for it to complete
+      await dispatch(logout()).unwrap();
+
+      // Clear cart data on successful logout
+      dispatch(clearCart());
+
+      // Close dropdown
+      setIsDropdownOpen(false);
+
+      // Show success message
+      toast.success("You have been successfully logged out!", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+
+      // Navigate to home page
+      navigate("/");
+    } catch (error: any) {
+      console.error("Logout failed:", error);
+
+      // Show error message
+      toast.error(error.message || "Logout failed. Please try again.", {
         position: "top-center",
         autoClose: 3000,
       });
@@ -36,9 +57,9 @@ const Navbar: React.FC = () => {
   const goToLogin = () => {
     navigate("/login");
   };
-  const GoToProfile=()=>{
-    navigate("/profile")
-  }
+  const GoToProfile = () => {
+    navigate("/profile");
+  };
   useEffect(() => {
     if (!isAuthenticated) {
     }
@@ -188,7 +209,7 @@ const Navbar: React.FC = () => {
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
               {/* Profile */}
               <button
-                onClick={()=>GoToProfile()}
+                onClick={() => GoToProfile()}
                 className="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors duration-150"
               >
                 <FaUserCircle className="mr-3 text-lg text-gray-600" />
