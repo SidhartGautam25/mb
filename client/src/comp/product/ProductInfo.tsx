@@ -21,7 +21,7 @@ const ProductInfo: React.FC = () => {
   // const [qty, setQty] = useState(1);
   const sizes = ["XS", "S", "M", "L", "XL"];
   const [selectedSize, setSelectedSize] = useState("M");
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number>(1);
   const [isQuantityInitialized, setIsQuantityInitialized] = useState(false);
 
   const { loading, error, product } = useAppSelector((state) => state.product);
@@ -164,7 +164,7 @@ const ProductInfo: React.FC = () => {
       });
       return;
     }
-    const newQuantity = quantity - 1;
+    const newQuantity:number = Number(quantity) - 1;
     setQuantity(newQuantity);
 
     if (cartItem && id) {
@@ -192,7 +192,7 @@ const ProductInfo: React.FC = () => {
   // };
 
   const increaseQuantity = useCallback(() => {
-    const newQuantity = quantity + 1;
+    const newQuantity:number = Number(quantity) + 1;
     setQuantity(newQuantity);
     if (cartItem && id) {
       // dispatch action for updating quantity of the item
