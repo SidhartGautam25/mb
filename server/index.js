@@ -24,6 +24,8 @@ mongoose.connection.on("disconnected", () => {
   console.log("mongoDB disconnected!");
 });
 
+// starting payment things
+
 process.on("unhandledRejection", (err) => {
   console.log(`Error: ${err.message}`);
   console.log(`Server is shutting down, due to unhandled promise rejection`);
