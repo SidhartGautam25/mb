@@ -2,6 +2,8 @@ import app from "./app.js";
 import { mongoConnect } from "./config/mongo.js";
 import mongoose from "mongoose";
 import {v2 as cloudinary} from 'cloudinary';
+import Razorpay from "razorpay";
+
 
 mongoConnect();
 cloudinary.config({
@@ -25,6 +27,10 @@ mongoose.connection.on("disconnected", () => {
 });
 
 // starting payment things
+export const instance=new Razorpay({
+  key_id:'',
+  key_secret:''
+})
 
 process.on("unhandledRejection", (err) => {
   console.log(`Error: ${err.message}`);
