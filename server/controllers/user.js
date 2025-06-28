@@ -119,29 +119,55 @@ export const addToCart = handleAsyncError(async (req, res, next) => {
 
 
 
-export const getCartItems = handleAsyncError(async (req, res, next) => {
-  console.log("getting cart items controller ")
-  const userId = req.user._id;
-  const user = await User.findById(userId).populate('cart.productId', 'name price images');
+// export const getCartItems = handleAsyncError(async (req, res, next) => {
+//   console.log("getting cart items controller ")
+//   const userId = req.user._id;
+//   const user = await User.findById(userId).populate('cart.productId', 'name price images');
   
-  if (!user) {
-    return next(new HandleError("User not found", 404));
+//   if (!user) {
+//     return next(new HandleError("User not found", 404));
+//   }
+
+//   console.log("you are here");
+//   console.log("seeing the item 0 ",user.cart);
+//   const cartItems = user.cart.map(item => ({
+//     id: item.productId._id.toString(),
+//     name: item.productId.name,
+//     price: item.productId.price,
+//     image: item.productId.image, 
+//     quantity: item.quantity
+//   }));
+
+//   console.log("cart items is ",cartItems);
+
+//   res.status(200).json({
+//     success: true,
+//     cartItems
+//   });
+// });
+
+// with aggregation
+export const getCartItems=handleAsyncError(async(req,res,next)=>{
+  const userId=req.user._id;
+  console.log("req.user is ",req.user);
+  const result=await User.getCartWithProducts(userId);
+
+  if(!result ){
+    return next(new HandleError("User Not Found ",404));
   }
-
-  console.log("you are here");
-  console.log("seeing the item 0 ",user.cart);
-  const cartItems = user.cart.map(item => ({
-    id: item.productId._id.toString(),
-    name: item.productId.name,
-    price: item.productId.price,
-    image: item.productId.image, 
-    quantity: item.quantity
+  // console.log("result is ",result[0].cart);
+  const user=result[0];
+  const cart=user.cart;
+  console.log("cart is ",cart);
+  const cartItems=cart.map(item=>({
+    id:item.productId.toString(),
+    name:item.product.name,
+    price:item.product.price,
+    image:item.product.image,
+    quantity:item.quantity
   }));
-
-  console.log("cart items is ",cartItems);
-
   res.status(200).json({
-    success: true,
+    success:true,
     cartItems
-  });
-});
+  })
+})
