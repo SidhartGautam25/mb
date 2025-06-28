@@ -11,7 +11,7 @@ interface CartItem {
 }
 
 interface ShippingInfo {
-  [key: string]: any; // Allow any shipping properties since the original doesn't specify
+  [key: string]: any; // Allow any shipping properties 
 }
 
 interface CartState {
@@ -21,6 +21,7 @@ interface CartState {
   success: boolean;
   message: string | null;
   removingId: string | null;
+  updatingId:string | null;
   shippingInfo: ShippingInfo;
 }
 
@@ -31,6 +32,7 @@ interface AddItemParams {
   image:string;
   price:number;
 }
+
 
 interface ProductResponse {
  
@@ -68,6 +70,16 @@ export const addItemsToCart = createAsyncThunk<CartItem, AddItemParams, { reject
     }
   }
 );
+
+export const loadCartItems=createAsyncThunk<CartItem[],void,{rejectValue:ApiError}>('cart/loadCartItems',async (_,{rejectWithValue})=>{
+  try{
+    const {data}=await axios.get('/api/v1/loadCart');
+    return data.cartItems;
+  }catch(error){
+    const axiosError=error as AxiosError<ApiError>;
+    return rejectWithValue(axiosError.response?.data || {message:"Failed to load cart Items"})
+  }
+})
 
 const cartSlice = createSlice({
   name: 'cart',
@@ -128,6 +140,18 @@ const cartSlice = createSlice({
       .addCase(addItemsToCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || 'An error occurred';
+      }).addCase(loadCartItems.pending,(state)=>{
+        state.loading=true;
+        state.error=null;
+      }).addCase(loadCartItems.fulfilled,(state,action:PayloadAction<CartItem[]>)=>{
+        console.log("action.payload is ",action.payload);
+        state.cartItems=action.payload;
+        state.loading=false;
+        state.error=null;
+        localStorage.setItem('cartItems',JSON.stringify(state.cartItems))
+      }).addCase(loadCartItems.rejected,(state,action)=>{
+        state.loading=false;
+        state.error=action.payload?.message || "An error Occured while loading cart items"
       });
   }
 });
