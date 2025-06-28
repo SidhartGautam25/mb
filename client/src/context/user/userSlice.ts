@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
+import axiosInstance from '../../utils/axiosConfig';
 
 
 
@@ -47,7 +48,7 @@ export const register = createAsyncThunk<ApiResponse, User, { rejectValue: ApiEr
         };
         console.log("userData is ",userData);
         console.log("trying to post /api/v1/register");
-        const { data } = await axios.post(`/api/v1/register`, userData, config);
+        const { data } = await axiosInstance.post(`/api/v1/register`, userData, config);
         console.log("data is ",data);
         return data;
         
@@ -67,7 +68,7 @@ export const login = createAsyncThunk<ApiResponse, LoginCredentials, { rejectVal
             }
         };
         console.log("trying to post /api/v1/login");
-        const { data } = await axios.post('/api/v1/login', { email, password }, config);
+        const { data } = await axiosInstance.post('/api/v1/login', { email, password }, config);
         console.log("data got is ",data);
         return data;
     } catch (err) {
@@ -80,7 +81,7 @@ export const login = createAsyncThunk<ApiResponse, LoginCredentials, { rejectVal
 export const loadUser = createAsyncThunk<ApiResponse, void, { rejectValue: ApiError }>(
     'user/loadUser', async (_, { rejectWithValue }) => {
         try {
-            const { data } = await axios.get('/api/v1/profile');
+            const { data } = await axiosInstance.get('/api/v1/profile');
             return data;
             
         } catch (err) {
@@ -95,7 +96,7 @@ export const logout = createAsyncThunk<ApiResponse, void, { rejectValue: ApiErro
     'user/logout', async (_, { rejectWithValue }) => {
       console.log("tring to logout user from client side");
         try {
-            const { data } = await axios.post('/api/v1/logout', { withCredentials: true });
+            const { data } = await axiosInstance.post('/api/v1/logout', { withCredentials: true });
             return data;
             
         } catch (err) {
@@ -115,7 +116,7 @@ export const updateProfile = createAsyncThunk<ApiResponse, FormData, { rejectVal
                     'Content-Type': 'multipart/form-data'
                 }
             };
-            const { data } = await axios.put('/api/v1/profile/update ', userData, config);
+            const { data } = await axiosInstance.put('/api/v1/profile/update ', userData, config);
             return data;
             
         } catch (err) {
@@ -136,7 +137,7 @@ export const updatePassword = createAsyncThunk<ApiResponse, any, { rejectValue: 
             'Content-Type': 'application/json'
           }
         };
-        const { data } = await axios.put('/api/v1/password/update', formData, config);
+        const { data } = await axiosInstance.put('/api/v1/password/update', formData, config);
         return data;
       } catch (error) {
         const axiosError = error as AxiosError<ApiError>;
@@ -154,7 +155,7 @@ export const forgotPassword = createAsyncThunk<ApiResponse, any, { rejectValue: 
             'Content-Type': 'application/json'
           }
         };
-        const { data } = await axios.post('/api/v1/password/forgot', email, config);
+        const { data } = await axiosInstance.post('/api/v1/password/forgot', email, config);
         return data;
       } catch (error) {
         const axiosError = error as AxiosError<ApiError>;
@@ -172,7 +173,7 @@ export const resetPassword = createAsyncThunk<ApiResponse, ResetPasswordData, { 
             'Content-Type': 'application/json'
           }
         };
-        const { data } = await axios.post(`/api/v1/reset/${token}`, userData, config);
+        const { data } = await axiosInstance.post(`/api/v1/reset/${token}`, userData, config);
         return data;
       } catch (error) {
         const axiosError = error as AxiosError<ApiError>;

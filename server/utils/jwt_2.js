@@ -8,7 +8,7 @@ export const generateTokens = (user) => {
     expiresIn: process.env.JWT_ACCESS_EXPIRE || '15m'
   });
   
-  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_KEY, {
+  const refreshToken = jwt.sign(payload, process.env.JWT_SEC_KEY, {
     expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d'
   });
   
@@ -19,17 +19,21 @@ export const sendToken = (user, statusCode, res) => {
   const { accessToken, refreshToken } = generateTokens(user);
   
   const accessTokenOptions = {
-    expires: new Date(Date.now() + (process.env.JWT_ACCESS_COOKIE_EXPIRE || 15) * 60 * 1000),
+    expires: new Date(
+      Date.now() +  10*24 * 60 * 60 * 1000
+    ),
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    // secure: process.env.NODE_ENV === 'production',
+    // sameSite: 'strict'
   };
   
   const refreshTokenOptions = {
-    expires: new Date(Date.now() + (process.env.JWT_REFRESH_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000),
+    expires: new Date(
+      Date.now() +  10*24 * 60 * 60 * 1000
+    ),
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    // secure: process.env.NODE_ENV === 'production',
+    // sameSite: 'strict'
   };
   
   res.status(statusCode)
@@ -52,7 +56,7 @@ export const verifyAccessToken = (token) => {
 
 export const verifyRefreshToken = (token) => {
   try {
-    return jwt.verify(token, process.env.JWT_REFRESH_KEY);
+    return jwt.verify(token, process.env.JWT_SEC_KEY);
   } catch (error) {
     throw new Error('Invalid or expired refresh token');
   }
