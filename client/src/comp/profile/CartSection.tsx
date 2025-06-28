@@ -1,4 +1,7 @@
-import { useAppSelector } from "../../context/hooks";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../context/hooks";
+import { useEffect } from "react";
+import { loadCartItems } from "../../context/cart/cartSlice";
 
 interface CartItem {
   id: string;
@@ -9,6 +12,17 @@ interface CartItem {
 }
 
 const CartSection: React.FC<{ items: CartItem[] }> = ({ items }) => {
+
+  const { cartItems, loading, error } = useAppSelector((state) => state.cart);
+  const dispatch = useAppDispatch();
+
+
+  useEffect(() => {
+    console.log("you ran useEffcet of cart compoent")
+    if (cartItems.length === 0) {
+      dispatch(loadCartItems());
+    }
+  }, [dispatch, cartItems.length]);
 
  
   return (

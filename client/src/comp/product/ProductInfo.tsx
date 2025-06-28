@@ -9,8 +9,6 @@ import {
   removeErrors,
 } from "../../context/product/productSlice";
 
-
-
 interface CartItem {
   id: string;
   name: string;
@@ -18,7 +16,6 @@ interface CartItem {
   price: number;
   quantity: number;
 }
-
 
 const ProductInfo: React.FC = () => {
   // const [qty, setQty] = useState(1);
@@ -91,14 +88,14 @@ const ProductInfo: React.FC = () => {
       });
       return;
     }
-    if(!id || !product){
-       toast.error("Product information is not available", {
+    if (!id || !product) {
+      toast.error("Product information is not available", {
         position: "top-center",
         autoClose: 3000,
       });
       return;
     }
-     if (quantity > (product.stock || 0)) {
+    if (quantity > (product.stock || 0)) {
       toast.error(`Only ${product.stock} items available in stock`, {
         position: "top-center",
         autoClose: 3000,
@@ -114,7 +111,7 @@ const ProductInfo: React.FC = () => {
     };
 
     dispatch(addItemsToCart(item));
-  },[isAuthenticated,id,product,quantity,dispatch]);
+  }, [isAuthenticated, id, product, quantity, dispatch]);
 
   useEffect(() => {
     if (!id) {
@@ -125,7 +122,7 @@ const ProductInfo: React.FC = () => {
     } else {
       dispatch(getProductDetails(id));
     }
-  }, [id,dispatch]);
+  }, [id, dispatch]);
 
   useEffect(() => {
     if (error) {
@@ -159,22 +156,29 @@ const ProductInfo: React.FC = () => {
   //   setQuantity((qty) => qty - 1);
   // };
 
-  const decreaseQuantity=useCallback(()=>{
-    if(quantity==1){
-       toast.error("Quantity cannot be less than 1", {
+  const decreaseQuantity = useCallback(() => {
+    if (quantity == 1) {
+      toast.error("Quantity cannot be less than 1", {
         position: "top-center",
         autoClose: 2000,
       });
       return;
     }
-    const newQuantity=quantity-1;
+    const newQuantity = quantity - 1;
     setQuantity(newQuantity);
 
-    if(cartItem){
-     // dispatch action for updating quantity of the item
+    if (cartItem && id) {
+      // dispatch action for updating quantity of the item
+        const item: CartItem = {
+      id,
+      name: product?.name,
+      image: product?.image,
+      price: product?.price,
+      quantity: newQuantity,
+    };
+      dispatch(addItemsToCart(item))
     }
-
-  },[quantity,cartItem,id,dispatch]);
+  }, [quantity, cartItem, id, dispatch]);
   // const increaseQuantity = () => {
   //   if (product?.stock <= quantity) {
   //     toast.error("Cannot exceed available Stock!", {
@@ -187,16 +191,23 @@ const ProductInfo: React.FC = () => {
   //   setQuantity((qty) => qty + 1);
   // };
 
-  const increaseQuantity=useCallback(()=>{
-    const newQuantity=quantity+1;
+  const increaseQuantity = useCallback(() => {
+    const newQuantity = quantity + 1;
     setQuantity(newQuantity);
-    if(cartItem){
+    if (cartItem && id) {
       // dispatch action for updating quantity of the item
+       const item: CartItem = {
+      id,
+      name: product?.name,
+      image: product?.image,
+      price: product?.price,
+      quantity: newQuantity,
+    };
+      dispatch(addItemsToCart(item))
     }
-  },[quantity,cartItem,id,dispatch])
+  }, [quantity, cartItem, id, dispatch]);
 
-
-   if (!id) {
+  if (!id) {
     return (
       <div className="w-full md:w-1/2 px-4 py-6">
         <div className="text-center text-red-500">Invalid product ID</div>
@@ -204,7 +215,7 @@ const ProductInfo: React.FC = () => {
     );
   }
 
-   if (loading) {
+  if (loading) {
     return (
       <div className="w-full md:w-1/2 px-4 py-6">
         <div className="animate-pulse">
@@ -217,7 +228,7 @@ const ProductInfo: React.FC = () => {
     );
   }
 
-    if (!product) {
+  if (!product) {
     return (
       <div className="w-full md:w-1/2 px-4 py-6">
         <div className="text-center text-red-500">Product not found</div>
@@ -225,22 +236,27 @@ const ProductInfo: React.FC = () => {
     );
   }
 
-
   return (
     <>
       {loading ? (
         <div>Laoding Details</div>
       ) : (
         <div className="w-full md:w-1/2 px-4 py-6 space-y-4">
-          <h1 className="text-xl font-semibold">{product?.name || "Product Name"}</h1>
+          <h1 className="text-xl font-semibold">
+            {product?.name || "Product Name"}
+          </h1>
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <span>⭐⭐⭐⭐☆</span>
             <span>(150 Reviews)</span>
             <span className="text-green-600 ml-2">In Stock</span>
           </div>
 
-          <div className="text-xl font-bold">Rs {product?.price || "Price not available"}</div>
-          <p className="text-sm text-gray-600">{product?.description || "description not available"}</p>
+          <div className="text-xl font-bold">
+            Rs {product?.price || "Price not available"}
+          </div>
+          <p className="text-sm text-gray-600">
+            {product?.description || "description not available"}
+          </p>
 
           <hr />
 
@@ -292,33 +308,39 @@ const ProductInfo: React.FC = () => {
               </button>
             )} */}
 
-            {!isInCart ?(
-               <button
-            className={`ml-4 px-5 py-2 rounded transition-colors ${
-              cartLoading || product.stock === 0
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-red-500 hover:bg-red-600 text-white'
-            }`}
-            onClick={addToCart}
-            disabled={cartLoading || product.stock === 0}
-          >
-            {cartLoading ? "Adding..." : product.stock === 0 ? "Out of Stock" : "Add To Cart"}
-          </button>
-            ):( <div className="ml-4 flex items-center gap-2">
-            <button className="bg-green-500 text-white px-5 py-2 rounded">
-              ✓ In Cart ({cartItem?.quantity})
-            </button>
-            {/* IMPROVEMENT: Added option to remove from cart */}
-            <button 
-              className="text-red-500 text-sm underline hover:text-red-700"
-              onClick={() => {
-                // This would need a removeFromCart action
-                // dispatch(removeFromCart(id));
-              }}
-            >
-              Remove
-            </button>
-          </div>)}
+            {!isInCart ? (
+              <button
+                className={`ml-4 px-5 py-2 rounded transition-colors ${
+                  cartLoading || product.stock === 0
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-red-500 hover:bg-red-600 text-white"
+                }`}
+                onClick={addToCart}
+                disabled={cartLoading || product.stock === 0}
+              >
+                {cartLoading
+                  ? "Adding..."
+                  : product.stock === 0
+                  ? "Out of Stock"
+                  : "Add To Cart"}
+              </button>
+            ) : (
+              <div className="ml-4 flex items-center gap-2">
+                <button className="bg-green-500 text-white px-5 py-2 rounded">
+                  ✓ In Cart ({cartItem?.quantity})
+                </button>
+                {/* IMPROVEMENT: Added option to remove from cart */}
+                <button
+                  className="text-red-500 text-sm underline hover:text-red-700"
+                  onClick={() => {
+                    // This would need a removeFromCart action
+                    // dispatch(removeFromCart(id));
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
 
             <button className="ml-2 border p-2 rounded">
               <AiOutlineHeart size={20} />
