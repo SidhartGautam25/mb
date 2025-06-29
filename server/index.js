@@ -27,10 +27,10 @@ mongoose.connection.on("disconnected", () => {
 });
 
 // starting payment things
-export const instance=new Razorpay({
-  key_id:'',
-  key_secret:''
-})
+// export const instance=new Razorpay({
+//   key_id:'',
+//   key_secret:''
+// })
 
 process.on("unhandledRejection", (err) => {
   console.log(`Error: ${err.message}`);
