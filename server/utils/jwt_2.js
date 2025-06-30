@@ -5,11 +5,13 @@ export const generateTokens = (user) => {
   const payload = { id: user._id };
   
   const accessToken = jwt.sign(payload, process.env.JWT_SEC_KEY, {
-    expiresIn: process.env.JWT_ACCESS_EXPIRE || '15m'
+    // expiresIn: process.env.JWT_ACCESS_EXPIRE || '15m'
+    expiresIn:'1m'
   });
   
   const refreshToken = jwt.sign(payload, process.env.JWT_SEC_KEY, {
-    expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d'
+    // expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d'
+    expiresIn:'7d'
   });
   
   return { accessToken, refreshToken };
@@ -20,8 +22,9 @@ export const sendToken = (user, statusCode, res) => {
   
   const accessTokenOptions = {
     expires: new Date(
-      Date.now() +  10*24 * 60 * 60 * 1000
+      Date.now() +  1 * 60 * 1000
     ),
+    // expires:'15m',
     httpOnly: true,
     // secure: process.env.NODE_ENV === 'production',
     // sameSite: 'strict'
@@ -29,8 +32,9 @@ export const sendToken = (user, statusCode, res) => {
   
   const refreshTokenOptions = {
     expires: new Date(
-      Date.now() +  10*24 * 60 * 60 * 1000
+      Date.now() +  7*24 * 60 * 60 * 1000
     ),
+    // expires:'7d',
     httpOnly: true,
     // secure: process.env.NODE_ENV === 'production',
     // sameSite: 'strict'

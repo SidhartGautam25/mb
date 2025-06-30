@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from 'axios';
+import axiosInstance from "../../utils/axiosConfig";
 
 // Types
 interface CartItem {
@@ -55,7 +56,7 @@ export const addItemsToCart = createAsyncThunk<CartItem, AddItemParams, { reject
   async ({ id, quantity ,name,image,price}, { rejectWithValue }) => {
     try {
       const productId=id;
-      const { data }: { data: ProductResponse } = await axios.post(`/api/v1/addToCart`,{productId,quantity});
+      const { data }: { data: ProductResponse } = await axiosInstance.post(`/api/v1/addToCart`,{productId,quantity});
 
       return {
         id:data.productId,
@@ -73,7 +74,7 @@ export const addItemsToCart = createAsyncThunk<CartItem, AddItemParams, { reject
 
 export const loadCartItems=createAsyncThunk<CartItem[],void,{rejectValue:ApiError}>('cart/loadCartItems',async (_,{rejectWithValue})=>{
   try{
-    const {data}=await axios.get('/api/v1/loadCart');
+    const {data}=await axiosInstance.get('/api/v1/loadCart');
     return data.cartItems;
   }catch(error){
     const axiosError=error as AxiosError<ApiError>;
