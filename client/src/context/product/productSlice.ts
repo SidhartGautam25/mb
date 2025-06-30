@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { findCategoryIndex } from '../../utils/categories';
+import axiosInstance from '../../utils/axiosConfig';
 
 // Types
 interface Product {
@@ -66,7 +67,7 @@ export const getProduct = createAsyncThunk<GetProductResponse, GetProductParams,
         }
       
        console.log("tring to get products");
-        const { data } = await axios.get(link);
+        const { data } = await axiosInstance.get(link);
         console.log("data is ",data);
         return data;
       } catch (error) {
@@ -83,7 +84,7 @@ export const getProductDetails = createAsyncThunk<GetProductDetailsResponse, str
     async (id, { rejectWithValue }) => {
       try {
         const link = `/api/v1/product/${id}`;
-        const { data } = await axios.get(link);
+        const { data } = await axiosInstance.get(link);
         return data;
       } catch (error) {
         const axiosError = error as AxiosError<ApiError>;
@@ -103,7 +104,7 @@ export const createReview = createAsyncThunk<CreateReviewResponse, CreateReviewP
           }
         };
   
-        const { data } = await axios.put('/api/v1/review', { rating, comment, productId }, config);
+        const { data } = await axiosInstance.put('/api/v1/review', { rating, comment, productId }, config);
         return data;
       } catch (error) {
         const axiosError = error as AxiosError<ApiError>;

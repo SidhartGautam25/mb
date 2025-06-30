@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios, { AxiosError } from 'axios';
+
+import axiosInstance from '../../utils/axiosConfig';
 
 
 
@@ -47,14 +48,14 @@ export const register = createAsyncThunk<ApiResponse, User, { rejectValue: ApiEr
         };
         console.log("userData is ",userData);
         console.log("trying to post /api/v1/register");
-        const { data } = await axios.post(`/api/v1/register`, userData, config);
+        const { data } = await axiosInstance.post(`/api/v1/register`, userData, config);
         console.log("data is ",data);
         return data;
         
     } catch (err) {
       console.log("error occured while doing this register things");
-        const axiosError = err as AxiosError<ApiError>;
-        return rejectWithValue(axiosError.response?.data || { message: 'Registration failed. Try again' })
+        // const axiosError = err as AxiosError<ApiError>;
+        return rejectWithValue({ message: 'Registration failed. Try again' })
         
     }
 });
@@ -67,25 +68,25 @@ export const login = createAsyncThunk<ApiResponse, LoginCredentials, { rejectVal
             }
         };
         console.log("trying to post /api/v1/login");
-        const { data } = await axios.post('/api/v1/login', { email, password }, config);
+        const { data } = await axiosInstance.post('/api/v1/login', { email, password }, config);
         console.log("data got is ",data);
         return data;
     } catch (err) {
       console.log("error occured while doing login thing")
-        const axiosError = err as AxiosError<ApiError>;
-        return rejectWithValue(axiosError.response?.data || { message: 'Login Failed' })
+        // const axiosError = err as ApiError;
+        return rejectWithValue({ message: 'Login Failed' })
     }
 });
 
 export const loadUser = createAsyncThunk<ApiResponse, void, { rejectValue: ApiError }>(
     'user/loadUser', async (_, { rejectWithValue }) => {
         try {
-            const { data } = await axios.get('/api/v1/profile');
+            const { data } = await axiosInstance.get('/api/v1/profile');
             return data;
             
         } catch (err) {
-            const axiosError = err as AxiosError<ApiError>;
-            return rejectWithValue(axiosError.response?.data || { message: 'failed to load user data' });
+            // const axiosError = err as AxiosError<ApiError>;
+            return rejectWithValue({ message: 'failed to load user data' });
             
         }
     }
@@ -95,12 +96,12 @@ export const logout = createAsyncThunk<ApiResponse, void, { rejectValue: ApiErro
     'user/logout', async (_, { rejectWithValue }) => {
       console.log("tring to logout user from client side");
         try {
-            const { data } = await axios.post('/api/v1/logout', { withCredentials: true });
+            const { data } = await axiosInstance.post('/api/v1/logout', { withCredentials: true });
             return data;
             
         } catch (err) {
-            const axiosError = err as AxiosError<ApiError>;
-            return rejectWithValue(axiosError.response?.data || {message:'Logout failed. try again'})
+            // const axiosError = err as AxiosError<ApiError>;
+            return rejectWithValue( {message:'Logout failed. try again'})
             
         }
     }
@@ -115,12 +116,12 @@ export const updateProfile = createAsyncThunk<ApiResponse, FormData, { rejectVal
                     'Content-Type': 'multipart/form-data'
                 }
             };
-            const { data } = await axios.put('/api/v1/profile/update ', userData, config);
+            const { data } = await axiosInstance.put('/api/v1/profile/update ', userData, config);
             return data;
             
         } catch (err) {
-            const axiosError = err as AxiosError<ApiError>;
-            return rejectWithValue(axiosError.response?.data || {message:'failed to update the profile'})
+            // const axiosError = err as AxiosError<ApiError>;
+            return rejectWithValue({message:'failed to update the profile'})
             
         }
     }
@@ -136,11 +137,11 @@ export const updatePassword = createAsyncThunk<ApiResponse, any, { rejectValue: 
             'Content-Type': 'application/json'
           }
         };
-        const { data } = await axios.put('/api/v1/password/update', formData, config);
+        const { data } = await axiosInstance.put('/api/v1/password/update', formData, config);
         return data;
       } catch (error) {
-        const axiosError = error as AxiosError<ApiError>;
-        return rejectWithValue(axiosError.response?.data || { message: 'Password update failed' });
+        // const axiosError = error as AxiosError<ApiError>;
+        return rejectWithValue( { message: 'Password update failed' });
       }
     }
 );
@@ -154,11 +155,11 @@ export const forgotPassword = createAsyncThunk<ApiResponse, any, { rejectValue: 
             'Content-Type': 'application/json'
           }
         };
-        const { data } = await axios.post('/api/v1/password/forgot', email, config);
+        const { data } = await axiosInstance.post('/api/v1/password/forgot', email, config);
         return data;
       } catch (error) {
-        const axiosError = error as AxiosError<ApiError>;
-        return rejectWithValue(axiosError.response?.data || { message: 'Email sent Failed' });
+        // const axiosError = error as AxiosError<ApiError>;
+        return rejectWithValue( { message: 'Email sent Failed' });
       }
     }
 );
@@ -172,11 +173,11 @@ export const resetPassword = createAsyncThunk<ApiResponse, ResetPasswordData, { 
             'Content-Type': 'application/json'
           }
         };
-        const { data } = await axios.post(`/api/v1/reset/${token}`, userData, config);
+        const { data } = await axiosInstance.post(`/api/v1/reset/${token}`, userData, config);
         return data;
       } catch (error) {
-        const axiosError = error as AxiosError<ApiError>;
-        return rejectWithValue(axiosError.response?.data || { message: 'Email sent Failed' });
+        // const axiosError = error as AxiosError<ApiError>;
+        return rejectWithValue({ message: 'Email sent Failed' });
       }
     }
 );
