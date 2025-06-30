@@ -34,14 +34,19 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error: AxiosError) => {
+    console.log("error occured while requesting at axios instnace")
     return Promise.reject(error);
   }
 );
 
 // Response interceptor
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response: AxiosResponse) => {
+    console.log("after request axios things")
+    return response},
   async (error: AxiosError) => {
+    console.log("an error occured so you are here on axios interceptor response use error handling function ");
+    console.log("error is ",error);
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
     if (error.response?.status === 401 && !originalRequest._retry) {
