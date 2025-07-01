@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios, { AxiosError } from 'axios';
+import  { AxiosError } from 'axios';
 import axiosInstance from "../../utils/axiosConfig";
+import { StorageManager } from "../../utils/storageManager";
 
 // Types
 interface CartItem {
@@ -85,13 +86,15 @@ export const loadCartItems=createAsyncThunk<CartItem[],void,{rejectValue:ApiErro
 const cartSlice = createSlice({
   name: 'cart',
   initialState: {
-    cartItems: JSON.parse(localStorage.getItem('cartItems') || '[]') as CartItem[],
+    // cartItems: JSON.parse(localStorage.getItem('cartItems') || '[]') as CartItem[],
+    cartItems:StorageManager.getCartItems(),
     loading: false,
     error: null,
     success: false,
     message: null,
     removingId: null,
-    shippingInfo: JSON.parse(localStorage.getItem('shippingInfo') || '{}') as ShippingInfo
+    // shippingInfo: JSON.parse(localStorage.getItem('shippingInfo') || '{}') as ShippingInfo
+    shippingInfo:StorageManager.getShippingInfo()
   } as CartState,
   reducers: {
     removeErrors: (state) => {
@@ -112,8 +115,11 @@ const cartSlice = createSlice({
     },
     clearCart: (state) => {
       state.cartItems = [];
-      localStorage.removeItem('cartItems');
-      localStorage.removeItem('shippingInfo');
+      state.shippingInfo={};
+      StorageManager.clearCartData();
+
+      // localStorage.removeItem('cartItems');
+      // localStorage.removeItem('shippingInfo');
     }
   },
   extraReducers: (builder) => {
@@ -136,7 +142,8 @@ const cartSlice = createSlice({
         state.loading = false;
         state.error = null;
         state.success = true;
-        localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+        // localStorage.setItem('cartItems', JSON.stringify(state.cartItems));
+        StorageManager.setCartItems(state.cartItems);
       })
       .addCase(addItemsToCart.rejected, (state, action) => {
         state.loading = false;
@@ -149,7 +156,8 @@ const cartSlice = createSlice({
         state.cartItems=action.payload;
         state.loading=false;
         state.error=null;
-        localStorage.setItem('cartItems',JSON.stringify(state.cartItems))
+        // localStorage.setItem('cartItems',JSON.stringify(state.cartItems))
+        StorageManager.setCartItems(state.cartItems);
       }).addCase(loadCartItems.rejected,(state,action)=>{
         state.loading=false;
         state.error=action.payload?.message || "An error Occured while loading cart items"

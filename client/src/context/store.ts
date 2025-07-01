@@ -4,6 +4,7 @@ import userReducer from "./user/userSlice.ts";
 import orderReducer from "./order/orderSlice.ts";
 import cartReducer from "./cart/cartSlice.ts";
 import adminReducer from "./admin/adminSlice.ts"
+import { setAxiosStore } from "../utils/axiosConfig.ts";
 
 
 export const store=configureStore({
@@ -15,6 +16,8 @@ reducer:{
     admin:adminReducer
 }
 })
+
+setAxiosStore(store);
 
 
 
