@@ -34,7 +34,7 @@ function App(): JSX.Element {
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/cart" element={<CartPage/>}/>
         {/* admin routes */}
-        <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>} />}/>
+        <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>} adminOnly={true}/>}/>
       </Routes>
     </Router>
   );
