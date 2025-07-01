@@ -1,7 +1,13 @@
 // utils/axiosConfig.ts
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { logout } from '../context/user/userSlice';
-import { useAppDispatch } from '../context/hooks';
+import { StorageManager } from './storageManager';
+
+
+let store:any=null;
+
+export const setAxiosStore = (storeInstance: any) => {
+  store = storeInstance;
+};
 
 // Create Axios instance
 const axiosInstance: AxiosInstance = axios.create({
@@ -76,8 +82,12 @@ axiosInstance.interceptors.response.use(
         processQueue(refreshError, null);
 
         // Dispatch logout using redux store directly since we're outside React components
-        const dispatch=useAppDispatch();
-        dispatch(logout());
+        if(store){
+          console.log("we are in axios config condition where there is store possible");
+          store.dispatch({type:'auth/forceLogout'});
+        }
+
+        StorageManager.clearAllData();
 
         // Redirect
         if (typeof window !== 'undefined') {
