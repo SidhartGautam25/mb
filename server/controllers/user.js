@@ -38,7 +38,7 @@ export const refreshToken = handleAsyncError(async (req, res, next) => {
   const refreshTokenOptions = {
     expires: new Date(
       Date.now() +
-        (process.env.JWT_REFRESH_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
+      (process.env.JWT_REFRESH_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,
     // secure: process.env.NODE_ENV === "production",
@@ -67,7 +67,7 @@ export const registerUser = handleAsyncError(async (req, res, next) => {
     password,
   });
   sendToken(user, 200, res);
-  
+
 });
 
 export const Login = handleAsyncError(async (req, res, next) => {
@@ -95,7 +95,7 @@ export const logout = handleAsyncError(async (req, res, next) => {
     expires: new Date(Date.now()),
     httpOnly: true,
   });
-  res.cookie("refreshToken",null,{
+  res.cookie("refreshToken", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
   })
@@ -224,5 +224,113 @@ export const getCartItems = handleAsyncError(async (req, res, next) => {
   res.status(200).json({
     success: true,
     cartItems,
+  });
+});
+
+
+export const removeItemFromCart = handleAsyncError(async (req, res, next) => {
+  const userId = req.user._id;
+  const user = await getUser(userId);
+  const { productId } = req.body;
+  const cart = user.cart;
+  const index = cart.findIndex((item) => item.productId?.toString() === productId?.toString());
+  if (index !== -1) {
+    user.cart.splice(index, 1);
+  }
+  await user.save({ validateBeforeSave: false });
+  console.log("successfully done");
+  res.status(200).json({
+    success: true,
+    productId,
+    message:  "Item removed from the cart",
+  });
+
+
+
+})
+
+
+
+
+export const addPhone = handleAsyncError(async (req, res, next) => {
+  const userId = req.user._id;
+  const { phone } = req.body;
+
+  // Validation
+  if (!phone) {
+    return next(new HandleError("Phone number is required", 400));
+  }
+
+  const user = await getUser(userId);
+  if (!user) {
+    return next(new HandleError("User not found", 404));
+  }
+
+  // Convert phone to string and add to array
+  const phoneString = phone.toString();
+  
+  // Initialize phone array if it doesn't exist, otherwise push new number
+  if (!user.phone || !Array.isArray(user.phone)) {
+    user.phone = [];
+    user.phone.push(phoneString)
+  } else {
+    // Check if phone number already exists to avoid duplicates
+    if (!user.phone.includes(phoneString)) {
+      user.phone.push(phoneString);
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Phone number already exists",
+        user
+      });
+    }
+  }
+
+  console.log("user is ",user);
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    user,
+    success: true,
+    message: "Phone number added successfully"
+  });
+});
+
+
+
+// New Address Controller
+export const addAddress = handleAsyncError(async (req, res, next) => {
+  const userId = req.user._id;
+  const { pin, other } = req.body;
+
+  // Validation
+  if (!pin || !other) {
+    return next(new HandleError("Both PIN and address details are required", 400));
+  }
+
+  const user = await getUser(userId);
+  if (!user) {
+    return next(new HandleError("User not found", 404));
+  }
+
+  // Create new address object
+  const newAddress = {
+    pin: pin.toString(),
+    other: other.toString()
+  };
+
+  // Initialize address array if it doesn't exist, otherwise push new address
+  if (!user.address || !Array.isArray(user.address)) {
+    user.address = [newAddress];
+  } else {
+    user.address.push(newAddress);
+  }
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    message: "Address added successfully",
+    user
   });
 });
