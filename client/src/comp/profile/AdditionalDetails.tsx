@@ -48,197 +48,206 @@ const AdditionalDetails: React.FC = () => {
   const displayedAddresses = showAllAddresses ? addresses : addresses.slice(0, 1) || [];
 
   return (
-    <div className="bg-white shadow rounded-xl p-6">
-      <h2 className="text-xl font-semibold mb-6 text-gray-800">More Details</h2>
-      
-      {/* Phone Numbers Section */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Phone className="w-5 h-5 text-blue-600" />
-            <h3 className="font-medium text-gray-700">Phone Numbers</h3>
-          </div>
-          <div className="flex items-center gap-2">
-            {phones.length > 1 && (
-              <button
-                onClick={() => setShowAllPhones(!showAllPhones)}
-                className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                {showAllPhones ? (
-                  <>
-                    <EyeOff className="w-4 h-4" />
-                    Show Less
-                  </>
-                ) : (
-                  <>
-                    <Eye className="w-4 h-4" />
-                    See All 
-                  </>
-                )}
-              </button>
-            )}
-            <button
-              onClick={() => setShowPhoneForm(!showPhoneForm)}
-              className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-            >
-              <Plus className="w-4 h-4" />
-              Add
-            </button>
-          </div>
-        </div>
+    <div className="bg-white shadow rounded-xl p-6 space-y-12">
+  <h2 className="text-xl font-semibold text-gray-800">More Details</h2>
 
-        {/* Phone Form */}
-        {showPhoneForm && (
-          <div className="bg-gray-50 rounded-lg p-4 mb-4 border-2 border-blue-200">
-            <div className="flex items-center gap-3">
-              <input
-                type="tel"
-                value={newPhone}
-                onChange={(e) => setNewPhone(e.target.value)}
-                placeholder="Enter phone number"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <button
-                onClick={handleSavePhone}
-                disabled={!newPhone.trim() || loading}
-                className="flex items-center gap-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-              >
-                <Save className="w-4 h-4" />
-                Save
-              </button>
-              <button
-                onClick={() => {
-                  setShowPhoneForm(false);
-                  setNewPhone('');
-                }}
-                className="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
-              >
-                <X className="w-4 h-4" />
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+  {/* Phone Numbers Section */}
+  <div className="border-b pb-8">
+    <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <div className="flex items-center gap-2">
+        <Phone className="w-5 h-5 text-blue-600" />
+        <h3 className="font-medium text-gray-700 text-lg">Phone Numbers</h3>
+      </div>
+      <button
+        onClick={() => setShowPhoneForm(!showPhoneForm)}
+        className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+      >
+        <Plus className="w-4 h-4" />
+        Add
+      </button>
+    </div>
 
-        {/* Phone List */}
-        <div className="space-y-2">
-          {phones.length === 0 ? (
-            <p className="text-gray-500 text-sm italic">No phone numbers added yet</p>
-          ) : (
-            displayedPhones.map((phone:string, index:number) => (
-              <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-gray-700 font-mono">{phone}</span>
-                {index === 0 && <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Primary</span>}
-              </div>
-            ))
-          )}
+    {/* Phone Form */}
+    {showPhoneForm && (
+      <div className="bg-gray-50 rounded-lg p-4 mb-4 border-2 border-blue-200 space-y-4">
+        <input
+          type="tel"
+          value={newPhone}
+          onChange={(e) => setNewPhone(e.target.value)}
+          placeholder="Enter phone number"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <button
+            onClick={handleSavePhone}
+            disabled={!newPhone.trim() || loading}
+            className="flex items-center justify-center gap-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors w-full sm:w-auto"
+          >
+            <Save className="w-4 h-4" />
+            Save
+          </button>
+          <button
+            onClick={() => {
+              setShowPhoneForm(false);
+              setNewPhone('');
+            }}
+            className="flex items-center justify-center gap-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors w-full sm:w-auto"
+          >
+            <X className="w-4 h-4" />
+            Cancel
+          </button>
         </div>
       </div>
+    )}
 
-      {/* Addresses Section */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-green-600" />
-            <h3 className="font-medium text-gray-700">Addresses</h3>
-          </div>
-          <div className="flex items-center gap-2">
-            {addresses.length > 1 && (
-              <button
-                onClick={() => setShowAllAddresses(!showAllAddresses)}
-                className="flex items-center gap-1 text-sm text-green-600 hover:text-green-700 transition-colors"
-              >
-                {showAllAddresses ? (
-                  <>
-                    <EyeOff className="w-4 h-4" />
-                    Show Less
-                  </>
-                ) : (
-                  <>
-                    <Eye className="w-4 h-4" />
-                    See All
-                  </>
-                )}
-              </button>
+    {/* Phone List */}
+    <div className="space-y-2">
+      {phones.length === 0 ? (
+        <p className="text-gray-500 text-sm italic">No phone numbers added yet</p>
+      ) : (
+        displayedPhones.map((phone: string, index: number) => (
+          <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span className="text-gray-700 font-mono break-all">{phone}</span>
+            {index === 0 && (
+              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full">Primary</span>
             )}
-            <button
-              onClick={() => setShowAddressForm(!showAddressForm)}
-              className="flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-sm"
-            >
-              <Plus className="w-4 h-4" />
-              Add
-            </button>
           </div>
-        </div>
+        ))
+      )}
+    </div>
 
-        {/* Address Form */}
-        {showAddressForm && (
-          <div className="bg-gray-50 rounded-lg p-4 mb-4 border-2 border-green-200">
-            <div className="space-y-3">
-              <input
-                type="text"
-                value={newAddress.pin}
-                onChange={(e) => setNewAddress({ ...newAddress, pin: e.target.value })}
-                placeholder="PIN Code"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <textarea
-                value={newAddress.other}
-                onChange={(e) => setNewAddress({ ...newAddress, other: e.target.value })}
-                placeholder="Enter complete address"
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
-              />
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={handleSaveAddress}
-                  disabled={!newAddress.pin.trim() || !newAddress.other.trim() || loading}
-                  className="flex items-center gap-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-                >
-                  <Save className="w-4 h-4" />
-                  Save Address
-                </button>
-                <button
-                  onClick={() => {
-                    setShowAddressForm(false);
-                    setNewAddress({ pin: '', other: '' });
-                  }}
-                  className="flex items-center gap-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Address List */}
-        <div className="space-y-3">
-          {addresses.length === 0 ? (
-            <p className="text-gray-500 text-sm italic">No addresses added yet</p>
+    {/* See All Button */}
+    {phones.length > 1 && (
+      <div className="mt-4">
+        <button
+          onClick={() => setShowAllPhones(!showAllPhones)}
+          className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          {showAllPhones ? (
+            <>
+              <EyeOff className="w-4 h-4" />
+              Show Less
+            </>
           ) : (
-            displayedAddresses.map((address:Address, index:number) => (
-              <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-gray-800">PIN: {address.pin}</span>
-                        {index === 0 && <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Primary</span>}
-                      </div>
-                      <p className="text-gray-600 text-sm mt-1">{address.other}</p>
-                    </div>
+            <>
+              <Eye className="w-4 h-4" />
+              See All
+            </>
+          )}
+        </button>
+      </div>
+    )}
+  </div>
+
+  {/* Addresses Section */}
+  <div>
+    <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <div className="flex items-center gap-2">
+        <MapPin className="w-5 h-5 text-green-600" />
+        <h3 className="font-medium text-gray-700 text-lg">Addresses</h3>
+      </div>
+      <button
+        onClick={() => setShowAddressForm(!showAddressForm)}
+        className="flex items-center gap-1 bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors text-sm"
+      >
+        <Plus className="w-4 h-4" />
+        Add
+      </button>
+    </div>
+
+    {/* Address Form */}
+    {showAddressForm && (
+      <div className="bg-gray-50 rounded-lg p-4 mb-4 border-2 border-green-200 space-y-4">
+        <input
+          type="text"
+          value={newAddress.pin}
+          onChange={(e) => setNewAddress({ ...newAddress, pin: e.target.value })}
+          placeholder="PIN Code"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+        <textarea
+          value={newAddress.other}
+          onChange={(e) => setNewAddress({ ...newAddress, other: e.target.value })}
+          placeholder="Enter complete address"
+          rows={3}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+        />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <button
+            onClick={handleSaveAddress}
+            disabled={!newAddress.pin.trim() || !newAddress.other.trim() || loading}
+            className="flex items-center justify-center gap-1 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors w-full sm:w-auto"
+          >
+            <Save className="w-4 h-4" />
+            Save Address
+          </button>
+          <button
+            onClick={() => {
+              setShowAddressForm(false);
+              setNewAddress({ pin: '', other: '' });
+            }}
+            className="flex items-center justify-center gap-1 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors w-full sm:w-auto"
+          >
+            <X className="w-4 h-4" />
+            Cancel
+          </button>
+        </div>
+      </div>
+    )}
+
+    {/* Address List */}
+    <div className="space-y-3">
+      {addresses.length === 0 ? (
+        <p className="text-gray-500 text-sm italic">No addresses added yet</p>
+      ) : (
+        displayedAddresses.map((address: Address, index: number) => (
+          <div key={index} className="p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-start gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full mt-1"></div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-medium text-gray-800">PIN: {address.pin}</span>
+                    {index === 0 && (
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                        Primary
+                      </span>
+                    )}
                   </div>
+                  <p className="text-gray-600 text-sm mt-1 break-words">{address.other}</p>
                 </div>
               </div>
-            ))
-          )}
-        </div>
-      </div>
+            </div>
+          </div>
+        ))
+      )}
     </div>
+
+    {/* See All Button */}
+    {addresses.length > 1 && (
+      <div className="mt-4">
+        <button
+          onClick={() => setShowAllAddresses(!showAllAddresses)}
+          className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700 transition-colors"
+        >
+          {showAllAddresses ? (
+            <>
+              <EyeOff className="w-4 h-4" />
+              Show Less
+            </>
+          ) : (
+            <>
+              <Eye className="w-4 h-4" />
+              See All
+            </>
+          )}
+        </button>
+      </div>
+    )}
+  </div>
+</div>
+
   );
 };
 
