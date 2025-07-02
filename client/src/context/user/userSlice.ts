@@ -28,6 +28,11 @@ interface LoginCredentials {
   password: string;
 }
 
+interface Address {
+  pin: string;
+  other: string;
+}
+
 interface ResetPasswordData {
   token: string;
   userData: any;
@@ -119,6 +124,54 @@ export const logout = createAsyncThunk<
   } catch (err) {
     // const axiosError = err as AxiosError<ApiError>;
     return rejectWithValue({ message: "Logout failed. try again" });
+  }
+});
+
+export const addPhone = createAsyncThunk<
+  ApiResponse,
+  string,
+  { rejectValue: ApiError }
+>("user/addPhone", async (phone: string, { rejectWithValue }) => {
+  console.log("trying to add phone to user profile");
+  try {
+    const { data } = await axiosInstance.post(
+      "/api/v1/addPhone",
+      { phone },
+      {
+        withCredentials: true,
+      }
+    );
+    console.log("data is ", data);
+    return data;
+  } catch (err) {
+    // const axiosError = err as AxiosError<ApiError>;
+    return rejectWithValue({
+      message: "Failed to add Phone number to account",
+    });
+  }
+});
+
+export const addAddress = createAsyncThunk<
+  ApiResponse,
+  Address,
+  { rejectValue: ApiError }
+>("user/addAddress", async ({ pin, other }, { rejectWithValue }) => {
+  console.log("trying to add address to user daata");
+  try {
+    const { data } = await axiosInstance.post(
+      "/api/v1/addAddress",
+      { pin, other },
+      {
+        withCredentials: true,
+      }
+    );
+    console.log("data is ", data);
+    return data;
+  } catch (err) {
+    // const axiosError = err as AxiosError<ApiError>;
+    return rejectWithValue({
+      message: "Failed to add address to your account",
+    });
   }
 });
 
@@ -299,6 +352,50 @@ const userSlice = createSlice({
         // }
         StorageManager.clearAuthData();
       })
+      .addCase(addPhone.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(addPhone.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload.success || true;
+        console.log("your request to add phone is fulfilled ",action.payload);
+        if (action.payload?.user) {
+          console.log("now we are updating state");
+          state.user = { ...state.user, ...action.payload.user };
+        }
+        StorageManager.setUser(state.user);
+      })
+      .addCase(addPhone.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to add phone number";
+        state.success = false;
+      })
+      .addCase(addAddress.pending, (state, action) => {
+        state.loading = true;
+        state.error = null;
+        state.success = null;
+      })
+      .addCase(addAddress.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = action.payload.success || false;
+        state.message = action.payload.message || "Address added successfully";
+
+        // Update user data in state and storage if provided
+        if (action.payload.user) {
+          // Merge the updated data with existing user data
+          state.user = { ...state.user, ...action.payload.user };
+          StorageManager.setUser(state.user);
+        }
+      })
+      .addCase(addAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to add address";
+        state.success = false;
+      })
       // Logout User
       .addCase(logout.pending, (state) => {
         state.loading = true;
@@ -306,7 +403,7 @@ const userSlice = createSlice({
       })
       .addCase(
         logout.fulfilled,
-        (state, action: PayloadAction<ApiResponse>) => {
+        (state) => {
           state.loading = false;
           state.error = null;
           state.user = null;

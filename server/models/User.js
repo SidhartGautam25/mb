@@ -5,40 +5,56 @@ import jwt from "jsonwebtoken"
 const userSchema = new mongoose.Schema(
   {
     name: {
-      type:String,
-      required:true,
-      unique:true,
+      type: String,
+      required: true,
+      unique: true,
     },
     email: {
-      type:String,
-      required:true,
-      unique:true,
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-      type:String,
-      required:true
-    },
-    phone:{
       type: String,
-      default:"0000000000"
+      required: true
+    },
+    phone: {
+      type: [String],
+      default: [],
     },
     role: {
       type: String,
       default: "user",
     },
-    cart:[{
-        productId:{
-          type:mongoose.Schema.ObjectId,
-          ref:"Product",
-          required:true
+    cart: [{
+      productId: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Product",
+        required: true
 
-        },
-        quantity:{
-          type:String,
-          default:"1",
-          required:true
-        }
+      },
+      quantity: {
+        type: String,
+        default: "1",
+        required: true
+      }
     }],
+    address: {
+      type: [{
+        pin: {
+          type: "String",
+          required: true,
+          default: ""
+        },
+        other: {
+          type: String,
+          default: "",
+          required: true
+        }
+
+      }],
+      default: [],
+    },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },
@@ -46,19 +62,19 @@ const userSchema = new mongoose.Schema(
 );
 
 
-userSchema.pre("save",async function(next){
+userSchema.pre("save", async function (next) {
   console.log("you are at pre of user scema");
-  if(!this.isModified("password")){
+  if (!this.isModified("password")) {
     return next();
   }
-  this.password=await bcrypt.hash(this.password,10);
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 })
 
-userSchema.methods.getJwtToken=function(){
+userSchema.methods.getJwtToken = function () {
   console.log("generating token");
-  return jwt.sign({id:this._id},process.env.JWT_SEC_KEY,{
-    expiresIn:process.env.JWT_EXP
+  return jwt.sign({ id: this._id }, process.env.JWT_SEC_KEY, {
+    expiresIn: process.env.JWT_EXP
   })
 }
 
@@ -71,7 +87,7 @@ userSchema.methods.verifyPassword = async function (pass) {
 };
 
 
-userSchema.statics.getCartWithProducts = async function(userId) {
+userSchema.statics.getCartWithProducts = async function (userId) {
   return await this.aggregate([
     {
       $match: { _id: new mongoose.Types.ObjectId(userId) }
