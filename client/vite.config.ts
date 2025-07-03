@@ -10,5 +10,9 @@ export default defineConfig({
         target:'http://localhost:8800'
       }
     }
+  },
+   preview: {
+    port: 4000,
+    allowedHosts: ['snapbharat.com']
   }
 })
