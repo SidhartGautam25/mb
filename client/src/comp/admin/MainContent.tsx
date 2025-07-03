@@ -3,7 +3,7 @@ import React from "react";
 import UsersComponent from "./hero/Users";
 import OrdersComponent from "./hero/Orders";
 import ProductsComponent from "./hero/Products";
-import CreatesComponent from "./hero/CreateProduct";
+// import CreatesComponent from "./hero/CreateProduct";
 import CProductC from "./CProduct";
 interface MainContentProps {
   activeSection: string;

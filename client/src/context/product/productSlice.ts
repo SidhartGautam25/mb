@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios, { AxiosError } from 'axios';
+import  { AxiosError } from 'axios';
 import { findCategoryIndex } from '../../utils/categories';
 import axiosInstance from '../../utils/axiosConfig';
 
@@ -176,7 +176,7 @@ const productSlice = createSlice({
           state.reviewLoading = true;
           state.error = null;
         })
-        .addCase(createReview.fulfilled, (state, action: PayloadAction<CreateReviewResponse>) => {
+        .addCase(createReview.fulfilled, (state) => {
           state.reviewLoading = false;
           state.reviewSuccess = true;
         })
