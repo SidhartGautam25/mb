@@ -11,10 +11,10 @@ const ProductsComponent: React.FC = () => {
     const dispatch = useAppDispatch();
   
      // Dummy delete handler
-    const handleDelete = (id: string) => {
-      console.log("Delete user:", id);
-      toast.info("Delete handler not implemented yet");
-    };
+    // const handleDelete = (id: string) => {
+    //   console.log("Delete user:", id);
+    //   toast.info("Delete handler not implemented yet");
+    // };
   
     
   

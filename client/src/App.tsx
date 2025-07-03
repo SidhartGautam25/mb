@@ -1,8 +1,8 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./context/hooks.ts";
-import { useEffect } from "react";
-import { loadUser } from "./context/user/userSlice";
+// import { useAppDispatch, useAppSelector } from "./context/hooks.ts";
+// import { useEffect } from "react";
+// import { loadUser } from "./context/user/userSlice";
 import Home from "./pages/home.tsx";
 import Product from "./pages/product.tsx";
 import Products from "./pages/products.tsx";

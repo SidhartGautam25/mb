@@ -373,7 +373,7 @@ const userSlice = createSlice({
         state.error = action.payload?.message || "Failed to add phone number";
         state.success = false;
       })
-      .addCase(addAddress.pending, (state, action) => {
+      .addCase(addAddress.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.success = null;

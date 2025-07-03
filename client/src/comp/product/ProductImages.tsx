@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAppSelector } from "../../context/hooks";
 
 
@@ -6,7 +6,7 @@ import { useAppSelector } from "../../context/hooks";
 const ProductImages: React.FC = () => {
   // const [selected, setSelected] = useState(images[0]);
 
-   const { loading, error, product } = useAppSelector((state) => state.product);
+   const {  product } = useAppSelector((state) => state.product);
    const images=[product?.image,product?.image,product?.image,product?.image];
 
   return (
