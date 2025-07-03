@@ -27,6 +27,10 @@ const productSchema = new mongoose.Schema({
     type:String,
     default:"0"
   },
+  subcat:{
+     type:String,
+     default:"",
+  },
   tags: [
     {
       type: String,

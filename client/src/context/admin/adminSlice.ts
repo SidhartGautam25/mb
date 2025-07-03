@@ -20,6 +20,7 @@ interface AdminState {
   totalAmount: number;
   order: Order | {};
   reviews: Review[];
+  updated:Boolean;
 }
 
 const initialState: AdminState = {
@@ -35,7 +36,8 @@ const initialState: AdminState = {
   orders: [],
   totalAmount: 0,
   order: {},
-  reviews: []
+  reviews: [],
+  updated:false
 };
 
 // Fetch ALL Products
@@ -130,7 +132,7 @@ export const getSingleUser = createAsyncThunk(
 // Update User role
 export const updateUserRole = createAsyncThunk(
   'admin/updateUserRole',
-  async ({ userId, role }: { userId: string, role: string }, { rejectWithValue }) => {
+  async ({ userId, role  }: { userId: string, role: string }, { rejectWithValue }) => {
     try {
       const { data } = await axios.put(`/api/v1/admin/user/${userId}`, { role });
       return data;
@@ -246,6 +248,7 @@ const adminSlice = createSlice({
       .addCase(fetchAdminProducts.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.products = action.payload.products;
+        
       })
       .addCase(fetchAdminProducts.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
@@ -302,6 +305,7 @@ const adminSlice = createSlice({
       .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.users = action.payload.users;
+        state.updated=false;
       })
       .addCase(fetchUsers.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
@@ -328,6 +332,8 @@ const adminSlice = createSlice({
       .addCase(updateUserRole.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.success = action.payload.success;
+        state.updated=true;
+        
       })
       .addCase(updateUserRole.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;

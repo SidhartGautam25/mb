@@ -12,6 +12,7 @@ import ProtectedRoute from "./comp/common/ProtectedRoute.tsx";
 import CreateProduct from "./pages/admin/createProduct.tsx";
 import Profile from "./pages/profile.tsx";
 import CartPage from "./pages/cart.tsx";
+import AdminHome from "./pages/admin/admin.tsx";
 
 function App(): JSX.Element {
   // const dispatch = useAppDispatch();
@@ -34,7 +35,8 @@ function App(): JSX.Element {
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/cart" element={<CartPage/>}/>
         {/* admin routes */}
-        <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>} adminOnly={true}/>}/>
+        <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>}  adminOnly={true}/>}/>
+        <Route path="/admin" element={<ProtectedRoute element={<AdminHome/>} adminOnly={true}/>}/>
       </Routes>
     </Router>
   );
