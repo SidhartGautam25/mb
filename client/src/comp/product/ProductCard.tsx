@@ -1,5 +1,5 @@
 import React from "react";
-import { AiOutlineHeart, AiOutlineEye } from "react-icons/ai";
+import { AiOutlineHeart } from "react-icons/ai";
 
 interface ProductCardProps {
   name: string;

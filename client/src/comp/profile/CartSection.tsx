@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { useEffect } from "react";
 import { loadCartItems } from "../../context/cart/cartSlice";
@@ -13,7 +13,7 @@ interface CartItem {
 
 const CartSection: React.FC<{ items: CartItem[] }> = ({ items }) => {
 
-  const { cartItems, loading, error } = useAppSelector((state) => state.cart);
+  const { cartItems} = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
 
 

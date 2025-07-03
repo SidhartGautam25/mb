@@ -19,7 +19,7 @@ const CProductC: React.FC = () => {
   const [category, setCategory] = useState("");
   const [subcat, setSubcat] = useState("");
   const [issubcat, setIssubcat] = useState(false);
-  const [catid, setCatid] = useState("");
+  // const [catid, setCatid] = useState("");
   const [subcategories,setSubcategories]=useState<CatItems | null>(null);
   const [stock, setStock] = useState("");
   const [image, setImage] = useState<string[]>([]);

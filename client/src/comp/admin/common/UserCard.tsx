@@ -1,7 +1,7 @@
 // components/dashboard/UserCard.tsx
 import React, { useState } from "react";
 import { Trash2 } from "lucide-react"; // optional, use any icons you like
-import { toast, ToastContainer } from "react-toastify";
+import {  ToastContainer } from "react-toastify";
 
 
 interface UserCardProps {
@@ -18,10 +18,12 @@ const UserCard: React.FC<UserCardProps> = ({ user, onDelete, onRoleChange }) => 
     setSelectedRole(role);
     onRoleChange(user._id, role);
     setShowDropdown(false);
+    onDelete(user._id);
   };
 
   const handleDeletion=()=>{
     console.log("toat should appear")
+    onDelete(user._id);
    
 
   }
