@@ -1,6 +1,7 @@
 // utils/axiosConfig.ts
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { StorageManager } from './storageManager';
+import { url } from './constants';
 
 
 let store:any=null;
@@ -11,7 +12,7 @@ export const setAxiosStore = (storeInstance: any) => {
 
 // Create Axios instance
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:8800',
+  baseURL: url,
   withCredentials: true,
   timeout: 10000,
 });
