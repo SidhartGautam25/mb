@@ -11,7 +11,7 @@ export const setAxiosStore = (storeInstance: any) => {
 
 // Create Axios instance
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: '',
+  baseURL: 'http://localhost:8800',
   withCredentials: true,
   timeout: 10000,
 });
