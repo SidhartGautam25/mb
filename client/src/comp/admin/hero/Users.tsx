@@ -45,10 +45,10 @@ const UsersComponent: React.FC = () => {
   });
   return <div className="text-gray-800 text-xl"><div className="space-y-4">
       {/* <h2 className="text-2xl font-bold text-gray-800 mb-4">📋 Users Management</h2> */}
-      {users.length === 0 ? (
+      {users?.length === 0 ? (
         <p className="text-gray-500 italic">No users found.</p>
       ) : (
-        users.map((user) => (
+        users?.map((user) => (
           <UserCard
             key={user._id}
             user={user}
