@@ -37,10 +37,10 @@ const ProductsComponent: React.FC = () => {
     });
   return <div className="text-gray-800 text-xl">
     <div>
-     {products.length === 0 ? (
+     {products?.length === 0 ? (
         <p className="text-gray-500 italic">No products found.</p>
       ) : (
-        products.map((product) => (
+        products?.map((product) => (
           <AProductCard product={product} id={product._id}/>
         ))
       )}
