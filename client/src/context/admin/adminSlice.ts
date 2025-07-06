@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import axiosInstance from "../../utils/axiosConfig";
 
 type Product = Record<string, any>;
 type User = Record<string, any>;
@@ -45,7 +46,7 @@ export const fetchAdminProducts = createAsyncThunk(
   'admin/fetchAdminProducts',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get('/api/v1/admin/products');
+      const { data } = await axiosInstance.get('/api/v1/admin/products');
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Error While Fetching the products");
@@ -64,7 +65,7 @@ export const createProduct = createAsyncThunk(
     //     }
     //   };
       console.log("productData ",productData);
-      const { data } = await axios.post('/api/v1/admin/product/create', productData);
+      const { data } = await axiosInstance.post('/api/v1/admin/product/create', productData);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Product Creation Failed");
@@ -82,7 +83,7 @@ export const updateProduct = createAsyncThunk(
           'Content-Type': 'multipart/form-data'
         }
       };
-      const { data } = await axios.put(`/api/v1/admin/product/${id}`, formData, config);
+      const { data } = await axiosInstance.put(`/api/v1/admin/product/${id}`, formData, config);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Product Update Failed");
@@ -108,7 +109,7 @@ export const fetchUsers = createAsyncThunk(
   'admin/fetchUsers',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`/api/v1/admin/users`);
+      const { data } = await axiosInstance.get(`/api/v1/admin/users`);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to fetch users");
@@ -121,7 +122,7 @@ export const getSingleUser = createAsyncThunk(
   'admin/getSingleUser',
   async (id: string, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`/api/v1/admin/user/${id}`);
+      const { data } = await axiosInstance.get(`/api/v1/admin/user/${id}`);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to fetch Single user");
@@ -134,7 +135,7 @@ export const updateUserRole = createAsyncThunk(
   'admin/updateUserRole',
   async ({ userId, role  }: { userId: string, role: string }, { rejectWithValue }) => {
     try {
-      const { data } = await axios.put(`/api/v1/admin/user/${userId}`, { role });
+      const { data } = await axiosInstance.put(`/api/v1/admin/user/${userId}`, { role });
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to update user role");
@@ -147,7 +148,7 @@ export const deleteUser = createAsyncThunk(
   'admin/deleteUser',
   async (userId: string, { rejectWithValue }) => {
     try {
-      const { data } = await axios.delete(`/api/v1/admin/user/${userId}`);
+      const { data } = await axiosInstance.delete(`/api/v1/admin/user/${userId}`);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to Delete User");
@@ -160,7 +161,7 @@ export const fetchAllOrders = createAsyncThunk(
   'admin/fetchAllOrders',
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`/api/v1/admin/orders`);
+      const { data } = await axiosInstance.get(`/api/v1/admin/orders`);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to Fetch Orders");
@@ -173,7 +174,7 @@ export const deleteOrder = createAsyncThunk(
   'admin/deleteOrder',
   async (id: string, { rejectWithValue }) => {
     try {
-      const { data } = await axios.delete(`/api/v1/admin/order/${id}`);
+      const { data } = await axiosInstance.delete(`/api/v1/admin/order/${id}`);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to Delete Order");
