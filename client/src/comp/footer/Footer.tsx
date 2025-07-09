@@ -25,9 +25,13 @@ const Footer: React.FC = () => {
         {/* Support */}
         <div>
           <h2 className="text-base font-bold mb-2">Support</h2>
-          <p className="mb-2 text-gray-400">6c/2, Kalikapur, DH 1515, India.</p>
-          <p className="mb-2 text-gray-400">exclusive@gmail.com</p>
-          <p className="text-gray-400">+88015-88888-9999</p>
+          <p className="mb-2 text-gray-400">
+            1st Floor Captain Complex, Naka 5, Near Kotwali Thana,
+            Darbhanga, PO Lalbagh, PS Laheria Sarai,
+            Dist Darbhanga, Bihar 846004
+          </p>
+          <p className="mb-2 text-gray-400">snapbharat@support</p>
+          <p className="text-gray-400">9508247637</p>
         </div>
 
         {/* Account */}
@@ -74,7 +78,7 @@ const Footer: React.FC = () => {
 
       {/* Bottom copyright */}
       <div className="text-center text-xs text-gray-500 mt-10 border-t border-gray-700 pt-4">
-        © Copyright Rimel 2022. All right reserved
+        © Copyright 2025. All rights reserved
       </div>
     </footer>
   );
