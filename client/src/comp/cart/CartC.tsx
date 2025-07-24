@@ -12,8 +12,8 @@ const CartC: React.FC = () => {
   let totalItem: number = 0;
 
   cartItems.forEach((item) => {
-    totalCost += item.price * item.quantity; // Multiply price by quantity
-    totalItem += item.quantity;
+    totalCost += Number(item.price) * Number(item.quantity); // Multiply price by quantity
+    totalItem += Number(item.quantity);
   });
 
   useEffect(() => {
