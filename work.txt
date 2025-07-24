@@ -1,0 +1,19 @@
+Uday --> 
+
+1. login signup page pe image lagana 
+2. footer pe data or link update krna
+3. homepage ko responsive krna
+4. cart section ka design improve krna
+5. Profile page pe human logo lagana (image section me )
+6. 
+
+Navneet -->
+
+1. products page pe pagination 
+2. admin ke hr componnet pe pagination
+3. item removal option in cart
+4. payment completion
+5. admin me product update option
+6. admin product detail componnet
+7. user detail componnet
+8. product deletion option in admin
