@@ -2,18 +2,7 @@ import React, { useRef } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import ProductCard from "./Card";
 
-interface Product {
-  id: number;
-  name: string;
-  image: string;
-  discount: number;
-  price: number;
-  originalPrice: number;
-  rating: number;
-  reviews: number;
-}
-
-const products: Product[] = [
+const products = [
   {
     id: 1,
     name: "Baby care product",
@@ -99,46 +88,34 @@ const FlashSale: React.FC = () => {
   };
 
   return (
-    <section className="w-full bg-gray-100 px-0 py-4 min-h-[70vh] max-h-[80vh] flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center mb-3 px-4 flex-shrink-0">
+    <section className="w-full bg-gray-100 py-6">
+      <div className="flex items-center mb-4 px-4">
         <span className="w-2 h-7 bg-red-500 mr-2 rounded-sm"></span>
-        <h2 className="text-titleSize mt-1 mb-1">Flash Sales</h2>
+        <h2 className="text-xl md:text-2xl font-semibold">Flash Sales</h2>
       </div>
 
-      {/* Products Container - takes remaining space */}
-      <div className="relative flex-1 min-h-0 overflow-hidden">
-        {/* Products Carousel - now properly filling height */}
+      <div className="relative">
         <div
           ref={scrollRef}
-          className="absolute inset-0 flex gap-4 overflow-x-auto overflow-y-hidden scroll-smooth px-4 scrollbar-hide pb-4"
-          style={{
-            justifyContent: products.length < 4 ? "center" : "flex-start",
-          }}
+          className="flex gap-4 overflow-x-auto px-4 pb-4 scroll-smooth scrollbar-hide"
         >
           {products.map((product) => (
-            <div
-              key={product.id}
-              className="h-full flex-shrink-0 mt-2"
-              style={{ width: "calc(16.666% - 13.33px)" }}
-            >
+            <div key={product.id} className="flex-shrink-0 w-48 sm:w-56 md:w-60">
               <ProductCard product={product} />
             </div>
           ))}
         </div>
-
-        {/* Arrows */}
-        {products.length > 4 && (
+        {products.length > 3 && (
           <>
             <button
               onClick={() => scroll("left")}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 shadow-md p-2 rounded-full z-10 hover:bg-white"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white shadow p-2 rounded-full z-10 hover:bg-gray-100"
             >
               <FaArrowLeft size={16} />
             </button>
             <button
               onClick={() => scroll("right")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 shadow-md p-2 rounded-full z-10 hover:bg-white"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white shadow p-2 rounded-full z-10 hover:bg-gray-100"
             >
               <FaArrowRight size={16} />
             </button>
@@ -146,9 +123,8 @@ const FlashSale: React.FC = () => {
         )}
       </div>
 
-      {/* View All Products Button */}
-      <div className="flex justify-center flex-shrink-0 px-4 mt-2">
-        <button className="bg-red-500 text-white px-8 py-2 text-sm rounded-md hover:bg-red-600 transition-colors duration-200">
+      <div className="flex justify-center mt-4">
+        <button className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600">
           View All Products
         </button>
       </div>
