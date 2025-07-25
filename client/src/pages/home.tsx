@@ -7,11 +7,13 @@ import FlashSale from "../comp/home/flashsale/Flashsale";
 
 const Home: React.FC = () => {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <Hero />
-      <FlashSale />
-      <CategorySection />
+      <main className="flex-grow">
+        <Hero />
+        <FlashSale />
+        <CategorySection />
+      </main>
       <Footer />
     </div>
   );

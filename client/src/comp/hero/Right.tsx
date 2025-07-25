@@ -4,42 +4,9 @@ const Right: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
-    {
-      content: (
-        // <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold p-4 text-center">
-        //   Summer Sale <br /> Up to 30% Off
-        // </div>
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold  text-center">
-          <img
-            src="product_img/sales.avif"
-            alt="banner"
-            className="w-full h-full flex items-center justify-center"
-          />
-        </div>
-      ),
-    },
-    {
-      content: (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold  text-center">
-          <img
-            src="product_img/salesbanner3.jpeg"
-            alt="banner"
-            className="w-full h-full flex items-center justify-center"
-          />
-        </div>
-      ),
-    },
-    {
-      content: (
-        <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white text-3xl font-bold  text-center">
-          <img
-            src="product_img/salesbanner2.avif"
-            alt="banner"
-            className="w-full h-full flex items-center justify-center"
-          />
-        </div>
-      ),
-    },
+    { content: <img src="product_img/sales.avif" alt="banner" className="w-full h-full object-cover" /> },
+    { content: <img src="product_img/salesbanner3.jpeg" alt="banner" className="w-full h-full object-cover" /> },
+    { content: <img src="product_img/salesbanner2.avif" alt="banner" className="w-full h-full object-cover" /> },
   ];
 
   useEffect(() => {
@@ -51,9 +18,7 @@ const Right: React.FC = () => {
   }, [slides.length]);
 
   return (
-    <div className="w-full md:w-3/4 lg:w-4/5 relative h-[400px] md:h-[450px] pl-4">
-      {" "}
-      {/* Added left padding */}
+    <div className="w-full md:w-3/4 lg:w-4/5 relative h-60 md:h-[450px]">
       <div className="w-full h-full relative overflow-hidden">
         {slides.map((slide, index) => (
           <div
@@ -65,8 +30,6 @@ const Right: React.FC = () => {
             {slide.content}
           </div>
         ))}
-
-        {/* Navigation dots */}
         <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
           {slides.map((_, index) => (
             <button
