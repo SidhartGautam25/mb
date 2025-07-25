@@ -9,12 +9,13 @@ const CartC: React.FC = () => {
   const { cartItems } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
 
-  // Calculate total cost and total items
-  const totalCost = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
-  const totalItem = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+Item = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  cartItems.forEach((item) => {
+    totalCost += Number(item.price) * Number(item.quantity); // Multiply price by quantity
+    totalItem += Number(item.quantity);
+  });
+
 
   useEffect(() => {
     if (cartItems.length === 0) {
