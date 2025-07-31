@@ -15,11 +15,13 @@ import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { logout } from "../../context/user/userSlice";
 import { clearCart } from "../../context/cart/cartSlice";
 import { toast } from "react-toastify";
+import logo from "../../../public/logo.jpeg"; 
 
 const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
@@ -53,38 +55,48 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <header className="w-full bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-4">
+    <header className="w-full bg-white shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
         {/* Logo */}
-        <a href="/" className="text-xl font-bold text-gray-800">
-          Mithila Bazar
+        <a
+          href="/"
+          className="flex items-center gap-2 text-2xl font-bold text-gray-800 tracking-tight"
+        >
+          <img
+            src={logo}
+            alt="Cliftkart Logo"
+            className="h-10 w-auto object-contain"
+          />
+          <span className="text-[#852555]">Cliftkart</span>
         </a>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-6">
           {/* Search */}
-          <div className="relative">
+          <div className="relative w-64">
             <input
               type="text"
               placeholder="What are you looking for?"
-              className="pl-4 pr-8 py-2 text-sm bg-gray-100 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full pl-4 pr-10 py-2 text-sm bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4a1630] placeholder-gray-400"
             />
-            <FaSearch className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           </div>
 
-          {/* Icons */}
+          {/* Wishlist */}
           <button className="p-1 hover:bg-gray-100 rounded-full" aria-label="Wishlist">
             <FaHeart className="text-xl text-gray-700" />
           </button>
+
+          {/* Cart */}
           <a href="/cart" className="p-1 hover:bg-gray-100 rounded-full" aria-label="Cart">
             <FaShoppingCart className="text-xl text-gray-700" />
           </a>
 
-          {/* User Dropdown */}
+          {/* Auth Dropdown */}
           <div className="relative" ref={dropdownRef}>
             {isAuthenticated ? (
               <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                onClick={() => setIsDropdownOpen((prev) => !prev)}
                 className="p-1 hover:bg-gray-100 rounded-full focus:outline-none"
                 aria-label="User menu"
               >
@@ -93,32 +105,30 @@ const Navbar: React.FC = () => {
             ) : (
               <button
                 onClick={() => navigate("/login")}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition"
+                className="bg-[#852555] hover:bg-[#983868] text-white px-4 py-2 rounded-md text-sm transition"
               >
                 Login
               </button>
             )}
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-lg z-50 overflow-hidden">
                 <button
                   onClick={() => navigate("/profile")}
-                  className="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                  className="w-full flex items-center px-4 py-3 text-sm hover:bg-gray-100 text-gray-700"
                 >
                   <FaUserCircle className="mr-3 text-lg" />
                   Profile
                 </button>
-                <div className="border-t border-gray-100"></div>
                 <button
-                  className="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                  className="w-full flex items-center px-4 py-3 text-sm hover:bg-gray-100 text-gray-700"
                 >
                   <FaQuestionCircle className="mr-3 text-lg" />
                   Help
                 </button>
-                <div className="border-t border-gray-100"></div>
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50"
+                  className="w-full flex items-center px-4 py-3 text-sm hover:bg-gray-100 text-gray-700"
                 >
                   <FaSignOutAlt className="mr-3 text-lg" />
                   Logout
@@ -128,7 +138,7 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Hamburger */}
+        {/* Mobile Menu Toggle */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300"
@@ -142,14 +152,14 @@ const Navbar: React.FC = () => {
         </button>
       </div>
 
-      {/* Mobile Menu Content */}
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white shadow-md px-4 py-4 space-y-4">
           <div className="relative">
             <input
               type="text"
               placeholder="Search products..."
-              className="w-full pl-4 pr-8 py-2 text-sm bg-gray-100 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              className="w-full pl-4 pr-10 py-2 text-sm bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4a1630] placeholder-gray-400"
             />
             <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           </div>
@@ -172,7 +182,7 @@ const Navbar: React.FC = () => {
             ) : (
               <button
                 onClick={() => navigate("/login")}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm transition w-full text-center"
+                className="bg-[#852555] hover:bg-[#983868] text-white px-4 py-2 rounded-md text-sm transition w-full text-center"
               >
                 Login
               </button>
