@@ -22,6 +22,8 @@ export const corsOptions = {
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:5173', // Vite default
+      'http://cliftkart.com',
+      'http://www.cliftkart.com',
       'https://cliftkart.com',
       'https://www.cliftkart.com'
     ];
