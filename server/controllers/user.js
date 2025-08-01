@@ -10,50 +10,127 @@ import {
   updateCartItemQuantity,
 } from "../utils/userUtility.js";
 
+// export const refreshToken = handleAsyncError(async (req, res, next) => {
+//   console.log("you are in refresh token controller");
+//   const { refreshToken } = req.cookies;
+//   if (!refreshToken) {
+//     return next(new HandleError("Refresh Token not found ", 401));
+//   }
+//   const decodedData = verifyRefreshToken(refreshToken);
+//   const user = await User.findById(decodedData.id);
+
+//   if (!user) {
+//     return next(new HandleError("User not found", 404));
+//   }
+
+//   const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+//     generateTokens(user);
+
+//   const accessTokenOptions = {
+//     expires: new Date(
+//       Date.now() + (process.env.JWT_ACCESS_COOKIE_EXPIRE || 15) * 60 * 1000
+//     ),
+//     httpOnly: true,
+//     // secure: process.env.NODE_ENV === "production",
+//     // sameSite: "strict",
+//   };
+
+//   const refreshTokenOptions = {
+//     expires: new Date(
+//       Date.now() +
+//       (process.env.JWT_REFRESH_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
+//     ),
+//     httpOnly: true,
+//     // secure: process.env.NODE_ENV === "production",
+//     // sameSite: "strict",
+//   };
+
+//   res
+//     .status(200)
+//     .cookie("accessToken", newAccessToken, accessTokenOptions)
+//     .cookie("refreshToken", newRefreshToken, refreshTokenOptions)
+//     .json({
+//       success: true,
+//       message: "Token refreshed successfully",
+//       accessToken: newAccessToken,
+//     });
+// });
+
+
 export const refreshToken = handleAsyncError(async (req, res, next) => {
-  console.log("you are in refresh token controller");
   const { refreshToken } = req.cookies;
+  
   if (!refreshToken) {
-    return next(new HandleError("Refresh Token not found ", 401));
-  }
-  const decodedData = verifyRefreshToken(refreshToken);
-  const user = await User.findById(decodedData.id);
-
-  if (!user) {
-    return next(new HandleError("User not found", 404));
+    return next(new HandleError("Authentication required - No refresh token provided", 401));
   }
 
-  const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-    generateTokens(user);
+  try {
+    // Verify the refresh token
+    const decodedData = verifyRefreshToken(refreshToken);
+    const user = await User.findById(decodedData.id);
 
-  const accessTokenOptions = {
-    expires: new Date(
-      Date.now() + (process.env.JWT_ACCESS_COOKIE_EXPIRE || 15) * 60 * 1000
-    ),
-    httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    // sameSite: "strict",
-  };
+    if (!user) {
+      return next(new HandleError("User not found", 404));
+    }
 
-  const refreshTokenOptions = {
-    expires: new Date(
-      Date.now() +
-      (process.env.JWT_REFRESH_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-    // secure: process.env.NODE_ENV === "production",
-    // sameSite: "strict",
-  };
+    // Check for token reuse
+    if (user.invalidatedTokens?.includes(refreshToken)) {
+      // Clear all tokens as security measure
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+      return next(new HandleError("Security alert: Potential token reuse detected", 401));
+    }
 
-  res
-    .status(200)
-    .cookie("accessToken", newAccessToken, accessTokenOptions)
-    .cookie("refreshToken", newRefreshToken, refreshTokenOptions)
-    .json({
-      success: true,
-      message: "Token refreshed successfully",
-      accessToken: newAccessToken,
+    // Generate new tokens
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = 
+      generateTokens(user);
+
+    // Invalidate the old refresh token
+    await User.findByIdAndUpdate(user._id, {
+      $push: { invalidatedTokens: refreshToken }
     });
+
+    // Cookie options
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieDomain = isProduction ? '.cliftkart.com' : undefined;
+
+    // Access token cookie (short-lived)
+    const accessTokenOptions = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      domain: cookieDomain,
+      maxAge: (process.env.JWT_ACCESS_COOKIE_EXPIRE || 1) * 60 * 1000, // 15 mins
+      path: '/'
+    };
+
+    // Refresh token cookie (long-lived, restricted path)
+    const refreshTokenOptions = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? 'none' : 'lax',
+      domain: cookieDomain,
+      maxAge: (process.env.JWT_REFRESH_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000, // 7 days
+      path: '/api/v1/auth/refresh' // Only sent to refresh endpoint
+    };
+
+    // Set cookies and respond
+    res
+      .status(200)
+      .cookie("accessToken", newAccessToken, accessTokenOptions)
+      .cookie("refreshToken", newRefreshToken, refreshTokenOptions)
+      .json({
+        success: true,
+        message: "Tokens refreshed successfully",
+        accessToken: newAccessToken // Optional: for clients that store in memory
+      });
+
+  } catch (error) {
+    // Clear invalid tokens on error
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return next(new HandleError("Invalid or expired refresh token", 401));
+  }
 });
 
 export const registerUser = handleAsyncError(async (req, res, next) => {

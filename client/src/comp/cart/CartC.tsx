@@ -8,14 +8,16 @@ const CartC: React.FC = () => {
   const navigate = useNavigate();
   const { cartItems } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
+  
+  // Initialize variables with default values
+  let totalCost: number = 0;
+  let totalItem: number = 0;
 
-Item = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-
+  // Calculate totals
   cartItems.forEach((item) => {
-    totalCost += Number(item.price) * Number(item.quantity); // Multiply price by quantity
+    totalCost += Number(item.price) * Number(item.quantity);
     totalItem += Number(item.quantity);
   });
-
 
   useEffect(() => {
     if (cartItems.length === 0) {

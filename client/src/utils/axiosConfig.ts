@@ -37,6 +37,7 @@ const processQueue = (error: AxiosError | null, token: string | null = null): vo
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
+    console.log('base url is ',config);
     console.log('Making request to:', config.url);
     return config;
   },

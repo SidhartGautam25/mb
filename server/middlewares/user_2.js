@@ -11,8 +11,9 @@ import {
 export const verifyUser = handleAsyncError(async (req, res, next) => {
   console.log("req.cookies is ", req.cookies);
   const { accessToken, refreshToken } = req.cookies;
-
+  console.log("veriyfing user");
   if (!accessToken && !refreshToken) {
+    console.log("user has no token available")
     return next(
       new HandleError(
         "Not authenticated, please login to access resources",
