@@ -73,8 +73,8 @@ export const sendToken = (user, statusCode, res) => {
   // Common options for both tokens
   const commonOptions = {
     httpOnly: true,
-    // secure: isProduction, // HTTPS required in production
-    secure:false,
+    secure: isProduction, // HTTPS required in production
+    // secure:false,
     path: '/',
     domain: isProduction ? '.cliftkart.com' : 'localhost'
   };
