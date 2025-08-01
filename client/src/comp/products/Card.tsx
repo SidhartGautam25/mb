@@ -1,14 +1,9 @@
 import { Star } from "lucide-react";
 
 interface Product {
-  name: string;
-  image: string;
-  badge?: string;
-  price: number;
-  oldPrice: number;
-  discount: number;
-  reviews: number;
+  [key: string]: any;
 }
+
 
 interface BookCardProps {
   product: Product;
