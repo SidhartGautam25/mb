@@ -4,9 +4,11 @@ const Right: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
-    { content: <img src="product_img/sales.avif" alt="banner" className="w-full h-full object-cover" /> },
-    { content: <img src="product_img/salesbanner3.jpeg" alt="banner" className="w-full h-full object-cover" /> },
+    { content: <img src="product_img/salesbanner6.avif" alt="banner" className="w-full h-full object-cover" /> },
+    { content: <img src="product_img/salesbanner5.jpg" alt="banner" className="w-full h-full object-cover" /> },
+        { content: <img src="product_img/salesbanner6.avif" alt="banner" className="w-full h-full object-cover" /> },
     { content: <img src="product_img/salesbanner2.avif" alt="banner" className="w-full h-full object-cover" /> },
+        { content: <img src="product_img/salesbanner6.avif" alt="banner" className="w-full h-full object-cover" /> },
   ];
 
   useEffect(() => {
