@@ -43,9 +43,16 @@ const CategoryBanner = () => {
           
          
           {/* Bottom right bottom */}
-          <div className="col-span-2 row-span-2 bg-indigo-500 border-2 border-gray-800 rounded-sm"></div>
+          <div className="col-span-2 row-span-2 bg-indigo-500 border-2 border-gray-800 rounded-sm">
+            
+          </div>
            {/* Bottom right top */}
-          <div className="col-span-2 row-span-1 bg-teal-500 border-2 border-gray-800 rounded-sm"></div>
+          <div className="col-span-2 row-span-1 bg-[#95295f]  rounded-sm">
+            <button className="w-full h-full text-white font-semibold text-lg hover:bg-[#c72576] transition duration-200">
+              View More
+            </button>
+          </div>
+
           
         </div>
       </div>

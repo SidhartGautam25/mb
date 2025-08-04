@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { logout } from "../../context/user/userSlice";
 import { clearCart } from "../../context/cart/cartSlice";
 import { toast } from "react-toastify";
-import logo from "../../../public/logo.jpeg"; 
+import logo from "../../../public/cliftkart_logo.png"; 
 
 const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

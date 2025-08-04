@@ -8,6 +8,7 @@ import {
 } from "../../context/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { useNavigate} from "react-router-dom";
+import Login_img from "../../../public/cliftkart_login.png";
 
 const LoginC: React.FC = () => {
   const [lEmail, setLEmail] = useState<string>("");
@@ -51,7 +52,7 @@ const LoginC: React.FC = () => {
         {/* Left Image Side (hidden on small screens) */}
         <div className="hidden md:block w-1/2 bg-blue-50">
           <img
-            src="/signup-image.png" // Replace with your actual path
+            src={Login_img} // Replace with your actual path
             alt="Signup visual"
             className="object-cover h-full w-full"
           />
