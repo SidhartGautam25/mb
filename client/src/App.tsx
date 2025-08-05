@@ -13,6 +13,7 @@ import CreateProduct from "./pages/admin/createProduct.tsx";
 import Profile from "./pages/profile.tsx";
 import CartPage from "./pages/cart.tsx";
 import AdminHome from "./pages/admin/admin.tsx";
+import { loadUser } from "./context/user/userSlice.ts";
 
 function App(): JSX.Element {
   // const dispatch = useAppDispatch();

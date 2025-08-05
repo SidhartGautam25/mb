@@ -8,7 +8,8 @@ import {
 } from "../../context/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { useNavigate} from "react-router-dom";
-import Login_img from "../../../public/cliftkart_login.png";
+// import Login_img from "../../../public/cliftkart_login.png";
+import Login_img from "../../../public/Cliftkart_login.png"
 
 const LoginC: React.FC = () => {
   const [lEmail, setLEmail] = useState<string>("");
