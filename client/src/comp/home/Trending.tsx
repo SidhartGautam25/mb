@@ -41,6 +41,26 @@ const sampleProducts = [
     originalPrice: 400,
     rating: 4.6,
     reviews: 99,
+  },
+  {
+    id: 3,
+    name: "Vadilal ice-cream",
+    image: "public/product_img/icecream.jpg",
+    discount: 30,
+    price: 370,
+    originalPrice: 470,
+    rating: 4.4,
+    reviews: 99,
+  },
+  {
+    id: 4,
+    name: "Fruits & vegetable",
+    image: "/product_img/vegetables.jpg",
+    discount: 25,
+    price: 375,
+    originalPrice: 400,
+    rating: 4.6,
+    reviews: 99,
   }
 ];
 

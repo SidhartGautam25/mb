@@ -30,8 +30,8 @@ const Footer: React.FC = () => {
             Darbhanga, PO Lalbagh, PS Laheria Sarai,
             Dist Darbhanga, Bihar 846004
           </p>
-          <p className="mb-2 text-white-400">snapbharat@support</p>
-          <p className="text-white-400">9508247637</p>
+          <p className="mb-2 text-white-400">support@cliftkart.com</p>
+          <p className="text-white-400">9123266618</p>
         </div>
 
         {/* Account */}

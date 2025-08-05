@@ -8,6 +8,7 @@ import {
 } from "../../context/user/userSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import signup_img from '../../../public/cliftkart_signup.jpg';
 
 const SignupC: React.FC = () => {
   const [user, setUser] = useState({
@@ -63,7 +64,7 @@ const SignupC: React.FC = () => {
         {/* Left Image Side (hidden on small screens) */}
         <div className="hidden md:block w-1/2 bg-blue-50">
           <img
-            src="/signup-image.png" // Replace with your actual path
+            src={signup_img} // Replace with your actual path
             alt="Signup visual"
             className="object-cover h-full w-full"
           />
