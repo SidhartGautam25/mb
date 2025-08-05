@@ -1,5 +1,5 @@
 import express from "express";
-import { addAddress, addPhone, addToCart, getCartItems, Login, logout, refreshToken, registerUser } from "../controllers/user.js";
+import { addAddress, addPhone, addToCart, getCartItems, Login, logout, refreshToken, registerUser, removeItemFromCart } from "../controllers/user.js";
 // import { verifyUser } from "../middlewares/user.js";
 import { verifyUser } from "../middlewares/user_2.js";
 import { roleBasedAccess } from "../middlewares/user.js";
@@ -12,6 +12,7 @@ router.route("/login").post(Login);
 router.route("/refresh-token").post(refreshToken);
 router.route("/addToCart").post(verifyUser, addToCart);
 router.route("/loadCart").get(verifyUser, getCartItems);
+router.route("/removeFromCart/:productId").delete(verifyUser,removeItemFromCart);
 router.route("/addAddress").post(verifyUser, addAddress);
 router.route("/addPhone").post(verifyUser, addPhone);
 router.route("/logout").post(logout);
