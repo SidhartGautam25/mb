@@ -58,6 +58,7 @@ import {
 
 
 export const refreshToken = handleAsyncError(async (req, res, next) => {
+  console.log("in refresh token function and we will try to refresh your token now")
   const { refreshToken } = req.cookies;
   
   if (!refreshToken) {
@@ -111,7 +112,7 @@ export const refreshToken = handleAsyncError(async (req, res, next) => {
       sameSite: isProduction ? 'none' : 'lax',
       domain: cookieDomain,
       maxAge: (process.env.JWT_REFRESH_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000, // 7 days
-      path: '/api/v1/auth/refresh' // Only sent to refresh endpoint
+      path: '/' 
     };
 
     // Set cookies and respond
@@ -306,14 +307,19 @@ export const getCartItems = handleAsyncError(async (req, res, next) => {
 
 
 export const removeItemFromCart = handleAsyncError(async (req, res, next) => {
+  console.log("you are in controller which remove items from cart");
   const userId = req.user._id;
   const user = await getUser(userId);
-  const { productId } = req.body;
+  const  productId  = req.params.productId;
   const cart = user.cart;
   const index = cart.findIndex((item) => item.productId?.toString() === productId?.toString());
+  console.log("index of item which we need to remove is ",index);
+  console.log("user before splice section is ",user);
   if (index !== -1) {
+    console.log("in splice section");
     user.cart.splice(index, 1);
   }
+  console.log("user after splice is ",user);
   await user.save({ validateBeforeSave: false });
   console.log("successfully done");
   res.status(200).json({

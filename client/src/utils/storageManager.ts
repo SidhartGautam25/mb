@@ -19,6 +19,7 @@ export class StorageManager{
 
     static getUser(): any {
     try {
+      console.log("getting user detail from local storage")
       const user = localStorage.getItem(this.KEYS.USER);
       return user ? JSON.parse(user) : null;
     } catch (error) {

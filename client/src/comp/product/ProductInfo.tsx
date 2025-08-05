@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
-import { useParams } from "react-router-dom";
-import { addItemsToCart, removeMessage } from "../../context/cart/cartSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { addItemsToCart, loadCartItems, removeFromCart, removeMessage } from "../../context/cart/cartSlice";
 import { toast } from "react-toastify";
 import {
   getProductDetails,
@@ -26,6 +26,7 @@ const ProductInfo: React.FC = () => {
 
   const { loading, error, product } = useAppSelector((state) => state.product);
   const { isAuthenticated } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user);
 
   const {
     loading: cartLoading,
@@ -37,6 +38,7 @@ const ProductInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const cartItem = useMemo(() => {
     if (!id) {
@@ -48,6 +50,14 @@ const ProductInfo: React.FC = () => {
   const isInCart = useMemo(() => !!cartItem, [cartItem]);
 
   // IMPROVEMENT: Initialize quantity from cart item on component mount
+  
+   
+  
+    useEffect(() => {
+      // if (cartItems.length === 0) {
+        dispatch(loadCartItems());
+      // }
+    }, [dispatch, cartItems.length]);
   useEffect(() => {
     if (cartItem && !isQuantityInitialized) {
       setQuantity(cartItem.quantity);
@@ -81,11 +91,16 @@ const ProductInfo: React.FC = () => {
   // };
 
   const addToCart = useCallback(() => {
+    console.log("add to cart function in action")
+    console.log("the userr detail according to us is ");
+    console.log(user);
     if (!isAuthenticated) {
-      toast.error("Please Login First to add items to cart", {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      console.log("you are not authenticated")
+      // toast.error("Please Login First to add items to cart", {
+      //   position: "top-center",
+      //   autoClose: 3000,
+      // });
+      navigate("/login")
       return;
     }
     if (!id || !product) {
@@ -190,6 +205,18 @@ const ProductInfo: React.FC = () => {
   //   }
   //   setQuantity((qty) => qty + 1);
   // };
+
+    // Remove from cart function
+  const RemoveFromCart = useCallback(() => {
+    if (!id) return;
+    
+    // Show confirmation dialog
+    if (window.confirm(`Are you sure you want to remove ${product?.name} from your cart?`)) {
+      const productId:string=id;
+      dispatch(removeFromCart(productId));
+    }
+  }, [id, product?.name, dispatch]);
+
 
   const increaseQuantity = useCallback(() => {
     const newQuantity:number = Number(quantity) + 1;
@@ -332,10 +359,7 @@ const ProductInfo: React.FC = () => {
                 {/* IMPROVEMENT: Added option to remove from cart */}
                 <button
                   className="text-red-500 text-sm underline hover:text-red-700"
-                  onClick={() => {
-                    // This would need a removeFromCart action
-                    // dispatch(removeFromCart(id));
-                  }}
+                  onClick={RemoveFromCart}
                 >
                   Remove
                 </button>

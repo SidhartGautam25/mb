@@ -93,7 +93,7 @@ export const sendToken = (user, statusCode, res) => {
     ...commonOptions,
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     sameSite: isProduction ? 'none' : 'lax',
-    path: '/api/v1/auth/refresh' // Only sent to refresh endpoint
+    path: '/' 
   };
 
   // For development: additional relaxed settings

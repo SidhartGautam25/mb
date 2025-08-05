@@ -10,9 +10,9 @@ const CartC: React.FC = () => {
   const { cartItems } = useAppSelector((state) => state.cart);
 
   useEffect(() => {
-    if (cartItems.length === 0) {
+    // if (cartItems.length === 0) {
       dispatch(loadCartItems());
-    }
+    // }
   }, [dispatch, cartItems.length]);
 
   const totalItem = cartItems.reduce(
