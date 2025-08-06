@@ -6,7 +6,7 @@ import Hero from "../comp/hero/Hero";
 import FlashSale from "../comp/home/flashsale/Flashsale";
 import Trending from "../comp/home/Trending";
 import Popular from "../comp/home/Popular";
-// import CategoryBanner from "../comp/home/CategoryBanner";
+import CategoryBanner from "../comp/home/CategoryBanner";
 
 
 const Home: React.FC = () => {
@@ -15,7 +15,7 @@ const Home: React.FC = () => {
       <Navbar />
       <main className="flex-grow">
         <Hero />
-        {/* <CategoryBanner /> */}
+        <CategoryBanner />
         <Popular />
         <Trending/>
         <FlashSale/>
