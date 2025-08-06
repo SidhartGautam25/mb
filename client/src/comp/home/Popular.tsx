@@ -1,8 +1,9 @@
 // components/Popular.tsx
 import React from "react";
+import useProductFetcher from "../../context/hooks/tagProduct";
 
 const Popular: React.FC = () => {
-const products = [
+const Products = [
   {
     id: 1,
     name: "Baby care product",
@@ -45,6 +46,10 @@ const products = [
   }
 ];
 
+
+ const {products}=useProductFetcher("popular",1);
+ console.log("products in popular tag is ",products);
+
   return (
     <section className="py-6 px-4 md:px-10 bg-gray-50">
       <div className="mb-4 flex items-center justify-between">
@@ -62,7 +67,7 @@ const products = [
         </a>
       </div>
       <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-        {products.map((product, index) => (
+        {Products.map((product, index) => (
           <div key={index} className="border rounded-xl p-3 shadow-sm hover:shadow-lg transition-all bg-white flex flex-col gap-2">
             <div className="relative w-full aspect-square overflow-hidden rounded-md">
               <img
