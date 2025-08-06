@@ -24,6 +24,7 @@ interface GetProductParams {
     keyword?: string;
     page?: number;
     category?: string;
+    tag?:string;
 }
   
 
@@ -76,6 +77,32 @@ export const getProduct = createAsyncThunk<GetProductResponse, GetProductParams,
       }
     }
 );
+
+
+export const getProductByTags = createAsyncThunk<GetProductResponse, GetProductParams, { rejectValue: ApiError }>(
+    'product/getProductBytags',
+    async ({ page = 1, tag }, { rejectWithValue }) => {
+      console.log("tring to fetch product");
+      try {
+        let link = '/api/v1/productsByTag?page=' + page;
+        if (tag) {
+          const cat=findCategoryIndex(tag);
+          link += `&category=${cat}`;
+        }
+      
+       console.log("tring to get products");
+        const { data } = await axiosInstance.get(link);
+        console.log("data is ",data);
+        return data;
+      } catch (error) {
+        const axiosError = error as AxiosError<ApiError>;
+        return rejectWithValue(axiosError.response?.data || { message: 'An error occurred' });
+      }
+    }
+);
+
+
+
   
 
 // Product Details
@@ -154,7 +181,8 @@ const productSlice = createSlice({
           state.loading = false;
           state.error = action.payload?.message || 'Something went wrong';
           state.products = [];
-        });
+        })
+       
   
       builder
         .addCase(getProductDetails.pending, (state) => {
