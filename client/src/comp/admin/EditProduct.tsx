@@ -10,7 +10,7 @@ import { categories, CatItems } from "../../utils/categories";
 import { tags as Tags } from "../../utils/tags";
 // import { logFormData } from "../../utils/logThings";
 
-const CProductC: React.FC = () => {
+const EditProductC: React.FC = () => {
   // const categories:string[]=["vegetables","fruits"];
   // const Tags: string[] = ["free", "50% OFF", "30% OFF"];
   const [id, setId] = useState("");
@@ -503,4 +503,4 @@ const CProductC: React.FC = () => {
   );
 };
 
-export default CProductC;
+export default EditProductC;
