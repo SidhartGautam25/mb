@@ -13,6 +13,7 @@ import { tags as Tags } from "../../utils/tags";
 const CProductC: React.FC = () => {
   // const categories:string[]=["vegetables","fruits"];
   // const Tags: string[] = ["free", "50% OFF", "30% OFF"];
+  
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");

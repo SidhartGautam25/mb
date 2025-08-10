@@ -13,7 +13,8 @@ import CreateProduct from "./pages/admin/createProduct.tsx";
 import Profile from "./pages/profile.tsx";
 import CartPage from "./pages/cart.tsx";
 import AdminHome from "./pages/admin/admin.tsx";
-import { loadUser } from "./context/user/userSlice.ts";
+// import { loadUser } from "./context/user/userSlice.ts";
+import EditProduct from "./pages/admin/eProduct.tsx";
 
 function App(): JSX.Element {
   // const dispatch = useAppDispatch();
@@ -38,6 +39,7 @@ function App(): JSX.Element {
         {/* admin routes */}
         <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>}  adminOnly={true}/>}/>
         <Route path="/admin" element={<ProtectedRoute element={<AdminHome/>} adminOnly={true}/>}/>
+        <Route path="/admin/product/edit/:id" element={<ProtectedRoute element={<EditProduct/>} adminOnly={true}/>}/>
       </Routes>
     </Router>
   );
