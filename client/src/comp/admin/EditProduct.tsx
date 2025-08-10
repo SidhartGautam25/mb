@@ -8,6 +8,7 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import { categories, CatItems } from "../../utils/categories";
 import { tags as Tags } from "../../utils/tags";
+import { getProductDetails } from "../../context/product/productSlice";
 // import { logFormData } from "../../utils/logThings";
 
 const EditProductC: React.FC = () => {
@@ -21,7 +22,7 @@ const EditProductC: React.FC = () => {
   const [subcat, setSubcat] = useState("");
   const [issubcat, setIssubcat] = useState(false);
   // const [catid, setCatid] = useState("");
-  const [subcategories,setSubcategories]=useState<CatItems | null>(null);
+  const [subcategories, setSubcategories] = useState<CatItems | null>(null);
   const [stock, setStock] = useState("");
   const [image, setImage] = useState<string[]>([]);
   const [iloading, setIloading] = useState<boolean>(false);
@@ -35,7 +36,7 @@ const EditProductC: React.FC = () => {
   if (iloading) {
     toast.success("Image processing");
   }
-  let items:CatItems | null;
+  let items: CatItems | null;
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = e.target.value;
     setCategory(selectedValue);
@@ -99,6 +100,16 @@ const EditProductC: React.FC = () => {
     //      });
     //     }
     //     logFormData(myForm);
+    useEffect(() => {
+      if (!id) {
+        toast.error("Error while loading Product", {
+          position: "top-center",
+          autoClose: 3000,
+        });
+      } else {
+        dispatch(getProductDetails(id));
+      }
+    }, [id, dispatch]);
     dispatch(
       createProduct({
         id,
@@ -110,15 +121,14 @@ const EditProductC: React.FC = () => {
         discount,
         tags,
         image,
-        subcat
+        subcat,
       })
     );
-    if(error){
-      toast.error("Please Try Again . Some Error occured while uploading")
-    }else{
+    if (error) {
+      toast.error("Please Try Again . Some Error occured while uploading");
+    } else {
       toast.success("Product created successfully");
     }
-
   };
 
   const handleCheckboxChange = (tag: string): void => {
@@ -315,30 +325,30 @@ const EditProductC: React.FC = () => {
             </div>
 
             {issubcat && (
-               <div className="space-y-2">
-              <label
-                htmlFor="category"
-                className="block text-sm font-medium text-gray-700"
-              >
-               Sub Category *
-              </label>
-              <select
-                id="subcat"
-                required
-                name="subcat"
-                value={subcat}
-                // onChange={(e) => setCategory(e.target.value)}
-                onChange={(e)=>setSubcat(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-              >
-                <option value="">Choose a Sub category</option>
-                {subcategories?.subcategories?.map((item) => (
-                  <option value={item.str} key={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Sub Category *
+                </label>
+                <select
+                  id="subcat"
+                  required
+                  name="subcat"
+                  value={subcat}
+                  // onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => setSubcat(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                >
+                  <option value="">Choose a Sub category</option>
+                  {subcategories?.subcategories?.map((item) => (
+                    <option value={item.str} key={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
 
             {/* Tags */}
@@ -347,7 +357,7 @@ const EditProductC: React.FC = () => {
                 Select Tags
               </label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {Tags.map((tag: Record<any,any>) => (
+                {Tags.map((tag: Record<any, any>) => (
                   <label
                     key={tag.str}
                     className="flex items-center space-x-2 p-2 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
@@ -498,7 +508,7 @@ const EditProductC: React.FC = () => {
           </form>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };
