@@ -87,8 +87,8 @@ export const getProducts=handleAsyncError(async (req,res,next)=>{
 })
 
 
-
-export const getProductsByTag=handleAsyncError(async (req,res,next)=>{
+// with better design 
+export const getProductsByTag1=handleAsyncError(async (req,res,next)=>{
   const count=10;
   console.log("trying to fetch products for a specific tag");
   console.log("req.query is ",req.query);
@@ -103,7 +103,9 @@ export const getProductsByTag=handleAsyncError(async (req,res,next)=>{
   //  getting filtered query
   console.log("step 1 is done");
   const filteredQuery=apiFeatures.query.clone();
+  console.log("filtered query is ",filteredQuery);
   const productCount=await filteredQuery.countDocuments();
+  console.log("product count is ",productCount);
 
   // calculating total pages according to total products
   console.log("reached here 2");
@@ -135,6 +137,26 @@ export const getProductsByTag=handleAsyncError(async (req,res,next)=>{
     totalPages,
     currentPage:page
   })
+
+})
+
+
+// normal design to just complete the work
+export const getProductsByTag=handleAsyncError(async (req,res,next)=>{
+  let {tag}=req.query;
+  if (!tag) {
+    return next(new Errorhandler("Please provide a product tag in the query.", 400));
+  }
+  tag=getTag(tag);
+  console.log("tag is ",tag);
+  let count=6;
+  const products = await Product.find({ tags: { $in: [tag] } }).limit(count); 
+  console.log("products are ",products);
+  res.status(200).json({
+    success: true,
+    count: products.length,
+    products,
+  });
 
 })
 
