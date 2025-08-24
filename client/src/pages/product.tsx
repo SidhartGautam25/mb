@@ -4,12 +4,13 @@ import ProductInfo from "../comp/product/ProductInfo";
 import RelatedItems from "../comp/product/RelatedItems";
 import Navbar from "../comp/navbar/Navbar";
 import Footer from "../comp/footer/Footer";
+import { useAppSelector } from "../context/hooks";
 
 
 const Product: React.FC = () => {
 
  
-   
+   const { product } = useAppSelector((state) => state.product);
       
 
       
@@ -23,7 +24,7 @@ const Product: React.FC = () => {
         <ProductImages />
         <ProductInfo />
       </div>
-      <RelatedItems />
+      <RelatedItems cat={product?.category} id={product?.id}/>
       <Footer />
     </>
   );

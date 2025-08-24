@@ -1,33 +1,87 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { toast } from "react-toastify";
+import { useAppDispatch } from "../../context/hooks";
+// import { useNavigate } from "react-router-dom";
+import { addItemsToCart, removeFromCart } from "../../context/cart/cartSlice";
 
 interface CartItem {
-  id: string;
-  name: string;
-  size?: string;
-  seller?: string;
-  oldPrice: number;
-  price: number;
-  discountPercent: number;
-  image: string;
-  quantity: number;
-  deliveryInfo?: string;
+  [key: string]: any;
 }
+
+
 
 type Props = {
   item: CartItem;
-  onQuantityChange?: (id: string, qty: number) => void;
-  onRemove?: (id: string) => void;
-  onSaveForLater?: (id: string) => void;
+  // onQuantityChange?: (id: string, qty: number) => void;
+  // onRemove?: (id: string) => void;
+  // onSaveForLater?: (id: string) => void;
 };
 
-const CartCard: React.FC<Props> = ({ item, onQuantityChange, onRemove, onSaveForLater }) => {
+const CartCard: React.FC<Props> = ({ item}) => {
   const subtotal = item.price * item.quantity;
   const savings = Math.max(0, (item.oldPrice || item.price) - item.price);
+  const [quantity, setQuantity] = useState<number>(item?.quantity || 1);
+  // const [isQuantityInitialized, setIsQuantityInitialized] = useState(false);
+  // const { loading, error, product } = useAppSelector((state) => state.product);
+  // const { isAuthenticated } = useAppSelector((state) => state.user);
+  // const {
+  //   loading: cartLoading,
+  //   error: cartError,
+  //   success,
+  //   message,
+  // } = useAppSelector((state) => state.cart);
+ 
+  const dispatch = useAppDispatch();
+ 
 
-  const changeQty = (newQty: number) => {
-    const qty = Math.max(1, Math.floor(newQty));
-    if (qty !== item.quantity) onQuantityChange?.(item.id, qty);
-  };
+
+  const decreaseQuantity = useCallback((e:React.MouseEvent) => {
+     e.stopPropagation(); 
+    if (quantity === 1) {
+      toast.error("Quantity cannot be less than 1");
+      return;
+    }
+    const newQuantity = Number(quantity) - 1;
+    
+    if (item) {
+      dispatch(
+        addItemsToCart({
+          id:item.id,
+          name: item?.name || "",
+          image: item?.image || "",
+          price: item?.price || 0,
+          quantity: newQuantity,
+        })
+      );
+      setQuantity(newQuantity);
+    }
+  }, [quantity, item , dispatch]);
+
+  const increaseQuantity = useCallback((e:React.MouseEvent) => {
+    e.stopPropagation(); 
+    const newQuantity = Number(quantity) + 1;
+    
+    if (item) {
+      dispatch(
+        addItemsToCart({
+          id:item.id,
+          name: item?.name || "",
+          image: item?.image || "",
+          price: item?.price || 0,
+          quantity: newQuantity,
+        })
+      );
+      setQuantity(newQuantity);
+    }
+  }, [quantity, item , dispatch]);
+
+  const RemoveFromCart = useCallback((e:React.MouseEvent) => {
+     e.stopPropagation(); 
+    if (!item) return;
+    if (window.confirm(`Remove ${item?.name} from your cart?`)) {
+      dispatch(removeFromCart(item.id));
+    }
+  }, [item.id, item?.name, dispatch]);
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-full">
@@ -36,7 +90,7 @@ const CartCard: React.FC<Props> = ({ item, onQuantityChange, onRemove, onSaveFor
         {/* Image */}
         <div className="flex-shrink-0">
           <img
-            src={item.image}
+            src={item.image[0]}
             alt={item.name}
             className="w-16 h-20 sm:w-24 sm:h-28 object-cover rounded border border-gray-100"
           />
@@ -76,16 +130,16 @@ const CartCard: React.FC<Props> = ({ item, onQuantityChange, onRemove, onSaveFor
               <button
                 aria-label="decrease quantity"
                 className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50"
-                onClick={() => changeQty(item.quantity - 1)}
+                onClick={decreaseQuantity}
                 disabled={item.quantity <= 1}
               >
                 −
               </button>
-              <span className="px-4 text-sm">{item.quantity}</span>
+              <span className="px-4 text-sm">{quantity}</span>
               <button
                 aria-label="increase quantity"
                 className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100"
-                onClick={() => changeQty(item.quantity + 1)}
+                onClick={increaseQuantity}
               >
                 +
               </button>
@@ -113,16 +167,16 @@ const CartCard: React.FC<Props> = ({ item, onQuantityChange, onRemove, onSaveFor
             <button
               aria-label="decrease quantity"
               className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50"
-              onClick={() => changeQty(item.quantity - 1)}
+              onClick={decreaseQuantity}
               disabled={item.quantity <= 1}
             >
               −
             </button>
-            <span className="px-4 text-sm">{item.quantity}</span>
+            <span className="px-4 text-sm">{quantity}</span>
             <button
               aria-label="increase quantity"
               className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100"
-              onClick={() => changeQty(item.quantity + 1)}
+              onClick={increaseQuantity}
             >
               +
             </button>
@@ -133,14 +187,14 @@ const CartCard: React.FC<Props> = ({ item, onQuantityChange, onRemove, onSaveFor
       {/* Actions (Save/Remove) */}
       <div className="flex items-center gap-4 mt-3 flex-wrap">
         <button
-          onClick={() => onSaveForLater?.(item.id)}
+          // onClick={() => onSaveForLater?.(item.id)}
           className="text-xs sm:text-sm font-medium text-gray-700 hover:text-blue-600"
         >
           ADD TO WISHLIST
         </button>
 
         <button
-          onClick={() => onRemove?.(item.id)}
+           onClick={RemoveFromCart}
           className="text-xs sm:text-sm font-medium text-gray-700 hover:text-red-600"
         >
           REMOVE

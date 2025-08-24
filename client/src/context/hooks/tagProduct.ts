@@ -61,7 +61,9 @@ const useProductFetcher = (
       let link = `/api/v1/productsByTag?page=${pageNum}`;
 
       if (Tag) {
+        console.log("Tag in fetch product hook is ",Tag);
         const tag = findTagIndex(Tag);
+        console.log("tag in fetch hook is ",tag);
         link += `&tag=${tag}`;
       }
 

@@ -37,7 +37,7 @@ const ProductCard: React.FC<CardProps> = ({ product }) => {
 
       {/* Product Image */}
       <img
-        src={product.image}
+        src={product.image[0]}
         alt={product.name}
         className="w-full h-36 object-contain mx-auto"
       />

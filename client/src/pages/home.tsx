@@ -3,7 +3,7 @@ import Navbar from "../comp/navbar/Navbar";
 import Footer from "../comp/footer/Footer";
 import Hero from "../comp/hero/Hero";
 // import CategorySection from "../comp/home/Category";
-import FlashSale from "../comp/home/flashsale/Flashsale";
+// import FlashSale from "../comp/home/flashsale/Flashsale";
 import Trending from "../comp/home/Trending";
 import Popular from "../comp/home/Popular";
 import CategoryBanner from "../comp/home/CategoryBanner";

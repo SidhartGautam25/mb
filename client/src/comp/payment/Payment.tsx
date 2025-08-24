@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 
 // import Login_img from "../../../public/cliftkart_login.png";
 declare global {
@@ -9,7 +9,8 @@ declare global {
 }
 
 const PaymentC: React.FC = () => {
-  const [amount, setAmount] = useState(500);
+  // const [amount, setAmount] = useState(500);
+  const amount=500;
 
   const handlePayment = async () => {
     if (!amount) {

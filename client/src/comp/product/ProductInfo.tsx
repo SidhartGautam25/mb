@@ -29,7 +29,7 @@ const ProductInfo: React.FC = () => {
   const electronicsColors = ["black", "silver", "white"];
   const shoeSizes = ["6", "7", "8", "9", "10", "11"];
   const furnitureMaterials = ["Wood", "Metal", "Plastic"];
-
+// for now
   const [selectedSize, setSelectedSize] = useState("M");
   const [selectedFormat, setSelectedFormat] = useState("Paperback");
   const [quantity, setQuantity] = useState<number>(1);

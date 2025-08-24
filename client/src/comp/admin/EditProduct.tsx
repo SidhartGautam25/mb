@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../context/hooks";
-import {
-  createProduct,
-  removeErrors,
-  removeSuccess,
-} from "../../context/admin/adminSlice";
+// import { useAppDispatch, useAppSelector } from "../../context/hooks";
+// import {
+//   createProduct,
+//   removeErrors,
+//   removeSuccess,
+// } from "../../context/admin/adminSlice";
 import { toast, ToastContainer } from "react-toastify";
-import { categories, CatItems } from "../../utils/categories";
+import { categories } from "../../utils/categories";
 import { tags as Tags } from "../../utils/tags";
 
 import { useParams } from "react-router-dom";
@@ -21,13 +21,13 @@ const EditProductC: React.FC = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [iid,setIid]=useState("");
-  const [subcat, setSubcat] = useState("");
-  const [issubcat, setIssubcat] = useState(false);
+  // const [subcat, setSubcat] = useState("");
+  // const [issubcat, setIssubcat] = useState(false);
   // const [catid, setCatid] = useState("");
-  const [subcategories,setSubcategories]=useState<CatItems | null>(null);
+  // const [subcategories,setSubcategories]=useState<CatItems | null>(null);
   const [stock, setStock] = useState("");
-  const [image, setImage] = useState<string[]>([]);
-  const [iloading, setIloading] = useState<boolean>(false);
+  // const [image, setImage] = useState<string[]>([]);
+  // const [iloading, setIloading] = useState<boolean>(false);
   // const [imagePreview, setImagePreview] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [discount, setDiscount] = useState("");
@@ -88,7 +88,7 @@ const EditProductC: React.FC = () => {
         stock,
         discount,
         tags,
-        image,
+        image:product?.image,
         subcat
       };
       const pid=id || "";

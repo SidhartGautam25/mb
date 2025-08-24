@@ -2,7 +2,7 @@
 import React from "react";
 import useProductFetcher from "../../context/hooks/tagProduct";
 
-import { FaStar, FaHeart } from "react-icons/fa";
+import {FaHeart } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
 
@@ -36,7 +36,7 @@ const Popular: React.FC = () => {
 
       {/* Product Grid */}
       <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-        {Products.map((product) => (
+        {products.map((product) => (
           <div
             key={product.id}
             className="border rounded-xl p-3 shadow-sm hover:shadow-lg transition-all bg-white flex flex-col relative"
@@ -53,7 +53,7 @@ const Popular: React.FC = () => {
 
             <div className="relative w-full aspect-square overflow-hidden rounded-md">
               <img
-                src={product.image}
+                src={product.image[0]}
                 alt={product.name}
                 className="object-contain w-full h-full min-h-[180px]"
               />

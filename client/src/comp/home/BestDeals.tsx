@@ -38,7 +38,7 @@ const BestDeals: React.FC = () => {
           <div key={index} className="border rounded-xl p-3 shadow-sm hover:shadow-lg transition-all bg-white flex flex-col gap-2">
             <div className="relative w-full aspect-square overflow-hidden rounded-md">
               <img
-                src={product.image}
+                src={product.image[0]}
                 alt={product.name}
                 className="object-contain w-full h-full min-h-[180px]"
               />

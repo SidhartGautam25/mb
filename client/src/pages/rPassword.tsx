@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom';
 
 const ForgotPasswordPage: React.FC = () => {
   // State to manage which step we are on
-  const [step, setStep] = useState(1); // 1 for email input, 2 for OTP/password input
-  
+  // const [step, setStep] = useState(1); // 1 for email input, 2 for OTP/password input
+  const step=1;
   // Form fields
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
@@ -23,6 +23,7 @@ const ForgotPasswordPage: React.FC = () => {
     setLoading(true);
     try {
       const { data } = await axios.post('http://localhost:8000/api/v1/sendOTP', { email });
+      console.log("Data is ",data);
     //   toast.success(data.message);
     //   setStep(2); // Move to the next step
     } catch (error: any) {

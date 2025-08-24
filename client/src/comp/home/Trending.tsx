@@ -71,7 +71,7 @@ const TrendingNow: React.FC = () => {
 
               {/* Product Image */}
               <img
-                src={product.image}
+                src={product.image[0]}
                 alt={product.name}
                 className="w-full h-32 sm:h-40 object-contain mb-4"
               />
