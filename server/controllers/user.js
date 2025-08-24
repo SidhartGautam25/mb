@@ -429,8 +429,8 @@ export const addAddress = handleAsyncError(async (req, res, next) => {
 
 
 export const sendOTP = handleAsyncError(async (req, res, next) => {
-  const accountSid = 'ACc151ce9cc5c186ba9a0f252c8f71ae76';
-  const authToken = '830a89c451817a5122f4f08bbfd0676a';
+  const accountSid = process.env.T_SID_ACCOUNT;
+  const authToken = process.env.T_AUTH_TOKEN;
   const client=new twilio(accountSid,authToken)
   console.log("you are at send otp controller")
   client.verify.v2.services("VA0819b4cc7dd627eb934aedd0d3be1589")
