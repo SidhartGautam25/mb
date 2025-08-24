@@ -6,7 +6,7 @@ interface SidebarProps {
   setActiveSection: (section: string) => void;
 }
 
-const sections = ["Users", "Orders", "Create", "Products"];
+const sections = ["Dashboard","Users", "Orders", "Create", "Products"];
 
 const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) => {
   return (

@@ -1,6 +1,9 @@
 // components/Popular.tsx
 import React from "react";
 import useProductFetcher from "../../context/hooks/tagProduct";
+
+import { FaStar, FaHeart } from "react-icons/fa";
+
 import { useNavigate } from "react-router-dom";
 
 const Popular: React.FC = () => {
@@ -14,7 +17,9 @@ const Popular: React.FC = () => {
 
   return (
     <section className="py-6 px-4 md:px-10 bg-gray-50">
+      {/* Header */}
       <div className="mb-4 flex items-center justify-between">
+
         <div className="div">
           <div className="flex items-center mb-4 px-4">
             <span className="w-2 h-7 bg-[#4a1630] mr-2 rounded-sm"></span>
@@ -28,27 +33,38 @@ const Popular: React.FC = () => {
           View All
         </a>
       </div>
+
+      {/* Product Grid */}
       <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
-        {products.map((product, index) => (
+        {Products.map((product) => (
           <div
-            key={index}
-            className="border rounded-xl p-3 shadow-sm hover:shadow-lg transition-all bg-white flex flex-col gap-2"
+            key={product.id}
+            className="border rounded-xl p-3 shadow-sm hover:shadow-lg transition-all bg-white flex flex-col relative"
           >
+            {/* Wishlist Icon */}
+            <button
+              className="absolute top-3 right-3 text-gray-400 hover:text-pink-500"
+              title="Add to Wishlist"
+            >
+              <FaHeart />
+            </button>
+
+            {/* Product Image */}
+
             <div className="relative w-full aspect-square overflow-hidden rounded-md">
               <img
                 src={product.image}
                 alt={product.name}
                 className="object-contain w-full h-full min-h-[180px]"
               />
-              {/* {product.badge && (
-                <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                  {product.badge}
-                </span>
-              )}  */}
+
             </div>
-            <h3 className="text-sm font-medium line-clamp-2">{product.name}</h3>
-            <div className="flex items-center justify-between text-sm">
+
+            {/* Product Info */}
+            <h3 className="text-sm font-medium line-clamp-2 mt-2">{product.name}</h3>
+            <div className="flex items-center justify-between text-sm mt-1">
               <div>
+
                 <p className="text-blue-600 font-semibold">${product.price}</p>
                 {product.price && (
                   <p className="text-gray-400 line-through text-xs">
@@ -66,6 +82,7 @@ const Popular: React.FC = () => {
             >
               View Details
             </button>
+
           </div>
         ))}
       </div>
