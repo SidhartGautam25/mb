@@ -9,16 +9,16 @@ const Navbar: React.FC = () => {
 
      
       <nav className="hidden md:flex space-x-6 text-sm text-gray-800">
-        <a href="/" className="hover:text-black">
+        <a href="/admin" className="hover:text-black">
          Dashboard
         </a>
-        <a href="#" className="hover:text-black">
+        <a href="/admin/product/create" className="hover:text-black">
           Create Product
         </a>
-        <a href="#" className="hover:text-black">
+        <a href="admin" className="hover:text-black">
           Orders
         </a>
-        <a href="/signup" className="hover:text-black">
+        <a href="/admin" className="hover:text-black">
           Categories
         </a>
       </nav> 

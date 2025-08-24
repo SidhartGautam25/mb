@@ -1,5 +1,6 @@
 import React from "react";
 import ProductCard from "./ProductCard";
+import useProductFetcher from "../../context/hooks/tagProduct";
 
 const relatedProducts = [
   {
@@ -41,6 +42,20 @@ const relatedProducts = [
 ];
 
 const RelatedItems: React.FC = () => {
+  const category = "fashion";
+  const { products: allProducts, loading } = useProductFetcher(
+    category,
+    1,
+    false
+  );
+  const products = allProducts.slice(0, 4);
+  console.log(
+    "in related item section ",
+    products,
+    " and loading is ",
+    loading
+  );
+
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">
       {/* Heading */}
@@ -51,8 +66,10 @@ const RelatedItems: React.FC = () => {
 
       {/* Products Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {relatedProducts.map((product, idx) => (
-          <ProductCard key={idx} {...product} />
+        {products.map((product, idx) => (
+          <div key={idx}>
+            <ProductCard product={product} />
+          </div>
         ))}
       </div>
     </section>

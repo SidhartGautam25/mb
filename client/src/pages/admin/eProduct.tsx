@@ -2,14 +2,14 @@ import React from "react";
 
 import Footer from "../../comp/footer/Footer";
 import Navbar from "../../comp/admin/Navbar";
-import CProductC from "../../comp/admin/CProduct";
+import EditProductC from "../../comp/admin/EditProduct";
 
 
 const EditProduct: React.FC = () => {
   return (
     <div>
       <Navbar/>
-      <CProductC/>
+      <EditProductC/>
      
       <Footer />
     </div>
