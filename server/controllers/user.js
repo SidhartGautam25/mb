@@ -428,21 +428,21 @@ export const addAddress = handleAsyncError(async (req, res, next) => {
 
 
 
-export const sendOTP = handleAsyncError(async (req, res, next) => {
-  const accountSid = process.env.T_SID_ACCOUNT;
-  const authToken = process.env.T_AUTH_TOKEN;
-  const client=new twilio(accountSid,authToken)
-  console.log("you are at send otp controller")
-  client.verify.v2.services("VA0819b4cc7dd627eb934aedd0d3be1589")
-      .verifications
-      .create({to: '+917461990368', channel: 'sms'})
-      .then(verification => console.log("verification sid is",verification.sid));
-  res.status(200).json({
-    success: true,
-    message: "otp sent successfully",
+// export const sendOTP = handleAsyncError(async (req, res, next) => {
+//   const accountSid = process.env.T_SID_ACCOUNT;
+//   const authToken = process.env.T_AUTH_TOKEN;
+//   const client=new twilio(accountSid,authToken)
+//   console.log("you are at send otp controller")
+//   client.verify.v2.services("VA0819b4cc7dd627eb934aedd0d3be1589")
+//       .verifications
+//       .create({to: '+917461990368', channel: 'sms'})
+//       .then(verification => console.log("verification sid is",verification.sid));
+//   res.status(200).json({
+//     success: true,
+//     message: "otp sent successfully",
    
-  });
+//   });
 
   
 
-});
+// });
