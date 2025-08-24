@@ -32,7 +32,7 @@ const AProductCard: React.FC<AProductCardProps> = ({ product, id, onDelete }) =>
   {/* Product Info */}
   <div className="flex items-center gap-4">
     <img
-      src={product.image}
+      src={product.image[0]}
       alt={product.name}
       className="w-16 h-16 object-cover rounded-md border"
     />
