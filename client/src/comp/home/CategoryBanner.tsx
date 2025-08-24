@@ -1,4 +1,5 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const CategoryBanner = () => {
   // Helper for background image style
@@ -8,6 +9,12 @@ const CategoryBanner = () => {
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
   });
+
+   const navigate = useNavigate();
+
+  const handleClick = (str:string) => {
+    navigate(str);
+  };
 
   return (
     <div className="bg-white w-full">
@@ -23,7 +30,7 @@ const CategoryBanner = () => {
         <div className="grid grid-cols-2 gap-2">
           <div
             className="h-32 border-2 border-gray-800 rounded-sm"
-             style={bgStyle("/catbanner/fashion.png")}
+            style={bgStyle("/catbanner/fashion.png")}
           ></div>
           <div
             className="h-32 border-2 border-gray-800 rounded-sm"
@@ -33,18 +40,21 @@ const CategoryBanner = () => {
 
         {/* Third row */}
         <div className="grid grid-cols-4 gap-2">
+          <Link to="/products/watches">
+            {" "}
+            <div
+              className="h-24 border-2 border-gray-800 rounded-sm"
+              style={bgStyle("/catbanner/watches.png")}
+            ></div>
+          </Link>
+
           <div
             className="h-24 border-2 border-gray-800 rounded-sm"
-            style={bgStyle("/catbanner/watches.png")}
+            style={bgStyle("/catbanner/b&himg.png")}
           ></div>
-       
           <div
             className="h-24 border-2 border-gray-800 rounded-sm"
-             style={bgStyle("/catbanner/b&himg.png")}
-          ></div>
-          <div
-            className="h-24 border-2 border-gray-800 rounded-sm"
-              style={bgStyle("/catbanner/toysimg.png")}
+            style={bgStyle("/catbanner/toysimg.png")}
           ></div>
         </div>
       </div>
@@ -55,31 +65,38 @@ const CategoryBanner = () => {
           <div
             className="col-span-4 row-span-6 border-2 border-gray-800 rounded-sm bg-center"
             style={bgStyle("/catbanner/Groceriesdesk.png")}
+            onClick={()=>handleClick("/products/groceries")}
           ></div>
 
           <div
             className="col-span-5 row-span-3 border-2 border-gray-800 rounded-sm"
             style={bgStyle("/catbanner/fashion.png")}
+            onClick={()=>handleClick("/products/fashion")}
           ></div>
 
           <div
             className="col-span-3 row-span-3 border-2 border-gray-800 rounded-sm"
             style={bgStyle("/catbanner/footwearimg.png")}
+            onClick={()=>handleClick("/products/footwear")}
           ></div>
-
-          <div
-            className="col-span-3 row-span-3 border-2 border-gray-800 rounded-sm"
-            style={bgStyle("/catbanner/watches.png")}
-          ></div>
+          
+            <div
+              className="col-span-3 row-span-3 border-2 border-gray-800 rounded-sm"
+              style={bgStyle("/catbanner/watches.png")}
+              onClick={()=>handleClick("/products/watches")}
+            ></div>
+          
 
           <div
             className="col-span-3 row-span-3 border-2 border-gray-800 rounded-sm"
             style={bgStyle("/catbanner/b&himg.png")}
+            onClick={()=>handleClick("/products/beautyAndHealth")}
           ></div>
 
           <div
             className="col-span-2 row-span-2 border-2 border-gray-800 rounded-sm"
             style={bgStyle("/catbanner/toysimg.png")}
+            onClick={()=>handleClick("/products/sportsAndToys")}
           ></div>
 
           <div className="col-span-2 row-span-1 rounded-sm bg-[#95295f] flex items-center justify-center">

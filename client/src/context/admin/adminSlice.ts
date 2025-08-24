@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import axiosInstance from "../../utils/axiosConfig";
 
-type Product = Record<string, any>;
+// type Product = Record<string, any>;
 type User = Record<string, any>;
 type Order = Record<string, any>;
 type Review = Record<string, any>;
@@ -21,7 +21,12 @@ interface AdminState {
   totalAmount: number;
   order: Order | {};
   reviews: Review[];
-  updated:Boolean;
+  updated: Boolean;
+  eProduct: Product | null;
+}
+
+interface Product {
+  [key: string]: any;
 }
 
 const initialState: AdminState = {
@@ -38,34 +43,58 @@ const initialState: AdminState = {
   totalAmount: 0,
   order: {},
   reviews: [],
-  updated:false
+  updated: false,
+  eProduct: {},
 };
+
+interface GetProductDetailsResponse {
+  product: Product;
+}
 
 // Fetch ALL Products
 export const fetchAdminProducts = createAsyncThunk(
-  'admin/fetchAdminProducts',
+  "admin/fetchAdminProducts",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.get('/api/v1/admin/products');
+      const { data } = await axiosInstance.get("/api/v1/admin/products");
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Error While Fetching the products");
+      return rejectWithValue(
+        error.response?.data || "Error While Fetching the products"
+      );
     }
   }
 );
 
 // Create Product
 export const createProduct = createAsyncThunk(
-  'admin/createProduct',
-  async (productData: Record<string,any>, { rejectWithValue }) => {
+  "admin/createProduct",
+  async (productData: Record<string, any>, { rejectWithValue }) => {
     try {
-    //   const config = {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data'
-    //     }
-    //   };
-      console.log("productData ",productData);
-      const { data } = await axiosInstance.post('/api/v1/admin/product/create', productData);
+      //   const config = {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data'
+      //     }
+      //   };
+      console.log("productData ", productData);
+      const { data } = await axiosInstance.post(
+        "/api/v1/admin/product/create",
+        productData
+      );
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Product Creation Failed");
+    }
+  }
+);
+
+// Product Details
+export const getProductDetails = createAsyncThunk(
+  "product/getProductDetails",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const link = `/api/v1/product/${id}`;
+      const { data } = await axiosInstance.get(link);
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Product Creation Failed");
@@ -75,15 +104,17 @@ export const createProduct = createAsyncThunk(
 
 // Update Product
 export const updateProduct = createAsyncThunk(
-  'admin/updateProduct',
-  async ({ id, formData }: { id: string, formData: FormData }, { rejectWithValue }) => {
+  "admin/updateProduct",
+  async ({id,productData}: {id:string, productData:Record<string, any>}, { rejectWithValue }) => {
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-      const { data } = await axiosInstance.put(`/api/v1/admin/product/${id}`, formData, config);
+      console.log("finally inside updateProduct thunk")
+      console.log("id is ",id );
+      console.log("productData is ",productData);
+      // const id=productData.id;
+      const { data } = await axiosInstance.put(
+        `/api/v1/admin/product/${id}`,
+        productData
+      );
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Product Update Failed");
@@ -93,7 +124,7 @@ export const updateProduct = createAsyncThunk(
 
 // Delete Product
 export const deleteProduct = createAsyncThunk(
-  'admin/deleteProduct',
+  "admin/deleteProduct",
   async (productId: string, { rejectWithValue }) => {
     try {
       await axios.delete(`/api/v1/admin/product/${productId}`);
@@ -104,9 +135,9 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
-// Fetch All Users 
+// Fetch All Users
 export const fetchUsers = createAsyncThunk(
-  'admin/fetchUsers',
+  "admin/fetchUsers",
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.get(`/api/v1/admin/users`);
@@ -119,36 +150,47 @@ export const fetchUsers = createAsyncThunk(
 
 // Get single user
 export const getSingleUser = createAsyncThunk(
-  'admin/getSingleUser',
+  "admin/getSingleUser",
   async (id: string, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.get(`/api/v1/admin/user/${id}`);
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Failed to fetch Single user");
+      return rejectWithValue(
+        error.response?.data || "Failed to fetch Single user"
+      );
     }
   }
 );
 
 // Update User role
 export const updateUserRole = createAsyncThunk(
-  'admin/updateUserRole',
-  async ({ userId, role  }: { userId: string, role: string }, { rejectWithValue }) => {
+  "admin/updateUserRole",
+  async (
+    { userId, role }: { userId: string; role: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const { data } = await axiosInstance.put(`/api/v1/admin/user/${userId}`, { role });
+      const { data } = await axiosInstance.put(`/api/v1/admin/user/${userId}`, {
+        role,
+      });
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Failed to update user role");
+      return rejectWithValue(
+        error.response?.data || "Failed to update user role"
+      );
     }
   }
 );
 
 // Delete user profile
 export const deleteUser = createAsyncThunk(
-  'admin/deleteUser',
+  "admin/deleteUser",
   async (userId: string, { rejectWithValue }) => {
     try {
-      const { data } = await axiosInstance.delete(`/api/v1/admin/user/${userId}`);
+      const { data } = await axiosInstance.delete(
+        `/api/v1/admin/user/${userId}`
+      );
       return data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to Delete User");
@@ -158,7 +200,7 @@ export const deleteUser = createAsyncThunk(
 
 // Fetch All Orders
 export const fetchAllOrders = createAsyncThunk(
-  'admin/fetchAllOrders',
+  "admin/fetchAllOrders",
   async (_, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.get(`/api/v1/admin/orders`);
@@ -171,7 +213,7 @@ export const fetchAllOrders = createAsyncThunk(
 
 // Delete Order
 export const deleteOrder = createAsyncThunk(
-  'admin/deleteOrder',
+  "admin/deleteOrder",
   async (id: string, { rejectWithValue }) => {
     try {
       const { data } = await axiosInstance.delete(`/api/v1/admin/order/${id}`);
@@ -184,50 +226,68 @@ export const deleteOrder = createAsyncThunk(
 
 // Update Order Status
 export const updateOrderStatus = createAsyncThunk(
-  'admin/updateOrderStatus',
-  async ({ orderId, status }: { orderId: string, status: string }, { rejectWithValue }) => {
+  "admin/updateOrderStatus",
+  async (
+    { orderId, status }: { orderId: string; status: string },
+    { rejectWithValue }
+  ) => {
     try {
       const config = {
         headers: {
-          'content-Type': 'application/json'
-        }
+          "content-Type": "application/json",
+        },
       };
-      const { data } = await axios.put(`/api/v1/admin/order/${orderId}`, { status }, config);
+      const { data } = await axios.put(
+        `/api/v1/admin/order/${orderId}`,
+        { status },
+        config
+      );
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Failed to Update Order status");
+      return rejectWithValue(
+        error.response?.data || "Failed to Update Order status"
+      );
     }
   }
 );
 
 // Fetch All Reviews
 export const fetchProductReviews = createAsyncThunk(
-  'admin/fetchProductReviews',
+  "admin/fetchProductReviews",
   async (productId: string, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(`/api/v1/admin/reviews?id=${productId}`);
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Failed to Fetch Product Reviews");
+      return rejectWithValue(
+        error.response?.data || "Failed to Fetch Product Reviews"
+      );
     }
   }
 );
 
 // Delete Review
 export const deleteReview = createAsyncThunk(
-  'admin/deleteReview',
-  async ({ productId, reviewId }: { productId: string, reviewId: string }, { rejectWithValue }) => {
+  "admin/deleteReview",
+  async (
+    { productId, reviewId }: { productId: string; reviewId: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const { data } = await axios.delete(`/api/v1/admin/reviews?productId=${productId}&id=${reviewId}`);
+      const { data } = await axios.delete(
+        `/api/v1/admin/reviews?productId=${productId}&id=${reviewId}`
+      );
       return data;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data || "Failed to Delete Product Review");
+      return rejectWithValue(
+        error.response?.data || "Failed to Delete Product Review"
+      );
     }
   }
 );
 
 const adminSlice = createSlice({
-  name: 'admin',
+  name: "admin",
   initialState,
   reducers: {
     removeErrors: (state) => {
@@ -238,7 +298,7 @@ const adminSlice = createSlice({
     },
     clearMessage: (state) => {
       state.message = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -246,15 +306,21 @@ const adminSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchAdminProducts.fulfilled, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.products = action.payload.products;
-        
-      })
-      .addCase(fetchAdminProducts.rejected, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload?.message || 'Error While Fetching the products';
-      })
+      .addCase(
+        fetchAdminProducts.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.products = action.payload.products;
+        }
+      )
+      .addCase(
+        fetchAdminProducts.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error =
+            action.payload?.message || "Error While Fetching the products";
+        }
+      )
 
       .addCase(createProduct.pending, (state) => {
         state.loading = true;
@@ -267,7 +333,24 @@ const adminSlice = createSlice({
       })
       .addCase(createProduct.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Product Creation Failed';
+        state.error = action.payload?.message || "Product Creation Failed";
+      })
+
+      .addCase(getProductDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(
+        getProductDetails.fulfilled,
+        (state, action: PayloadAction<GetProductDetailsResponse>) => {
+          state.loading = false;
+          state.error = null;
+          state.eProduct = action.payload.product;
+        }
+      )
+      .addCase(getProductDetails.rejected, (state) => {
+        state.loading = false;
+        state.error = "Something went wrong, unable to fetch product right now";
       })
 
       .addCase(updateProduct.pending, (state) => {
@@ -281,23 +364,28 @@ const adminSlice = createSlice({
       })
       .addCase(updateProduct.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Product Update Failed';
+        state.error = action.payload?.message || "Product Update Failed";
       })
 
       .addCase(deleteProduct.pending, (state, action) => {
         const productId = action.meta.arg;
         state.deleting[productId] = true;
       })
-      .addCase(deleteProduct.fulfilled, (state, action: PayloadAction<{ productId: string }>) => {
-        const productId = action.payload.productId;
-        state.deleting[productId] = false;
-        state.products = state.products.filter(product => product._id !== productId);
-      })
-    //   .addCase(deleteProduct.rejected, (state, action: PayloadAction<any>) => {
-    //     const productId = action.meta.arg;
-    //     state.deleting[productId] = false;
-    //     state.error = action.payload?.message || 'Product Deletion Failed';
-    //   })
+      .addCase(
+        deleteProduct.fulfilled,
+        (state, action: PayloadAction<{ productId: string }>) => {
+          const productId = action.payload.productId;
+          state.deleting[productId] = false;
+          state.products = state.products.filter(
+            (product) => product._id !== productId
+          );
+        }
+      )
+      //   .addCase(deleteProduct.rejected, (state, action: PayloadAction<any>) => {
+      //     const productId = action.meta.arg;
+      //     state.deleting[productId] = false;
+      //     state.error = action.payload?.message || 'Product Deletion Failed';
+      //   })
 
       .addCase(fetchUsers.pending, (state) => {
         state.loading = true;
@@ -306,11 +394,11 @@ const adminSlice = createSlice({
       .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.users = action.payload.users;
-        state.updated=false;
+        state.updated = false;
       })
       .addCase(fetchUsers.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to fetch users';
+        state.error = action.payload?.message || "Failed to fetch users";
       })
 
       .addCase(getSingleUser.pending, (state) => {
@@ -323,22 +411,24 @@ const adminSlice = createSlice({
       })
       .addCase(getSingleUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to fetch single users';
+        state.error = action.payload?.message || "Failed to fetch single users";
       })
 
       .addCase(updateUserRole.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateUserRole.fulfilled, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.success = action.payload.success;
-        state.updated=true;
-        
-      })
+      .addCase(
+        updateUserRole.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.success = action.payload.success;
+          state.updated = true;
+        }
+      )
       .addCase(updateUserRole.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to update user role';
+        state.error = action.payload?.message || "Failed to update user role";
       })
 
       .addCase(deleteUser.pending, (state) => {
@@ -351,21 +441,24 @@ const adminSlice = createSlice({
       })
       .addCase(deleteUser.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to Delete User';
+        state.error = action.payload?.message || "Failed to Delete User";
       })
 
       .addCase(fetchAllOrders.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchAllOrders.fulfilled, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.orders = action.payload.orders;
-        state.totalAmount = action.payload.totalAmount;
-      })
+      .addCase(
+        fetchAllOrders.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.orders = action.payload.orders;
+          state.totalAmount = action.payload.totalAmount;
+        }
+      )
       .addCase(fetchAllOrders.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to Fetch Orders';
+        state.error = action.payload?.message || "Failed to Fetch Orders";
       })
 
       .addCase(deleteOrder.pending, (state) => {
@@ -379,35 +472,49 @@ const adminSlice = createSlice({
       })
       .addCase(deleteOrder.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to Delete Order';
+        state.error = action.payload?.message || "Failed to Delete Order";
       })
 
       .addCase(updateOrderStatus.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateOrderStatus.fulfilled, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.success = action.payload.success;
-        state.order = action.payload.order;
-      })
-      .addCase(updateOrderStatus.rejected, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload?.message || 'Failed to Update Order status';
-      })
+      .addCase(
+        updateOrderStatus.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.success = action.payload.success;
+          state.order = action.payload.order;
+        }
+      )
+      .addCase(
+        updateOrderStatus.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error =
+            action.payload?.message || "Failed to Update Order status";
+        }
+      )
 
       .addCase(fetchProductReviews.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProductReviews.fulfilled, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.reviews = action.payload.reviews;
-      })
-      .addCase(fetchProductReviews.rejected, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload?.message || 'Failed to Fetch Product Reviews';
-      })
+      .addCase(
+        fetchProductReviews.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.reviews = action.payload.reviews;
+        }
+      )
+      .addCase(
+        fetchProductReviews.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.loading = false;
+          state.error =
+            action.payload?.message || "Failed to Fetch Product Reviews";
+        }
+      )
 
       .addCase(deleteReview.pending, (state) => {
         state.loading = true;
@@ -420,9 +527,10 @@ const adminSlice = createSlice({
       })
       .addCase(deleteReview.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to Delete Product Review';
+        state.error =
+          action.payload?.message || "Failed to Delete Product Review";
       });
-  }
+  },
 });
 
 export const { removeErrors, removeSuccess, clearMessage } = adminSlice.actions;

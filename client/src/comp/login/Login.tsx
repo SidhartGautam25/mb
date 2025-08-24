@@ -7,18 +7,18 @@ import {
   removeSuccess,
 } from "../../context/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import Login_img from "../../../public/cliftkart_login.png";
-import Login_img from "../../../public/Cliftkart_login.png"
+import Login_img from "../../../public/Cliftkart_login.png";
 
 const LoginC: React.FC = () => {
   const [lEmail, setLEmail] = useState<string>("");
   const [lPassword, setLPassword] = useState<string>("");
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { error, success, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
-  const homeUrl="/";
+  const homeUrl = "/";
   const dispatch = useAppDispatch();
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,9 +93,19 @@ const LoginC: React.FC = () => {
 
           {/* Already have account */}
           <p className="text-sm text-center mt-4 text-gray-600">
-            Create your account instead?{" "}
-            <a href="/signup" className="text-black underline">
+            <span>Create your account instead? </span>
+            <a
+              href="/signup"
+              className="font-medium text-black underline hover:text-gray-800"
+            >
               Sign up
+            </a>
+            <span className="mx-2 text-gray-400">|</span>
+            <a
+              href="/reset-password"
+              className="font-medium text-black underline hover:text-gray-800"
+            >
+              Forget password?
             </a>
           </p>
         </div>

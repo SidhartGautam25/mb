@@ -15,8 +15,9 @@ const SignupC: React.FC = () => {
     name: "",
     email: "",
     password: "",
+    phone:""
   });
-  const { name, email, password } = user;
+  const { name, email, password ,phone} = user;
   const { success, error } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -27,7 +28,7 @@ const SignupC: React.FC = () => {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("trying to signup")
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phone) {
       toast.error("Please fill all the field properly");
       return;
     }
@@ -36,7 +37,7 @@ const SignupC: React.FC = () => {
     // myForm.set("email", email);
     // myForm.set("password", password);
     // console.log("trying to dispatch register ",myForm);
-    dispatch(register({name, email, password}));
+    dispatch(register({name, email,phone, password}));
     
   };
   useEffect(() => {
@@ -89,6 +90,14 @@ const SignupC: React.FC = () => {
               placeholder="Email"
               name="email"
               value={email}
+              onChange={onChanges}
+              className="w-full border-b border-gray-300 py-2 outline-none focus:border-black"
+            />
+             <input
+              type="phone"
+              placeholder="Phone Number"
+              name="phone"
+              value={phone}
               onChange={onChanges}
               className="w-full border-b border-gray-300 py-2 outline-none focus:border-black"
             />
