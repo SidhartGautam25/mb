@@ -3,41 +3,149 @@ import React from "react";
 interface CartItem {
   id: string;
   name: string;
+  size?: string;
+  seller?: string;
+  oldPrice: number;
   price: number;
+  discountPercent: number;
   image: string;
   quantity: number;
+  deliveryInfo?: string;
 }
 
-const CartCard: React.FC<{ item: CartItem }> = ({ item }) => {
+type Props = {
+  item: CartItem;
+  onQuantityChange?: (id: string, qty: number) => void;
+  onRemove?: (id: string) => void;
+  onSaveForLater?: (id: string) => void;
+};
+
+const CartCard: React.FC<Props> = ({ item, onQuantityChange, onRemove, onSaveForLater }) => {
+  const subtotal = item.price * item.quantity;
+  const savings = Math.max(0, (item.oldPrice || item.price) - item.price);
+
+  const changeQty = (newQty: number) => {
+    const qty = Math.max(1, Math.floor(newQty));
+    if (qty !== item.quantity) onQuantityChange?.(item.id, qty);
+  };
+
   return (
-    <div className="bg-white shadow-sm rounded-lg p-4 flex flex-col sm:flex-row items-center sm:items-start gap-4 w-full border border-gray-200 hover:shadow-md transition">
-      {/* Product Image */}
-      <img
-        src={item.image}
-        alt={item.name}
-        className="w-32 h-32 object-cover rounded-md border border-gray-100"
-      />
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-full">
+      {/* Top row: Image | Main info (name/price/qty-on-desktop) | Subtotal */}
+      <div className="flex items-start gap-4">
+        {/* Image */}
+        <div className="flex-shrink-0">
+          <img
+            src={item.image}
+            alt={item.name}
+            className="w-16 h-20 sm:w-24 sm:h-28 object-cover rounded border border-gray-100"
+          />
+        </div>
 
-      {/* Product Details */}
-      <div className="flex flex-col flex-1 w-full text-center sm:text-left">
-        <h3 className="font-semibold text-lg text-gray-800 mb-1">{item.name}</h3>
+        {/* Main info */}
+        <div className="flex-1 min-w-0">
+          {/* Title, size, seller */}
+          <h3 className="font-medium text-gray-900 text-sm sm:text-base line-clamp-2">
+            {item.name}
+          </h3>
+          {item.size && <p className="text-xs sm:text-sm text-gray-600 mt-1">Size: {item.size}</p>}
+          {item.seller && (
+            <p className="text-xs sm:text-sm text-gray-600">
+              Seller: <span className="text-blue-600">{item.seller}</span>
+            </p>
+          )}
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6">
-          <p className="text-gray-600 text-sm">
-            Price: <span className="font-medium text-gray-800">₹{item.price}</span>
-          </p>
-          <p className="text-gray-600 text-sm">
-            Quantity: <span className="font-medium text-gray-800">{item.quantity}</span>
-          </p>
+          {/* Price row (unit price, old price, discount) */}
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            {item.oldPrice > item.price && (
+              <span className="text-gray-500 line-through text-xs sm:text-sm">₹{item.oldPrice}</span>
+            )}
+            <p className="text-xs text-gray-600">Price:</p><span className="text-base sm:text-lg font-semibold text-gray-900">₹{item.price}</span>
+            {item.discountPercent > 0 && (
+              <span className="text-green-600 font-medium text-xs sm:text-sm">{item.discountPercent}% Off</span>
+            )}
+            {savings > 0 && (
+              <span className="text-xs text-gray-500 ml-1">You save ₹{savings}</span>
+            )}
+          </div>
+
+          {/* Quantity - shown inline under price on desktop (hidden on mobile) */}
+          <div className="hidden sm:flex items-center gap-3 mt-3">
+            <label className="text-sm text-gray-600">Qty:</label>
+            <div className="flex items-center border border-gray-300 rounded">
+              <button
+                aria-label="decrease quantity"
+                className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+                onClick={() => changeQty(item.quantity - 1)}
+                disabled={item.quantity <= 1}
+              >
+                −
+              </button>
+              <span className="px-4 text-sm">{item.quantity}</span>
+              <button
+                aria-label="increase quantity"
+                className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100"
+                onClick={() => changeQty(item.quantity + 1)}
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          {/* Delivery info (mobile+desktop) */}
+          {item.deliveryInfo && (
+            <p className="text-xs sm:text-sm text-gray-700 mt-2">{item.deliveryInfo}</p>
+          )}
+        </div>
+
+        {/* Subtotal - always aligned right */}
+        <div className="ml-auto text-right flex-shrink-0">
+          <p className="text-xs text-gray-600">Subtotal:</p>
+          <p className="text-lg font-semibold text-gray-900">₹{subtotal.toLocaleString()}</p>
         </div>
       </div>
 
-      {/* Actions (Optional Future Enhancements) */}
-      {/* <div className="flex items-center space-x-2">
-        <button className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
-          Remove
+      {/* Mobile quantity block (visible on mobile only) */}
+      <div className="sm:hidden mt-3">
+        <div className="flex items-center gap-3">
+          <label className="text-sm text-gray-600">Qty:</label>
+          <div className="flex items-center border border-gray-300 rounded">
+            <button
+              aria-label="decrease quantity"
+              className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 disabled:opacity-50"
+              onClick={() => changeQty(item.quantity - 1)}
+              disabled={item.quantity <= 1}
+            >
+              −
+            </button>
+            <span className="px-4 text-sm">{item.quantity}</span>
+            <button
+              aria-label="increase quantity"
+              className="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100"
+              onClick={() => changeQty(item.quantity + 1)}
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Actions (Save/Remove) */}
+      <div className="flex items-center gap-4 mt-3 flex-wrap">
+        <button
+          onClick={() => onSaveForLater?.(item.id)}
+          className="text-xs sm:text-sm font-medium text-gray-700 hover:text-blue-600"
+        >
+          ADD TO WISHLIST
         </button>
-      </div> */}
+
+        <button
+          onClick={() => onRemove?.(item.id)}
+          className="text-xs sm:text-sm font-medium text-gray-700 hover:text-red-600"
+        >
+          REMOVE
+        </button>
+      </div>
     </div>
   );
 };
