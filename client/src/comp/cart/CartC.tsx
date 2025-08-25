@@ -10,9 +10,7 @@ const CartC: React.FC = () => {
   const { cartItems } = useAppSelector((state) => state.cart);
 
   useEffect(() => {
-    // if (cartItems.length === 0) {
-      dispatch(loadCartItems());
-    // }
+    dispatch(loadCartItems());
   }, [dispatch, cartItems.length]);
 
   const totalItem = cartItems.reduce(
@@ -39,8 +37,9 @@ const CartC: React.FC = () => {
         <div className="text-center text-gray-600">Your cart is empty.</div>
       ) : (
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6 lg:gap-8">
-          {/* Cart Items */}
-          <div className="flex-1 w-full space-y-4">
+          
+          {/* Cart Items Container */}
+          <div className="flex-1 w-full bg-white rounded-xl shadow p-4 sm:p-6 space-y-4">
             {cartItems.map((item) => (
               <div
                 key={item.id}

@@ -16,6 +16,11 @@ import AdminHome from "./pages/admin/admin.tsx";
 // import { loadUser } from "./context/user/userSlice.ts";
 import EditProduct from "./pages/admin/eProduct.tsx";
 
+import ForgotPasswordPage from "./pages/rPassword.tsx";
+import PaymentC from "./comp/payment/Payment.tsx";
+import ScrollToTop from "./comp/common/ScrollToTop.tsx";
+import ProductsByTag from "./pages/tagProduct.tsx";
+
 function App(): JSX.Element {
   // const dispatch = useAppDispatch();
   // const { isAuthenticated } = useAppSelector((state) => state.user);
@@ -28,14 +33,18 @@ function App(): JSX.Element {
 
   return (
     <Router>
+       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/products/:category" element={<Products />} />
+        <Route path="/products/tag/:tag" element={<ProductsByTag />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/cart" element={<CartPage/>}/>
+        <Route path="/payment" element={<PaymentC/>}/>
+         <Route path="/reset-password" element={<ForgotPasswordPage/>}/>
         {/* admin routes */}
         <Route path="/admin/product/create" element={<ProtectedRoute element={<CreateProduct/>}  adminOnly={true}/>}/>
         <Route path="/admin" element={<ProtectedRoute element={<AdminHome/>} adminOnly={true}/>}/>

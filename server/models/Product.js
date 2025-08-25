@@ -45,10 +45,10 @@ const productSchema = new mongoose.Schema({
     maxLength: [5, "Price cannot exceed 5 digits"],
     default: 100,
   },
-  image:{
+  image:[{
     type:String,
     default:""
-  }
+  },]
 });
 
 export default mongoose.model("Product", productSchema);
