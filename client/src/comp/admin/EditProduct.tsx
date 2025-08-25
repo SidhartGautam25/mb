@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { useAppDispatch, useAppSelector } from "../../context/hooks";
-// import {
-//   createProduct,
-//   removeErrors,
-//   removeSuccess,
-// } from "../../context/admin/adminSlice";
 import { toast, ToastContainer } from "react-toastify";
 import { categories } from "../../utils/categories";
 import { tags as Tags } from "../../utils/tags";
@@ -12,93 +6,68 @@ import { tags as Tags } from "../../utils/tags";
 import { useParams } from "react-router-dom";
 import { useAdminProduct } from "../../context/hooks/admin/product";
 
+
+export interface CatItem {
+  id: string;
+  name: string;
+  str: string;
+}
+
+export type CatItems = CatItem[];
+
+
+
 const EditProductC: React.FC = () => {
-  const { product, fetchProductDetails , loading,updateProduct , error } = useAdminProduct();
-  console.log("product in the edit component is ",product);
+  const { product, fetchProductDetails, loading, updateProduct, error,success } = useAdminProduct();
+  console.log("product in the edit component is ", product);
   const { id } = useParams<{ id: string }>();
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [iid,setIid]=useState("");
-  // const [subcat, setSubcat] = useState("");
-  // const [issubcat, setIssubcat] = useState(false);
-  // const [catid, setCatid] = useState("");
-  // const [subcategories,setSubcategories]=useState<CatItems | null>(null);
+  const [iid, setIid] = useState("");
+  const [subcat, setSubcat] = useState("");
+  const [issubcat, setIssubcat] = useState(false);
+  const [subcategories, setSubcategories] = useState<CatItems | null>(null);
   const [stock, setStock] = useState("");
-  // const [image, setImage] = useState<string[]>([]);
-  // const [iloading, setIloading] = useState<boolean>(false);
-  // const [imagePreview, setImagePreview] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
   const [discount, setDiscount] = useState("");
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = e.target.value;
+    setCategory(selectedValue);
+    const items = categories.find((item) => item.str === selectedValue) || null;
+    if (items?.subcategories?.length) {
+      setIssubcat(true);
+      setSubcategories(items.subcategories);
+    }
+  };
 
-  // const { error, success, loading } = useAppSelector((state) => state.admin);
 
-  // const dispatch = useAppDispatch();
-  // if (iloading) {
-  //   toast.success("Image processing");
-  // }
-  // let items:CatItems | null;
-  // const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const selectedValue = e.target.value;
-  //   setCategory(selectedValue);
-  //   items = categories.find((item) => item.str === selectedValue) || null;
-  //   if (items?.subcategories?.length) {
-  //     setIssubcat(true);
-  //     setSubcategories(items);
-  //   }
-  // };
-
-  // const uploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = e.target.files;
-  //   const data = new FormData();
-  //   if (files) {
-  //     data.append("file", files[0]);
-  //     data.append("upload_preset", "ppn3qr4u");
-  //     setIloading(true);
-
-  //     const res = await fetch(
-  //       "https://api.cloudinary.com/v1_1/dkzpbucfz/image/upload",
-  //       {
-  //         method: "POST",
-  //         body: data,
-  //       }
-  //     );
-  //     const file = await res.json();
-  //     setImage(file.secure_url);
-  //     console.log("we are here now ");
-  //     console.log(file.secure_url);
-  //     setIloading(false);
-  //   }
-  //   if (e.target.files?.length) {
-  //     toast.success("Image uploaded selected successfully!");
-  //   }
-  // };
 
   const handleSubmit = () => {
-    
+
     console.log("you clicked to update the product and going to call updateProduct")
-      console.log("tags is ",tags);
-    const productData={
-        id:iid,
-        name,
-        price,
-        description,
-        category,
-        stock,
-        discount,
-        tags,
-        image:product?.image,
-        subcat
-      };
-      const pid=id || "";
-      updateProduct(pid,productData)
-   
-    if(error){
-      toast.error("Please Try Again . Some Error occured while updating the details")
-    }else{
-      toast.success("Product created successfully");
-    }
+    console.log("tags is ", tags);
+    const productData = {
+      id: iid,
+      name,
+      price,
+      description,
+      category,
+      stock,
+      discount,
+      tags,
+      image: product?.image,
+      subcat
+    };
+    const pid = id || "";
+    updateProduct(pid, productData)
+
+    // if (error) {
+    //   toast.error("Please Try Again . Some Error occured while updating the details")
+    // } else {
+    //   toast.success("Product updated successfully");
+    // }
 
   };
 
@@ -131,7 +100,19 @@ const EditProductC: React.FC = () => {
   //   }
   // }, [dispatch, error, success]);
 
-  
+  useEffect(() => {
+  if (error) {
+    toast.error("some error occurs while updating the product details"); // Or a more generic message
+    // clearAdminState(); // Reset the error state so it doesn't show again
+  }
+
+  if (success) {
+    toast.success("Product updated successfully");
+    // clearAdminState(); // Reset the success state
+  }
+}, [error, success]);
+
+
 
   console.log("product detail on edit page is ", product);
   useEffect(() => {
@@ -142,18 +123,39 @@ const EditProductC: React.FC = () => {
     console.log("fetched product detail is ", product);
   }, [id, fetchProductDetails]);
 
-  useEffect(()=>{
+  useEffect(() => {
+    console.log("product in edit use effect is ", product);
     setName(product?.name ?? "");
-    setCategory(product?.category ?? "");
+    // setCategory(product?.category ?? "");
     setDescription(product?.description ?? "");
     setPrice(product?.price ?? "");
     setStock(product?.stock ?? "");
     setDiscount(product?.discount ?? "");
-    console.log("product id is ",product?.id)
+    console.log("product id is ", product?.id)
     setIid(product?.id ?? "")
     setTags(product?.tags ?? [])
+    setSubcat(product?.subcat ?? "")
 
-  },[product])
+    const currentCategoryStr = product?.category ?? "";
+    setCategory(currentCategoryStr);
+
+    if (currentCategoryStr) {
+      const categoryData = categories.find(
+        (item) => item.str === currentCategoryStr
+      );
+
+      // If that category has subcategories, update the state to show them
+      if (categoryData?.subcategories?.length) {
+        setIssubcat(true);
+        setSubcategories(categoryData.subcategories);
+      } else {
+        // Otherwise, ensure the subcategory dropdown is hidden
+        setIssubcat(false);
+        setSubcategories(null);
+      }
+    }
+
+  }, [product])
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -166,7 +168,7 @@ const EditProductC: React.FC = () => {
           <form
             className="space-y-6"
             encType="multipart/form-data"
-            // onSubmit={handleSubmit}
+          // onSubmit={handleSubmit}
           >
             {/* Product Name */}
             <div className="space-y-2">
@@ -189,7 +191,7 @@ const EditProductC: React.FC = () => {
             </div>
 
             {/* Product ID  */}
-             <div className="space-y-2">
+            <div className="space-y-2">
               <label
                 htmlFor="id"
                 className="block text-sm font-medium text-gray-700"
@@ -203,10 +205,10 @@ const EditProductC: React.FC = () => {
                 required
                 name="id"
                 value={iid}
-                onChange={(e) => setIid(e.target.value)}
+                // onChange={(e) => setIid(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
               />
-            </div> 
+            </div>
 
             {/* Price and Discount Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -281,8 +283,8 @@ const EditProductC: React.FC = () => {
                 required
                 name="category"
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                // onChange={handleCategoryChange}
+                // onChange={(e) => setCategory(e.target.value)}
+                onChange={handleCategoryChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
               >
                 <option value="">Choose a Category</option>
@@ -294,32 +296,32 @@ const EditProductC: React.FC = () => {
               </select>
             </div>
 
-            {/* {issubcat && (
-               <div className="space-y-2">
-              <label
-                htmlFor="category"
-                className="block text-sm font-medium text-gray-700"
-              >
-               Sub Category *
-              </label>
-              <select
-                id="subcat"
-                required
-                name="subcat"
-                value={subcat}
-                // onChange={(e) => setCategory(e.target.value)}
-                onChange={(e)=>setSubcat(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-              >
-                <option value="">Choose a Sub category</option>
-                {subcategories?.subcategories?.map((item) => (
-                  <option value={item.str} key={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            )} */}
+            {issubcat && (
+              <div className="space-y-2">
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Sub Category *
+                </label>
+                <select
+                  id="subcat"
+                  required
+                  name="subcat"
+                  value={subcat}
+                  // onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => setSubcat(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+                >
+                  <option value="">Choose a Sub category</option>
+                  {subcategories?.map((item) => (
+                    <option value={item.str} key={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* Tags */}
             <div className="space-y-3">
@@ -372,51 +374,6 @@ const EditProductC: React.FC = () => {
               />
             </div>
 
-            {/* Image Upload */}
-            <div className="space-y-3">
-              <label
-                htmlFor="image"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Product Images
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                <input
-                  id="image"
-                  type="file"
-                  name="image"
-                  // onChange={uploadImage}
-                  className="hidden"
-                />
-                <label
-                  htmlFor="image"
-                  className="cursor-pointer flex flex-col items-center space-y-2"
-                >
-                  <svg
-                    className="w-12 h-12 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                    />
-                  </svg>
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium text-blue-600 hover:text-blue-500">
-                      Click to upload
-                    </span>
-                    <span> or drag and drop</span>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    PNG, JPG, GIF up to 10MB
-                  </p>
-                </label>
-              </div>
-            </div>
 
             {/* Submit Button */}
             <div className="pt-4">
