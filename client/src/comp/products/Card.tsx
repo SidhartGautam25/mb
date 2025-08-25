@@ -22,7 +22,7 @@ const Card: React.FC<BookCardProps> = ({ product }) => {
       {/* Image */}
       <div className="w-full min-h-[220px] max-h-[250px] bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden p-4">
         <img
-          src={product.image}
+          src={product.image[0]}
           alt={product.name}
           className="object-contain h-full"
         />

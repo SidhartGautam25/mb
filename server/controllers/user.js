@@ -9,6 +9,7 @@ import {
   getUser,
   updateCartItemQuantity,
 } from "../utils/userUtility.js";
+import twilio from "twilio"
 
 // export const refreshToken = handleAsyncError(async (req, res, next) => {
 //   console.log("you are in refresh token controller");
@@ -60,7 +61,7 @@ import {
 export const refreshToken = handleAsyncError(async (req, res, next) => {
   console.log("in refresh token function and we will try to refresh your token now")
   const { refreshToken } = req.cookies;
-  
+
   if (!refreshToken) {
     return next(new HandleError("Authentication required - No refresh token provided", 401));
   }
@@ -83,7 +84,7 @@ export const refreshToken = handleAsyncError(async (req, res, next) => {
     }
 
     // Generate new tokens
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = 
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       generateTokens(user);
 
     // Invalidate the old refresh token
@@ -112,7 +113,7 @@ export const refreshToken = handleAsyncError(async (req, res, next) => {
       sameSite: isProduction ? 'none' : 'lax',
       domain: cookieDomain,
       maxAge: (process.env.JWT_REFRESH_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000, // 7 days
-      path: '/' 
+      path: '/'
     };
 
     // Set cookies and respond
@@ -136,14 +137,20 @@ export const refreshToken = handleAsyncError(async (req, res, next) => {
 
 export const registerUser = handleAsyncError(async (req, res, next) => {
   console.log("user is trying to register ", req.body);
-  const { name, email, password } = req.body;
+  const { name, email, password,phone:ph} = req.body;
   console.log("name is ", name, " email is ", email, " password is ", password);
   console.log("trying to create user");
+  const phone=[];
+  phone.push(ph);
+  
   const user = await User.create({
     name,
     email,
     password,
+    phone
+   
   });
+  console.log("user created is ",user);
   sendToken(user, 200, res);
 
 });
@@ -310,22 +317,22 @@ export const removeItemFromCart = handleAsyncError(async (req, res, next) => {
   console.log("you are in controller which remove items from cart");
   const userId = req.user._id;
   const user = await getUser(userId);
-  const  productId  = req.params.productId;
+  const productId = req.params.productId;
   const cart = user.cart;
   const index = cart.findIndex((item) => item.productId?.toString() === productId?.toString());
-  console.log("index of item which we need to remove is ",index);
-  console.log("user before splice section is ",user);
+  console.log("index of item which we need to remove is ", index);
+  console.log("user before splice section is ", user);
   if (index !== -1) {
     console.log("in splice section");
     user.cart.splice(index, 1);
   }
-  console.log("user after splice is ",user);
+  console.log("user after splice is ", user);
   await user.save({ validateBeforeSave: false });
   console.log("successfully done");
   res.status(200).json({
     success: true,
     productId,
-    message:  "Item removed from the cart",
+    message: "Item removed from the cart",
   });
 
 
@@ -351,7 +358,7 @@ export const addPhone = handleAsyncError(async (req, res, next) => {
 
   // Convert phone to string and add to array
   const phoneString = phone.toString();
-  
+
   // Initialize phone array if it doesn't exist, otherwise push new number
   if (!user.phone || !Array.isArray(user.phone)) {
     user.phone = [];
@@ -369,7 +376,7 @@ export const addPhone = handleAsyncError(async (req, res, next) => {
     }
   }
 
-  console.log("user is ",user);
+  console.log("user is ", user);
   await user.save({ validateBeforeSave: false });
 
   res.status(200).json({
@@ -417,3 +424,25 @@ export const addAddress = handleAsyncError(async (req, res, next) => {
     user
   });
 });
+
+
+
+
+// export const sendOTP = handleAsyncError(async (req, res, next) => {
+//   const accountSid = process.env.T_SID_ACCOUNT;
+//   const authToken = process.env.T_AUTH_TOKEN;
+//   const client=new twilio(accountSid,authToken)
+//   console.log("you are at send otp controller")
+//   client.verify.v2.services(process.env.T_VERIFY)
+//       .verifications
+//       .create({to: '+917461990368', channel: 'sms'})
+//       .then(verification => console.log("verification sid is",verification.sid));
+//   res.status(200).json({
+//     success: true,
+//     message: "otp sent successfully",
+   
+//   });
+
+  
+
+// });

@@ -31,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="h-[65%] min-h-[65%] w-full p-2 flex items-center justify-center bg-gray-50 rounded">
         {product.image ? (
           <img
-            src={product.image}
+            src={product.image[0]}
             alt={product.name}
             className="max-h-full max-w-full object-contain"
           />

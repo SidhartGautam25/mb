@@ -2,7 +2,12 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { useNavigate, useParams } from "react-router-dom";
-import { addItemsToCart, loadCartItems, removeFromCart, removeMessage } from "../../context/cart/cartSlice";
+import {
+  addItemsToCart,
+  loadCartItems,
+  removeFromCart,
+  removeMessage,
+} from "../../context/cart/cartSlice";
 import { toast } from "react-toastify";
 import {
   getProductDetails,
@@ -18,16 +23,20 @@ interface CartItem {
 }
 
 const ProductInfo: React.FC = () => {
-  // const [qty, setQty] = useState(1);
+  // Default options
   const sizes = ["XS", "S", "M", "L", "XL"];
+  const bookFormats = ["Paperback", "Hardcover"];
+  const electronicsColors = ["black", "silver", "white"];
+  const shoeSizes = ["6", "7", "8", "9", "10", "11"];
+  const furnitureMaterials = ["Wood", "Metal", "Plastic"];
+// for now
   const [selectedSize, setSelectedSize] = useState("M");
+  const [selectedFormat, setSelectedFormat] = useState("Paperback");
   const [quantity, setQuantity] = useState<number>(1);
   const [isQuantityInitialized, setIsQuantityInitialized] = useState(false);
 
   const { loading, error, product } = useAppSelector((state) => state.product);
   const { isAuthenticated } = useAppSelector((state) => state.user);
-  const user = useAppSelector((state) => state.user);
-
   const {
     loading: cartLoading,
     error: cartError,
@@ -36,28 +45,20 @@ const ProductInfo: React.FC = () => {
     cartItems,
   } = useAppSelector((state) => state.cart);
   const { id } = useParams<{ id: string }>();
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const cartItem = useMemo(() => {
-    if (!id) {
-      return null;
-    }
-    return cartItems.find((item) => item.id === id) || null;
-  }, [cartItems, id]);
-
+  // Cart logic
+  const cartItem = useMemo(
+    () => (id ? cartItems.find((item) => item.id === id) || null : null),
+    [cartItems, id]
+  );
   const isInCart = useMemo(() => !!cartItem, [cartItem]);
 
-  // IMPROVEMENT: Initialize quantity from cart item on component mount
-  
-   
-  
-    useEffect(() => {
-      // if (cartItems.length === 0) {
-        dispatch(loadCartItems());
-      // }
-    }, [dispatch, cartItems.length]);
+  useEffect(() => {
+    dispatch(loadCartItems());
+  }, [dispatch]);
+
   useEffect(() => {
     if (cartItem && !isQuantityInitialized) {
       setQuantity(cartItem.quantity);
@@ -68,53 +69,17 @@ const ProductInfo: React.FC = () => {
     }
   }, [cartItem, isQuantityInitialized]);
 
-  // const addToCart = () => {
-  //   console.log("add to cart function");
-  //   if (isAuthenticated) {
-  //     console.log("your are authenticated");
-  //     const productId = id ?? "1";
-  //     const item = {
-  //       id: productId,
-  //       name: product?.name,
-  //       image: product?.image,
-  //       price: product?.price,
-  //       quantity: quantity,
-  //     };
-  //     dispatch(addItemsToCart(item));
-  //   } else {
-  //     console.log("sorry you are logged out");
-  //     toast.error("Please login first to add items to cart", {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //     });
-  //   }
-  // };
-
   const addToCart = useCallback(() => {
-    console.log("add to cart function in action")
-    console.log("the userr detail according to us is ");
-    console.log(user);
     if (!isAuthenticated) {
-      console.log("you are not authenticated")
-      // toast.error("Please Login First to add items to cart", {
-      //   position: "top-center",
-      //   autoClose: 3000,
-      // });
-      navigate("/login")
+      navigate("/login");
       return;
     }
     if (!id || !product) {
-      toast.error("Product information is not available", {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      toast.error("Product information is not available");
       return;
     }
     if (quantity > (product.stock || 0)) {
-      toast.error(`Only ${product.stock} items available in stock`, {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      toast.error(`Only ${product.stock} items available in stock`);
       return;
     }
     const item: CartItem = {
@@ -122,18 +87,14 @@ const ProductInfo: React.FC = () => {
       name: product.name,
       image: product.image,
       price: product.price,
-      quantity: quantity,
+      quantity,
     };
-
     dispatch(addItemsToCart(item));
   }, [isAuthenticated, id, product, quantity, dispatch]);
 
   useEffect(() => {
     if (!id) {
-      toast.error("Error while loading Product", {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      toast.error("Error while loading Product");
     } else {
       dispatch(getProductDetails(id));
     }
@@ -141,254 +102,224 @@ const ProductInfo: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error("Error while loading Product", {
-        position: "top-center",
-        autoClose: 3000,
-      });
+      toast.error("Error while loading Product");
       dispatch(removeErrors());
     }
     if (cartError) {
-      toast.error(cartError, { position: "top-center", autoClose: 3000 });
+      toast.error(cartError);
     }
   }, [dispatch, error, cartError]);
 
   useEffect(() => {
     if (success) {
-      toast.success(message, { position: "top-center", autoClose: 3000 });
+      toast.success(message);
       dispatch(removeMessage());
     }
   }, [dispatch, success, message]);
 
-  // const decreaseQuantity = () => {
-  //   if (quantity <= 1) {
-  //     toast.error("Quantity cannot be less than 1", {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //     });
-  //     dispatch(removeErrors());
-  //     return;
-  //   }
-  //   setQuantity((qty) => qty - 1);
-  // };
-
   const decreaseQuantity = useCallback(() => {
-    if (quantity == 1) {
-      toast.error("Quantity cannot be less than 1", {
-        position: "top-center",
-        autoClose: 2000,
-      });
+    if (quantity === 1) {
+      toast.error("Quantity cannot be less than 1");
       return;
     }
-    const newQuantity:number = Number(quantity) - 1;
+    const newQuantity = quantity - 1;
     setQuantity(newQuantity);
-
     if (cartItem && id) {
-      // dispatch action for updating quantity of the item
-        const item: CartItem = {
-      id,
-      name: product?.name,
-      image: product?.image,
-      price: product?.price,
-      quantity: newQuantity,
-    };
-      dispatch(addItemsToCart(item))
+      dispatch(
+        addItemsToCart({
+          id,
+          name: product?.name || "",
+          image: product?.image || "",
+          price: product?.price || 0,
+          quantity: newQuantity,
+        })
+      );
     }
-  }, [quantity, cartItem, id, dispatch]);
-  // const increaseQuantity = () => {
-  //   if (product?.stock <= quantity) {
-  //     toast.error("Cannot exceed available Stock!", {
-  //       position: "top-center",
-  //       autoClose: 3000,
-  //     });
-  //     dispatch(removeErrors());
-  //     return;
-  //   }
-  //   setQuantity((qty) => qty + 1);
-  // };
+  }, [quantity, cartItem, id, dispatch, product]);
 
-    // Remove from cart function
+  const increaseQuantity = useCallback(() => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    if (cartItem && id) {
+      dispatch(
+        addItemsToCart({
+          id,
+          name: product?.name || "",
+          image: product?.image || "",
+          price: product?.price || 0,
+          quantity: newQuantity,
+        })
+      );
+    }
+  }, [quantity, cartItem, id, dispatch, product]);
+
   const RemoveFromCart = useCallback(() => {
     if (!id) return;
-    
-    // Show confirmation dialog
-    if (window.confirm(`Are you sure you want to remove ${product?.name} from your cart?`)) {
-      const productId:string=id;
-      dispatch(removeFromCart(productId));
+    if (window.confirm(`Remove ${product?.name} from your cart?`)) {
+      dispatch(removeFromCart(id));
     }
   }, [id, product?.name, dispatch]);
 
+  // Dynamic render helpers
+  const renderDynamicColors = (colors: string[]) => (
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="font-medium">Colours:</span>
+      {colors.map((color, index) => (
+        <button
+          key={index}
+          className="w-5 h-5 rounded-full border shadow-sm"
+          style={{ backgroundColor: color }}
+          title={color}
+        />
+      ))}
+    </div>
+  );
 
-  const increaseQuantity = useCallback(() => {
-    const newQuantity:number = Number(quantity) + 1;
-    setQuantity(newQuantity);
-    if (cartItem && id) {
-      // dispatch action for updating quantity of the item
-       const item: CartItem = {
-      id,
-      name: product?.name,
-      image: product?.image,
-      price: product?.price,
-      quantity: newQuantity,
-    };
-      dispatch(addItemsToCart(item))
-    }
-  }, [quantity, cartItem, id, dispatch]);
+  const renderSizeOptions = (options: string[]) => (
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="font-medium">Size:</span>
+      {options.map((size) => (
+        <button
+          key={size}
+          className={`px-3 py-1 border rounded ${
+            selectedSize === size
+              ? "bg-black text-white"
+              : "text-black border-gray-300"
+          }`}
+          onClick={() => setSelectedSize(size)}
+        >
+          {size}
+        </button>
+      ))}
+    </div>
+  );
+
+  const renderBookFormats = () => (
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="font-medium">Format:</span>
+      {bookFormats.map((format) => (
+        <button
+          key={format}
+          className={`px-3 py-1 border rounded ${
+            selectedFormat === format
+              ? "bg-black text-white"
+              : "text-black border-gray-300"
+          }`}
+          onClick={() => setSelectedFormat(format)}
+        >
+          {format}
+        </button>
+      ))}
+    </div>
+  );
+
+  const renderMaterials = (materials: string[]) => (
+    <div className="flex items-center gap-2 flex-wrap">
+      <span className="font-medium">Material:</span>
+      {materials.map((mat) => (
+        <button
+          key={mat}
+          className="px-3 py-1 border rounded text-black border-gray-300"
+        >
+          {mat}
+        </button>
+      ))}
+    </div>
+  );
+
+  const category = product?.category?.toLowerCase();
 
   if (!id) {
-    return (
-      <div className="w-full md:w-1/2 px-4 py-6">
-        <div className="text-center text-red-500">Invalid product ID</div>
-      </div>
-    );
+    return <div className="text-center text-red-500">Invalid product ID</div>;
   }
-
   if (loading) {
-    return (
-      <div className="w-full md:w-1/2 px-4 py-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-          <div className="h-6 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-16 bg-gray-200 rounded mb-4"></div>
-        </div>
-      </div>
-    );
+    return <div className="animate-pulse text-gray-500">Loading...</div>;
   }
-
   if (!product) {
-    return (
-      <div className="w-full md:w-1/2 px-4 py-6">
-        <div className="text-center text-red-500">Product not found</div>
-      </div>
-    );
+    return <div className="text-center text-red-500">Product not found</div>;
   }
 
   return (
-    <>
-      {loading ? (
-        <div>Laoding Details</div>
-      ) : (
-        <div className="w-full md:w-1/2 px-4 py-6 space-y-4">
-          <h1 className="text-xl font-semibold">
-            {product?.name || "Product Name"}
-          </h1>
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <span>⭐⭐⭐⭐☆</span>
-            <span>(150 Reviews)</span>
-            <span className="text-green-600 ml-2">In Stock</span>
-          </div>
+    <div className="w-full md:w-1/2 px-4 py-6 space-y-4">
+      <h1 className="text-xl font-semibold">{product?.name}</h1>
+      <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
+        <span>⭐⭐⭐⭐☆</span>
+        <span>(150 Reviews)</span>
+        <span className="text-green-600 ml-2">In Stock</span>
+      </div>
+      <div className="text-xl font-bold">Rs {product?.price}</div>
+      <p className="text-sm text-gray-600">{product?.description}</p>
+      <hr />
 
-          <div className="text-xl font-bold">
-            Rs {product?.price || "Price not available"}
-          </div>
-          <p className="text-sm text-gray-600">
-            {product?.description || "description not available"}
-          </p>
+      {category === "fashion" && (
+        <>
+          {renderDynamicColors(["red", "blue", "black", "green"])}
+          {renderSizeOptions(sizes)}
+        </>
+      )}
+      {category === "watches" && renderDynamicColors(["black", "brown", "silver"])}
+      {category === "books" && renderBookFormats()}
+      {category === "electronics" && renderDynamicColors(electronicsColors)}
+      {category === "shoes" && (
+        <>
+          {renderDynamicColors(["black", "white", "blue"])}
+          {renderSizeOptions(shoeSizes)}
+        </>
+      )}
+      {category === "furniture" && renderMaterials(furnitureMaterials)}
 
-          <hr />
+      {/* Quantity & Cart */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <button onClick={decreaseQuantity} className="px-3 py-1 border">−</button>
+        <span>{quantity}</span>
+        <button onClick={increaseQuantity} className="px-3 py-1 border">+</button>
 
-          {/* Colours */}
-          <div className="flex items-center gap-2">
-            <span>Colours:</span>
-            <button className="w-4 h-4 rounded-full bg-red-500 border" />
-            <button className="w-4 h-4 rounded-full bg-blue-600 border" />
-          </div>
-
-          {/* Size */}
-          <div className="flex items-center gap-2">
-            <span>Size:</span>
-            {sizes.map((size) => (
-              <button
-                key={size}
-                className={`px-3 py-1 border rounded ${
-                  selectedSize === size
-                    ? "bg-black text-white"
-                    : "text-black border-gray-300"
-                }`}
-                onClick={() => setSelectedSize(size)}
-              >
-                {size}
-              </button>
-            ))}
-          </div>
-
-          {/* Quantity and Actions */}
-          <div className="flex items-center gap-2">
-            <button onClick={decreaseQuantity} className="px-3 py-1 border">
-              −
+        {!isInCart ? (
+          <button
+            className={`ml-4 px-5 py-2 rounded ${
+              cartLoading || product.stock === 0
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-red-500 hover:bg-red-600 text-white"
+            }`}
+            onClick={addToCart}
+            disabled={cartLoading || product.stock === 0}
+          >
+            {cartLoading ? "Adding..." : product.stock === 0 ? "Out of Stock" : "Add To Cart"}
+          </button>
+        ) : (
+          <div className="ml-4 flex items-center gap-2 flex-wrap">
+            <button className="bg-green-500 text-white px-5 py-2 rounded">
+              ✓ In Cart ({cartItem?.quantity})
             </button>
-            <span>{quantity}</span>
-            <button onClick={increaseQuantity} className="px-3 py-1 border">
-              +
-            </button>
-
-            {/* {ind == -1 ? (
-              <button
-                className="ml-4 bg-red-500 text-white px-5 py-2 rounded"
-                onClick={() => addToCart()}
-              >
-                Add To Cart
-              </button>
-            ) : (
-              <button className="ml-4 bg-green-500 text-white px-5 py-2 rounded">
-                Added to cart
-              </button>
-            )} */}
-
-            {!isInCart ? (
-              <button
-                className={`ml-4 px-5 py-2 rounded transition-colors ${
-                  cartLoading || product.stock === 0
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-red-500 hover:bg-red-600 text-white"
-                }`}
-                onClick={addToCart}
-                disabled={cartLoading || product.stock === 0}
-              >
-                {cartLoading
-                  ? "Adding..."
-                  : product.stock === 0
-                  ? "Out of Stock"
-                  : "Add To Cart"}
-              </button>
-            ) : (
-              <div className="ml-4 flex items-center gap-2">
-                <button className="bg-green-500 text-white px-5 py-2 rounded">
-                  ✓ In Cart ({cartItem?.quantity})
-                </button>
-                {/* IMPROVEMENT: Added option to remove from cart */}
-                <button
-                  className="text-red-500 text-sm underline hover:text-red-700"
-                  onClick={RemoveFromCart}
-                >
-                  Remove
-                </button>
-              </div>
-            )}
-
-            <button className="ml-2 border p-2 rounded">
-              <AiOutlineHeart size={20} />
+            <button
+              className="text-red-500 text-sm underline hover:text-red-700"
+              onClick={RemoveFromCart}
+            >
+              Remove
             </button>
           </div>
+        )}
+        <button className="ml-2 border p-2 rounded">
+          <AiOutlineHeart size={20} />
+        </button>
+      </div>
 
-          {/* Delivery Info */}
-          <div className="border mt-4 divide-y">
-            <div className="px-4 py-2 text-sm">
-              <strong>Free Delivery</strong>
-              <div className="text-gray-600 text-xs">
-                Enter your postal code for Delivery Availability
-              </div>
-            </div>
-            <div className="px-4 py-2 text-sm">
-              <strong>Return Delivery</strong>
-              <div className="text-gray-600 text-xs">
-                Free 30 Days Delivery Returns. Details
-              </div>
-            </div>
+      {/* Delivery Info */}
+      <div className="border mt-4 divide-y">
+        <div className="px-4 py-2 text-sm">
+          <strong>Free Delivery</strong>
+          <div className="text-gray-600 text-xs">
+            Enter your postal code for Delivery Availability
           </div>
         </div>
-      )}
-    </>
+        <div className="px-4 py-2 text-sm">
+          <strong>Return Delivery</strong>
+          <div className="text-gray-600 text-xs">
+            Free 30 Days Delivery Returns. Details
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

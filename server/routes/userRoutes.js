@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.route("/register").post(registerUser);
 router.route("/login").post(Login);
+// router.route("/sendOTP").post(sendOTP);
 router.route("/refresh-token").post(refreshToken);
 router.route("/addToCart").post(verifyUser, addToCart);
 router.route("/loadCart").get(verifyUser, getCartItems);
