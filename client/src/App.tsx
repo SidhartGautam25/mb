@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import { useAppDispatch, useAppSelector } from "./context/hooks.ts";
 // import { useEffect } from "react";
 // import { loadUser } from "./context/user/userSlice";
+//import { useAppDispatch } from "./context/hooks.ts";
 import Home from "./pages/home.tsx";
+//import { useAppSelector } from "./context/hooks.ts";
 import Product from "./pages/product.tsx";
 import Products from "./pages/products.tsx";
 import Login from "./pages/login.tsx";
@@ -20,10 +22,11 @@ import ForgotPasswordPage from "./pages/rPassword.tsx";
 import PaymentC from "./comp/payment/Payment.tsx";
 import ScrollToTop from "./comp/common/ScrollToTop.tsx";
 import ProductsByTag from "./pages/tagProduct.tsx";
+import AuthenticatedRoute from "./comp/common/AuthenticatedRoute.tsx";
 
 function App(): JSX.Element {
-  // const dispatch = useAppDispatch();
-  // const { isAuthenticated } = useAppSelector((state) => state.user);
+   //const dispatch = use AppDispatch();
+   //const { isAuthenticated } = useAppSelector((state) => state.user);
 
   // useEffect(() => {
   //   if (isAuthenticated) {
@@ -42,7 +45,7 @@ function App(): JSX.Element {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile/>}/>
-        <Route path="/cart" element={<CartPage/>}/>
+        <Route path="/cart" element={<AuthenticatedRoute element={<CartPage/>} required={true}/>}/>
         <Route path="/payment" element={<PaymentC/>}/>
          <Route path="/reset-password" element={<ForgotPasswordPage/>}/>
         {/* admin routes */}

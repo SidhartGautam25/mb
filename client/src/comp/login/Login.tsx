@@ -27,7 +27,7 @@ const LoginC: React.FC = () => {
   };
   useEffect(() => {
     if (error) {
-      toast.error(error, { position: "top-center", autoClose: 3000 });
+      toast.error("Something went wrong , please check your details again", { position: "top-center", autoClose: 3000 });
       dispatch(removeErrors());
     }
   }, [dispatch, error]);

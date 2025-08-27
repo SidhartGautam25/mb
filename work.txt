@@ -1,19 +1,24 @@
-Uday --> 
+To do
 
-1. login signup page pe image lagana 
-2. footer pe data or link update krna
-3. homepage ko responsive krna
-4. cart section ka design improve krna
-5. Profile page pe human logo lagana (image section me )
-6. 
+1. payment
+2. otp
+3. related item
+4. refund policy
+5. term and condition
+6. admin dashboard
+7. view more button in category
 
-Navneet -->
+Bugs
 
-1. products page pe pagination 
-2. admin ke hr componnet pe pagination
-3. item removal option in cart
-4. payment completion
-5. admin me product update option
-6. admin product detail componnet
-7. user detail componnet
-8. product deletion option in admin
+1. product created toast is appearing twice
+2. after logout , items are still visible in cart and can be added and subtracted
+3. calculation bug in product page and cart page
+4. Product image div cover problem
+5. Product wise product page -> color , size 
+
+Completed
+1. login 
+2. signup with phone number registration
+3. ssl certificate added
+4. hoem page responsive
+5. 

@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../context/hooks";
 import { logout } from "../../context/user/userSlice";
 import { clearCart } from "../../context/cart/cartSlice";
 import { toast } from "react-toastify";
-import logo from "../../../public/cliftkart_logo.png"; 
+import logo from "../../../public/cliftkart_logo.png";
 
 const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -24,6 +24,7 @@ const Navbar: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.user);
+
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -88,9 +89,11 @@ const Navbar: React.FC = () => {
           </button>
 
           {/* Cart */}
-          <a href="/cart" className="p-1 hover:bg-gray-100 rounded-full" aria-label="Cart">
+          {isAuthenticated ? (
+<a href="/cart" className="p-1 hover:bg-gray-100 rounded-full" aria-label="Cart">
             <FaShoppingCart className="text-xl text-gray-700" />
           </a>
+          ):(<></>)}
 
           {/* Auth Dropdown */}
           <div className="relative" ref={dropdownRef}>

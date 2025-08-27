@@ -13,7 +13,7 @@
 // const CProductC: React.FC = () => {
 //   // const categories:string[]=["vegetables","fruits"];
 //   // const Tags: string[] = ["free", "50% OFF", "30% OFF"];
-  
+
 //   const [id, setId] = useState("");
 //   const [name, setName] = useState("");
 //   const [price, setPrice] = useState("");
@@ -688,11 +688,6 @@ const CProductC: React.FC = () => {
         subcat,
       })
     );
-    if (error) {
-      toast.error("Please Try Again. Some Error occurred while uploading");
-    } else {
-      toast.success("Product created successfully");
-    }
   };
 
   const handleCheckboxChange = (tag: string): void => {
@@ -705,7 +700,7 @@ const CProductC: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error, { position: "top-center", autoClose: 6000 });
+      toast.error("Some error occured while creating the product", { position: "top-center", autoClose: 6000 });
       dispatch(removeErrors());
     }
     if (success) {

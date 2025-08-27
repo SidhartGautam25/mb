@@ -75,7 +75,10 @@ export class StorageManager{
   }
 
   static clearCartData(): void {
+    console.log("you are trying to delete the local cart items");
+    console.log("before deleting the details ",localStorage.getItem(this.KEYS.CART_ITEMS))
     localStorage.removeItem(this.KEYS.CART_ITEMS);
+    console.log("after deleting the details ", localStorage.getItem(this.KEYS.CART_ITEMS));
     localStorage.removeItem(this.KEYS.SHIPPING_INFO);
   }
 
